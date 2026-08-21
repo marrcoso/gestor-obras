@@ -1,7 +1,7 @@
 {
   "tenants": [
     {
-      "id": "965b3e00-6f41-4984-8956-8398dc332d52",
+      "id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
       "nome_fantasia": "Alfa Engenharia & Construções",
       "razao_social": "Alfa Engenharia e Construções Civis Ltda",
       "cnpj": "45.123.789/0001-90",
@@ -10,40 +10,40 @@
       "plano": "PRO",
       "max_obras_ativas": 10,
       "ativo": true,
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     }
   ],
   "users": [
     {
-      "id": "7cae9a97-fa40-4925-bd92-eb9ed32bfcda",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
+      "id": "268f9116-88ca-4552-bf97-1d24d1aa2c2b",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
       "nome": "Carlos Silva (Engenheiro & Dono)",
       "email": "admin@alfaengenharia.com",
-      "senha_hash": "$2a$10$NOHpDNYwE6KO.kX/3Dm1SOvrWzSVqAX2L0w4SvKQh5N.wFF74s/AS",
+      "senha_hash": "$2a$10$MyEDee6FcFKJdBMsNBnJ4up192NbfUVMDmBTq62sxUKygA5f835rS",
       "telefone_whatsapp": "11987654321",
       "perfil": "ADMIN",
       "ativo": true,
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
+      "id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
       "nome": "Sebastião Oliveira (Mestre de Obras)",
       "email": "mestre@alfaengenharia.com",
-      "senha_hash": "$2a$10$NOHpDNYwE6KO.kX/3Dm1SOvrWzSVqAX2L0w4SvKQh5N.wFF74s/AS",
+      "senha_hash": "$2a$10$MyEDee6FcFKJdBMsNBnJ4up192NbfUVMDmBTq62sxUKygA5f835rS",
       "telefone_whatsapp": "11976543210",
       "perfil": "MESTRE_OBRA",
       "ativo": true,
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     }
   ],
   "obras": [
     {
-      "id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
+      "id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
       "nome": "Residencial Jardim das Flores - Casa 04",
       "cliente_nome": "Roberto Guimarães",
       "cliente_telefone": "11991234567",
@@ -56,12 +56,12 @@
       "status": "EM_ANDAMENTO",
       "orcamento_previsto": 420000,
       "saldo_atual": 45200,
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "6637fae9-6df6-4fc7-8ef1-3207507e2936",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
+      "id": "659e53b6-18a6-4749-a7b8-1b5509126ec9",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
       "nome": "Reforma Comercial Edifício Paulista",
       "cliente_nome": "Dra. Camila Vasconcelos (Clínica)",
       "cliente_telefone": "11988776655",
@@ -74,16 +74,16 @@
       "status": "EM_ANDAMENTO",
       "orcamento_previsto": 185000,
       "saldo_atual": 12800,
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     }
   ],
   "transacoes": [
     {
-      "id": "992421cb-6334-46a1-87cd-b19db91aa012",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "user_id": "7cae9a97-fa40-4925-bd92-eb9ed32bfcda",
+      "id": "900b85b7-29c6-4578-9e01-3e2e65c39d41",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "user_id": "268f9116-88ca-4552-bf97-1d24d1aa2c2b",
       "tipo": "RECEITA",
       "categoria": "RECEBIMENTO_CLIENTE",
       "descricao": "Entrada / Sinal de Contrato - Obra Jardim das Flores",
@@ -93,14 +93,14 @@
       "data_pagamento": "2026-06-05",
       "status": "PAGO",
       "origem_lancamento": "WEB",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "262977b2-6ce8-48bd-8101-1486400c472a",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "user_id": "7cae9a97-fa40-4925-bd92-eb9ed32bfcda",
+      "id": "73a05198-8012-48ba-b902-9bff36014f49",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "user_id": "268f9116-88ca-4552-bf97-1d24d1aa2c2b",
       "tipo": "RECEITA",
       "categoria": "RECEBIMENTO_CLIENTE",
       "descricao": "Medição 1 - Conclusão Fundação e Alvenaria Bruta",
@@ -110,14 +110,14 @@
       "data_pagamento": "2026-07-10",
       "status": "PAGO",
       "origem_lancamento": "WEB",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "66f13526-d1a4-451b-9c21-6ed0ceba8bb2",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "user_id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
+      "id": "ef68ec90-f301-4cdb-b753-7116a67b61dd",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "user_id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
       "tipo": "DESPESA",
       "categoria": "MATERIAL_BASICO",
       "descricao": "120 Sacos Cimento CP-II + 14m³ Areia Média Lavada",
@@ -128,14 +128,14 @@
       "status": "PAGO",
       "fornecedor_beneficiario": "Depósito de Materiais União",
       "origem_lancamento": "MOBILE",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "17c41931-37cc-4cd3-8f6c-fdd874bba507",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "user_id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
+      "id": "40e733de-9361-4417-b6a2-2faebbf0cac5",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "user_id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
       "tipo": "DESPESA",
       "categoria": "MAO_DE_OBRA_DIARIA",
       "descricao": "Pagamento Quinzenal Equipe de Pedreiros e Serventes (4 profissionais)",
@@ -146,14 +146,14 @@
       "status": "PAGO",
       "fornecedor_beneficiario": "Equipe de Campo",
       "origem_lancamento": "MOBILE",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "3e7da8eb-97dd-42f2-a896-9c2826f2da36",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "user_id": "7cae9a97-fa40-4925-bd92-eb9ed32bfcda",
+      "id": "98855ae0-97fa-4bc4-8703-4a0baec9b3af",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "user_id": "268f9116-88ca-4552-bf97-1d24d1aa2c2b",
       "tipo": "DESPESA",
       "categoria": "EQUIPAMENTO_LOCACAO",
       "descricao": "Locação Mensal Betoneira 400L + Andaimes Fachadeiros",
@@ -164,14 +164,14 @@
       "status": "PAGO",
       "fornecedor_beneficiario": "Andaimes & Cia Locações",
       "origem_lancamento": "WEB",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "a8761624-06ed-452d-82b7-623ac507fc03",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6637fae9-6df6-4fc7-8ef1-3207507e2936",
-      "user_id": "7cae9a97-fa40-4925-bd92-eb9ed32bfcda",
+      "id": "ffc97b1d-9c09-4ed7-89f1-294fe44e90d0",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "659e53b6-18a6-4749-a7b8-1b5509126ec9",
+      "user_id": "268f9116-88ca-4552-bf97-1d24d1aa2c2b",
       "tipo": "RECEITA",
       "categoria": "RECEBIMENTO_CLIENTE",
       "descricao": "Sinal de Contrato - Reforma Clínica Comercial",
@@ -181,14 +181,14 @@
       "data_pagamento": "2026-07-15",
       "status": "PAGO",
       "origem_lancamento": "WEB",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "5f8f7485-e67e-4ab9-8ba2-28eedf676170",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6637fae9-6df6-4fc7-8ef1-3207507e2936",
-      "user_id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
+      "id": "8b9f1f6e-92fb-4ed3-9dd7-bdcebab2f353",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "659e53b6-18a6-4749-a7b8-1b5509126ec9",
+      "user_id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
       "tipo": "DESPESA",
       "categoria": "MATERIAL_ACABAMENTO",
       "descricao": "Gesso Acartonado Drywall 12.5mm + Perfis F530 e Guias",
@@ -199,14 +199,14 @@
       "status": "PAGO",
       "fornecedor_beneficiario": "Distribuidora Drywall SP",
       "origem_lancamento": "MOBILE",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "4d227830-1d04-4007-8bdd-b293b8fc64ed",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6637fae9-6df6-4fc7-8ef1-3207507e2936",
-      "user_id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
+      "id": "4bf5edec-27d7-408f-b9f0-6a36002cf3ba",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "659e53b6-18a6-4749-a7b8-1b5509126ec9",
+      "user_id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
       "tipo": "DESPESA",
       "categoria": "TRANSPORTE_FRETE",
       "descricao": "Caçambas de Entulho com Descarte Certificado (4 viagens)",
@@ -217,15 +217,15 @@
       "status": "PAGO",
       "fornecedor_beneficiario": "Caçambas LimpaObra",
       "origem_lancamento": "MOBILE",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     }
   ],
   "contas_receber": [
     {
-      "id": "9b32e04f-6061-4926-9584-8313dc33afe7",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
+      "id": "0d55bcb4-5736-4a85-8720-eecf5357da09",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
       "numero_parcela": 2,
       "descricao_medicao": "Medição 2 - Cobertura e Alvenaria Concluída",
       "valor": 55000,
@@ -233,32 +233,32 @@
       "status": "ATRASADO",
       "historico_cobranca": "[2026-08-12] Cliente avisou que faria a liberação até sexta-feira",
       "ultimo_contato_cobranca": "2026-08-12T14:30:00Z",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "14474951-bd8b-41d8-afd9-334e3710379b",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
+      "id": "900110c2-17c6-4f57-9c61-b7a120eef48a",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
       "numero_parcela": 3,
       "descricao_medicao": "Medição 3 - Revestimentos e Instalações Elétricas/Hidráulicas",
       "valor": 65000,
       "data_vencimento": "2026-09-10",
       "status": "PENDENTE",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "7e0679a9-fb45-4a2a-9db6-3ae50d73fc05",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6637fae9-6df6-4fc7-8ef1-3207507e2936",
+      "id": "a7e4a6f6-c5c9-4414-8a8c-744448c98220",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "659e53b6-18a6-4749-a7b8-1b5509126ec9",
       "numero_parcela": 2,
       "descricao_medicao": "Medição 2 - Drywall e Infraestrutura de Ar Condicionado",
       "valor": 40000,
       "data_vencimento": "2026-08-25",
       "status": "PENDENTE",
-      "created_at": "2026-08-16T20:40:16.990Z",
-      "updated_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z",
+      "updated_at": "2026-08-21T22:54:10.091Z"
     }
   ],
   "sinapi_itens": [
@@ -592,37 +592,37 @@
   "orcamento_itens": [],
   "diario_fotos": [
     {
-      "id": "af52c573-6109-4684-bbe5-13d20b428af6",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "user_id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
+      "id": "d07df416-75d0-4769-8be2-d8ab02723a3b",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "user_id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
       "foto_url": "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=800&q=80",
       "etapa": "FUNDACAO_ESTRUTURA",
       "descricao": "Concretagem das sapatas e vigas baldrame finalizada com sucesso. Teste de corpos de prova realizado.",
       "data_registro": "2026-06-18",
-      "created_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "ece70f22-664b-4440-87a1-025946ed18e2",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6be85ce5-01bc-4523-a880-68a099ee3994",
-      "user_id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
+      "id": "c06af6ca-defd-4f2e-b900-f0df4f1ae51b",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "e9d14dbd-8eff-4588-8780-16d1e06a2e5a",
+      "user_id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
       "foto_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
       "etapa": "ALVENARIA_VEDACAO",
       "descricao": "Levantamento das paredes do térreo e amarração com pilares estruturais.",
       "data_registro": "2026-07-08",
-      "created_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z"
     },
     {
-      "id": "9bf1db1d-a25a-4759-a58f-3796c426f87d",
-      "tenant_id": "965b3e00-6f41-4984-8956-8398dc332d52",
-      "obra_id": "6637fae9-6df6-4fc7-8ef1-3207507e2936",
-      "user_id": "5d609ed5-cea9-4d2c-b100-82b63ecda592",
+      "id": "cc485ed2-7dd5-4c44-bd21-edeed6a5a730",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "659e53b6-18a6-4749-a7b8-1b5509126ec9",
+      "user_id": "6e1b2e80-8661-4d1f-840b-9d1e3e725abc",
       "foto_url": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80",
       "etapa": "INSTALACOES_ELETRICA_HIDRAULICA",
       "descricao": "Passagem dos conduítes elétricos e montagem da estrutura de drywall acústico para os consultórios.",
       "data_registro": "2026-07-26",
-      "created_at": "2026-08-16T20:40:16.990Z"
+      "created_at": "2026-08-21T22:54:10.091Z"
     }
   ]
 }
