@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   DollarSign,
@@ -10,19 +11,20 @@ import {
 } from 'lucide-react';
 
 interface SidebarProps {
-  currentView: string;
-  setCurrentView: (view: string) => void;
   openNewObraModal: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, openNewObraModal }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const menuItems = [
-    { id: 'dashboard', label: 'Painel Executivo', icon: LayoutDashboard },
-    { id: 'fluxo', label: 'Fluxo de Caixa / Obra', icon: DollarSign },
-    { id: 'inadimplencia', label: 'Radar de Inadimplência', icon: AlertTriangle, badge: 'Crítico' },
-    { id: 'sinapi', label: 'Orçador SINAPI', icon: FileSpreadsheet },
-    { id: 'diario', label: 'Diário de Fotos', icon: Camera },
-    { id: 'field', label: 'App do Canteiro (Mobile)', icon: Smartphone, highlight: true }
+    { path: '/dashboard', label: 'Painel Executivo', icon: LayoutDashboard },
+    { path: '/fluxo', label: 'Fluxo de Caixa / Obra', icon: DollarSign },
+    { path: '/inadimplencia', label: 'Radar de Inadimplência', icon: AlertTriangle, badge: 'Crítico' },
+    { path: '/sinapi', label: 'Orçador SINAPI', icon: FileSpreadsheet },
+    { path: '/diario', label: 'Diário de Fotos', icon: Camera },
+    { path: '/campo', label: 'App do Canteiro (Mobile)', icon: Smartphone, highlight: true }
   ];
 
   return (
@@ -54,12 +56,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, o
 
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = currentView === item.id;
+          const isActive = location.pathname === item.path || (item.path === '/campo' && location.pathname === '/field');
 
           return (
             <button
-              key={item.id}
-              onClick={() => setCurrentView(item.id)}
+              key={item.path}
+              onClick={() => navigate(item.path)}
               style={{
                 display: 'flex',
                 alignItems: 'center',

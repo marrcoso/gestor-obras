@@ -1,18 +1,17 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Smartphone, DollarSign, Camera, AlertTriangle, LayoutDashboard } from 'lucide-react';
 
-interface MobileBottomNavProps {
-  currentView: string;
-  setCurrentView: (view: string) => void;
-}
+export const MobileBottomNav: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ currentView, setCurrentView }) => {
   const tabs = [
-    { id: 'field', label: 'Canteiro', icon: Smartphone },
-    { id: 'fluxo', label: 'Caixa', icon: DollarSign },
-    { id: 'diario', label: 'Fotos', icon: Camera },
-    { id: 'inadimplencia', label: 'Cobrança', icon: AlertTriangle },
-    { id: 'dashboard', label: 'Gestão', icon: LayoutDashboard }
+    { path: '/campo', label: 'Canteiro', icon: Smartphone },
+    { path: '/fluxo', label: 'Caixa', icon: DollarSign },
+    { path: '/diario', label: 'Fotos', icon: Camera },
+    { path: '/inadimplencia', label: 'Cobrança', icon: AlertTriangle },
+    { path: '/dashboard', label: 'Gestão', icon: LayoutDashboard }
   ];
 
   return (
@@ -33,12 +32,12 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ currentView, s
     >
       {tabs.map((tab) => {
         const Icon = tab.icon;
-        const isActive = currentView === tab.id;
+        const isActive = location.pathname === tab.path || (tab.path === '/campo' && location.pathname === '/field');
 
         return (
           <button
-            key={tab.id}
-            onClick={() => setCurrentView(tab.id)}
+            key={tab.path}
+            onClick={() => navigate(tab.path)}
             style={{
               display: 'flex',
               flexDirection: 'column',

@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
-import { Obra, InadimplenciaRadarData, TransacaoFinanceira } from '../types/index.js';
+import { InadimplenciaRadarData, TransacaoFinanceira } from '../types/index.js';
 import { api } from '../services/api.js';
+
 import {
   DollarSign,
-  TrendingUp,
   AlertTriangle,
+  TrendingUp,
   Building2,
-  Calendar,
-  CheckCircle2,
-  Clock,
   ArrowUpRight,
-  ArrowDownRight,
-  ExternalLink
+  ArrowDownRight
 } from 'lucide-react';
 
 interface DashboardPageProps {
-  setCurrentView: (view: string) => void;
-  openNewObraModal: () => void;
+  openNewObraModal?: () => void;
 }
 
-export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, openNewObraModal }) => {
+export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
+  const navigate = useNavigate();
+  const outletContext = useOutletContext<{ openNewObraModal: () => void } | null>();
+  const openNewObraModal = props.openNewObraModal || outletContext?.openNewObraModal || (() => {});
   const { obras, setSelectedObra } = useAuth();
   const [inadimplencia, setInadimplencia] = useState<InadimplenciaRadarData | null>(null);
   const [recentTransacoes, setRecentTransacoes] = useState<TransacaoFinanceira[]>([]);
@@ -67,7 +67,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => setCurrentView('field')} className="btn btn-secondary">
+          <button onClick={() => navigate('/campo')} className="btn btn-secondary">
             📱 Modo Canteiro
           </button>
           <button onClick={openNewObraModal} className="btn btn-primary">
@@ -115,7 +115,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
             {formatMoney(inadimplencia?.total_vencido || 0)}
           </p>
           <button
-            onClick={() => setCurrentView('inadimplencia')}
+            onClick={() => navigate('/inadimplencia')}
             style={{
               background: 'none',
               border: 'none',
@@ -158,7 +158,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
               <Building2 size={18} color="#94a3b8" />
             </div>
           </div>
-          <p style={{ fontSize: '26px', fontWeight: 800, color: '#fff' }}>
+          <p style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text-main)' }}>
             {obras.filter((o) => o.status === 'EM_ANDAMENTO').length} ativas
           </p>
           <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
@@ -191,7 +191,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
                     <span className="badge badge-primary" style={{ marginBottom: '6px' }}>
                       {obra.estado_uf} • {obra.status}
                     </span>
-                    <h4 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>{obra.nome}</h4>
+                    <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)' }}>{obra.nome}</h4>
                     <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Cliente: {obra.cliente_nome}</p>
                   </div>
                   <div
@@ -246,7 +246,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
                   <button
                     onClick={() => {
                       setSelectedObra(obra);
-                      setCurrentView('fluxo');
+                      navigate('/fluxo');
                     }}
                     className="btn btn-secondary"
                     style={{ flex: 1, fontSize: '12px', padding: '8px' }}
@@ -257,7 +257,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
                   <button
                     onClick={() => {
                       setSelectedObra(obra);
-                      setCurrentView('diario');
+                      navigate('/diario');
                     }}
                     className="btn btn-secondary"
                     style={{ flex: 1, fontSize: '12px', padding: '8px' }}
@@ -278,7 +278,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
             <h3 style={{ fontSize: '16px', fontWeight: 700 }}>Últimos Lançamentos em Campo & Escritório</h3>
             <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Despesas e pagamentos lançados recentemente.</p>
           </div>
-          <button onClick={() => setCurrentView('fluxo')} className="btn btn-secondary" style={{ fontSize: '12px', padding: '6px 12px' }}>
+          <button onClick={() => navigate('/fluxo')} className="btn btn-secondary" style={{ fontSize: '12px', padding: '6px 12px' }}>
             Ver Fluxo Completo <ArrowUpRight size={14} />
           </button>
         </div>
@@ -311,7 +311,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
                     {isReceita ? <ArrowUpRight size={16} color="#10b981" /> : <ArrowDownRight size={16} color="#ef4444" />}
                   </div>
                   <div>
-                    <p style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>{item.descricao}</p>
+                    <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-main)' }}>{item.descricao}</p>
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                       {item.categoria.replace(/_/g, ' ')} • {item.origem_lancamento === 'MOBILE' ? '📱 Canteiro' : '💻 Escritório'}
                     </span>

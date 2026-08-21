@@ -1,5 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet
+} from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
+import { ThemeProvider } from './context/ThemeContext.js';
 import { LoginPage } from './pages/LoginPage.js';
 import { Navbar } from './components/Navbar.js';
 import { Sidebar } from './components/Sidebar.js';
@@ -12,16 +20,38 @@ import { DiarioObrasPage } from './pages/DiarioObrasPage.js';
 import { MobileFieldPage } from './pages/MobileFieldPage.js';
 import { NewObraModal } from './components/NewObraModal.js';
 
-const MainApp: React.FC = () => {
-  const { user, loading, refreshObras } = useAuth();
-  const [currentView, setCurrentView] = useState('dashboard');
+const AppLayout: React.FC = () => {
+  const { refreshObras } = useAuth();
   const [newObraModalOpen, setNewObraModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (user?.perfil === 'MESTRE_OBRA') {
-      setCurrentView('field');
-    }
-  }, [user]);
+  return (
+    <div className="app-container">
+      {/* Sidebar para desktop */}
+      <Sidebar openNewObraModal={() => setNewObraModalOpen(true)} />
+
+      <div className="main-content">
+        <Navbar />
+
+        <main style={{ flex: 1 }}>
+          <Outlet context={{ openNewObraModal: () => setNewObraModalOpen(true) }} />
+        </main>
+
+        {/* Bottom Nav móvel */}
+        <MobileBottomNav />
+
+        {/* Modal Global de Cadastro de Obra */}
+        <NewObraModal
+          isOpen={newObraModalOpen}
+          onClose={() => setNewObraModalOpen(false)}
+          onSuccess={() => refreshObras()}
+        />
+      </div>
+    </div>
+  );
+};
+
+const ProtectedRoute: React.FC = () => {
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -44,53 +74,46 @@ const MainApp: React.FC = () => {
   }
 
   if (!user) {
-    return <LoginPage />;
+    return <Navigate to="/login" replace />;
   }
 
-  return (
-    <div className="app-container">
-      {/* Sidebar para desktop */}
-      <Sidebar
-        currentView={currentView}
-        setCurrentView={setCurrentView}
-        openNewObraModal={() => setNewObraModalOpen(true)}
-      />
+  return <AppLayout />;
+};
 
-      <div className="main-content">
-        <Navbar currentView={currentView} setCurrentView={setCurrentView} />
-
-        <main style={{ flex: 1 }}>
-          {currentView === 'dashboard' && (
-            <DashboardPage
-              setCurrentView={setCurrentView}
-              openNewObraModal={() => setNewObraModalOpen(true)}
-            />
-          )}
-          {currentView === 'fluxo' && <FluxoCaixaPage />}
-          {currentView === 'inadimplencia' && <InadimplenciaPage />}
-          {currentView === 'sinapi' && <SinapiOrcamentosPage />}
-          {currentView === 'diario' && <DiarioObrasPage />}
-          {currentView === 'field' && <MobileFieldPage />}
-        </main>
-
-        {/* Bottom Nav móvel */}
-        <MobileBottomNav currentView={currentView} setCurrentView={setCurrentView} />
-
-        {/* Modal Global de Cadastro de Obra */}
-        <NewObraModal
-          isOpen={newObraModalOpen}
-          onClose={() => setNewObraModalOpen(false)}
-          onSuccess={() => refreshObras()}
-        />
-      </div>
-    </div>
-  );
+const RootRedirect: React.FC = () => {
+  const { user } = useAuth();
+  if (user?.perfil === 'MESTRE_OBRA') {
+    return <Navigate to="/campo" replace />;
+  }
+  return <Navigate to="/dashboard" replace />;
 };
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Rota Pública */}
+            <Route path="/login" element={<LoginPage />} />
+
+            {/* Rotas Protegidas */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<RootRedirect />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/fluxo" element={<FluxoCaixaPage />} />
+              <Route path="/inadimplencia" element={<InadimplenciaPage />} />
+              <Route path="/sinapi" element={<SinapiOrcamentosPage />} />
+              <Route path="/diario" element={<DiarioObrasPage />} />
+              <Route path="/campo" element={<MobileFieldPage />} />
+              <Route path="/field" element={<Navigate to="/campo" replace />} />
+            </Route>
+
+            {/* Rota Coringa / Fallback */}
+            <Route path="*" element={<RootRedirect />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
