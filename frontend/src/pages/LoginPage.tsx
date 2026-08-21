@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
-import { HardHat, ShieldCheck, Smartphone, ArrowRight, Building2 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext.js';
+import { HardHat, ShieldCheck, Smartphone, ArrowRight, Building2, Sun, Moon } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
-  const { login, loginDemo } = useAuth();
+  const navigate = useNavigate();
+  const { user, login, loginDemo } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [isRegister, setIsRegister] = useState(false);
+
+  // Redireciona se já autenticado
+  useEffect(() => {
+    if (user) {
+      navigate(user.perfil === 'MESTRE_OBRA' ? '/campo' : '/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   // Form State
   const [email, setEmail] = useState('');
@@ -22,7 +33,6 @@ export const LoginPage: React.FC = () => {
     try {
       if (isRegister) {
         // Registro
-        // Para simplificar, o login() já pode receber
       } else {
         await login(email, senha);
       }
@@ -38,6 +48,7 @@ export const LoginPage: React.FC = () => {
     setError('');
     try {
       await loginDemo(perfil);
+      navigate(perfil === 'MESTRE_OBRA' ? '/campo' : '/dashboard');
     } catch (err: any) {
       setError(err.message || 'Erro ao carregar demonstração.');
     } finally {
@@ -53,9 +64,27 @@ export const LoginPage: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        backgroundColor: 'var(--bg-dark)'
+        backgroundColor: 'var(--bg-dark)',
+        position: 'relative'
       }}
     >
+      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+        <button
+          onClick={toggleTheme}
+          className="btn btn-secondary"
+          style={{
+            padding: '8px 12px',
+            borderRadius: '8px',
+            color: theme === 'dark' ? '#f59e0b' : '#3b82f6',
+            gap: '6px'
+          }}
+          title={theme === 'dark' ? 'Mudar para Tema Claro' : 'Mudar para Tema Escuro'}
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          <span style={{ fontSize: '12px' }}>{theme === 'dark' ? 'Claro' : 'Escuro'}</span>
+        </button>
+      </div>
+
       <div style={{ width: '100%', maxWidth: '440px' }}>
         {/* Brand Header */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
@@ -110,7 +139,7 @@ export const LoginPage: React.FC = () => {
               >
                 <ShieldCheck size={18} color="#f59e0b" />
                 <div style={{ textAlign: 'left' }}>
-                  <p style={{ fontSize: '13px', fontWeight: 700, color: '#fff', lineHeight: 1.1 }}>
+                  <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
                     Entrar como Dono / Engenheiro
                   </p>
                   <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
@@ -133,7 +162,7 @@ export const LoginPage: React.FC = () => {
               >
                 <Smartphone size={18} color="#60a5fa" />
                 <div style={{ textAlign: 'left' }}>
-                  <p style={{ fontSize: '13px', fontWeight: 700, color: '#fff', lineHeight: 1.1 }}>
+                  <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
                     Entrar como Mestre de Obras
                   </p>
                   <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>

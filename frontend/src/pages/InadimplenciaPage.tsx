@@ -226,7 +226,7 @@ export const InadimplenciaPage: React.FC = () => {
                     </td>
 
                     <td style={{ padding: '12px 16px' }}>
-                      <p style={{ fontWeight: 700, color: '#fff' }}>{conta.obra_nome}</p>
+                      <p style={{ fontWeight: 700, color: 'var(--text-main)' }}>{conta.obra_nome}</p>
                       <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                         {conta.cliente_nome} {conta.cliente_telefone ? `• ${conta.cliente_telefone}` : ''}
                       </span>
@@ -239,7 +239,7 @@ export const InadimplenciaPage: React.FC = () => {
 
                     <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{conta.data_vencimento}</td>
 
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: '#fff' }}>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-main)' }}>
                       {formatMoney(conta.valor)}
                     </td>
 

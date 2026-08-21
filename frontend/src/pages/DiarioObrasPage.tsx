@@ -203,7 +203,7 @@ export const DiarioObrasPage: React.FC = () => {
       {fotos.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '48px', color: 'var(--text-muted)' }}>
           <Camera size={40} style={{ margin: '0 auto 12px auto', opacity: 0.5 }} />
-          <h3 style={{ fontSize: '16px', color: '#fff', marginBottom: '4px' }}>Nenhuma foto nesta etapa</h3>
+          <h3 style={{ fontSize: '16px', color: 'var(--text-main)', marginBottom: '4px' }}>Nenhuma foto nesta etapa</h3>
           <p style={{ fontSize: '13px' }}>Clique em "+ Nova Foto de Campo" ou use o app mobile no canteiro.</p>
         </div>
       ) : (
@@ -391,7 +391,7 @@ export const DiarioObrasPage: React.FC = () => {
                   border: '1px solid var(--border)'
                 }}
               >
-                <h4 style={{ fontSize: '18px', fontWeight: 800, color: '#fff' }}>{relatorioData.obra.nome}</h4>
+                <h4 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-main)' }}>{relatorioData.obra.nome}</h4>
                 <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
                   Proprietário: <strong>{relatorioData.obra.cliente_nome}</strong> | Construtora:{' '}
                   <strong>{relatorioData.construtora.nome}</strong>

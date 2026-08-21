@@ -48,7 +48,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ url, onClose }) => {
           </div>
         </div>
 
-        <div style={{ padding: '20px', display: 'flex', justifyContent: 'center', backgroundColor: '#000' }}>
+        <div style={{ padding: '20px', display: 'flex', justifyContent: 'center', backgroundColor: 'var(--bg-input)' }}>
           {isPdf ? (
             <iframe src={fullUrl} style={{ width: '100%', height: '500px', border: 'none' }} title="PDF" />
           ) : (

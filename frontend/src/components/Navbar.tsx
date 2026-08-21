@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
-import { HardHat, Building2, Wifi, WifiOff, RefreshCw, LogOut, Smartphone, Monitor } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext.js';
+import { HardHat, Building2, Wifi, WifiOff, RefreshCw, LogOut, Smartphone, Monitor, Sun, Moon } from 'lucide-react';
 import { offlineQueue } from '../services/offlineQueue.js';
 import { api } from '../services/api.js';
 
-interface NavbarProps {
-  currentView: string;
-  setCurrentView: (view: string) => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) => {
+export const Navbar: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const { user, tenant, obras, selectedObra, setSelectedObra, isOnline, refreshObras, logout } = useAuth();
   const [syncing, setSyncing] = React.useState(false);
   const pendingCount = offlineQueue.count();
+
+  const isField = location.pathname === '/campo' || location.pathname === '/field';
 
   const handleSync = async () => {
     setSyncing(true);
@@ -24,6 +26,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
     } finally {
       setSyncing(false);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -104,7 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           }}
         >
           <button
-            onClick={() => setCurrentView('field')}
+            onClick={() => navigate('/campo')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -115,8 +122,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               borderRadius: '6px',
               border: 'none',
               cursor: 'pointer',
-              backgroundColor: currentView === 'field' ? 'var(--primary)' : 'transparent',
-              color: currentView === 'field' ? '#fff' : 'var(--text-muted)'
+              backgroundColor: isField ? 'var(--primary)' : 'transparent',
+              color: isField ? '#fff' : 'var(--text-muted)'
             }}
           >
             <Smartphone size={14} />
@@ -124,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           </button>
 
           <button
-            onClick={() => setCurrentView('dashboard')}
+            onClick={() => navigate('/dashboard')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -135,8 +142,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
               borderRadius: '6px',
               border: 'none',
               cursor: 'pointer',
-              backgroundColor: currentView !== 'field' ? 'var(--primary)' : 'transparent',
-              color: currentView !== 'field' ? '#fff' : 'var(--text-muted)'
+              backgroundColor: !isField ? 'var(--primary)' : 'transparent',
+              color: !isField ? '#fff' : 'var(--text-muted)'
             }}
           >
             <Monitor size={14} />
@@ -170,10 +177,28 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           )}
         </div>
 
+        {/* Alternador de Tema Claro / Escuro */}
+        <button
+          onClick={toggleTheme}
+          className="btn btn-secondary"
+          style={{
+            padding: '8px',
+            borderRadius: '8px',
+            color: theme === 'dark' ? '#f59e0b' : '#3b82f6',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          title={theme === 'dark' ? 'Alternar para Tema Claro' : 'Alternar para Tema Escuro'}
+          aria-label="Alternar tema"
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+
         {/* Perfil & Logout */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderLeft: '1px solid var(--border)', paddingLeft: '12px' }}>
           <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: '13px', fontWeight: 600, color: '#fff', lineHeight: 1.1 }}>{user?.nome}</p>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.1 }}>{user?.nome}</p>
             <span
               style={{
                 fontSize: '10px',
@@ -186,7 +211,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           </div>
 
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="btn btn-secondary"
             style={{ padding: '8px', borderRadius: '8px', color: 'var(--text-muted)' }}
             title="Sair da Conta"

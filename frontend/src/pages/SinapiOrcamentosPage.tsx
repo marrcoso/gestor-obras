@@ -225,7 +225,7 @@ export const SinapiOrcamentosPage: React.FC = () => {
                               {item.unidade}
                             </span>
                           </div>
-                          <p style={{ fontSize: '13px', fontWeight: 600, color: '#fff', lineHeight: 1.3 }}>
+                          <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.3 }}>
                             {item.descricao}
                           </p>
                         </div>
@@ -346,7 +346,7 @@ export const SinapiOrcamentosPage: React.FC = () => {
                 <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#93c5fd', fontWeight: 700 }}>
                   VALOR TOTAL DO ORÇAMENTO (COM BDI)
                 </span>
-                <p style={{ fontSize: '24px', fontWeight: 800, color: '#fff' }}>
+                <p style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-main)' }}>
                   {formatMoney(activeOrcamento?.valor_total_orcado || 0)}
                 </p>
               </div>
@@ -379,7 +379,7 @@ export const SinapiOrcamentosPage: React.FC = () => {
                       }}
                     >
                       <div style={{ flex: 1, paddingRight: '12px' }}>
-                        <p style={{ fontSize: '13px', fontWeight: 600, color: '#fff', lineHeight: 1.2 }}>
+                        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.2 }}>
                           {item.descricao}
                         </p>
                         <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>

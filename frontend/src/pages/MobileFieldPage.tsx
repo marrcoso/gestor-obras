@@ -446,7 +446,7 @@ export const MobileFieldPage: React.FC = () => {
             <Check size={36} color="#10b981" />
           </div>
 
-          <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#fff', marginBottom: '8px' }}>
+          <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
             Registro Concluído!
           </h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>{sucessoMsg}</p>

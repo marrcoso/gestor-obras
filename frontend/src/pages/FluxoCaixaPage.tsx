@@ -300,7 +300,7 @@ export const FluxoCaixaPage: React.FC = () => {
                     </td>
 
                     <td style={{ padding: '12px 16px' }}>
-                      <p style={{ fontWeight: 600, color: '#fff' }}>{t.descricao}</p>
+                      <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t.descricao}</p>
                       <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
                         {t.categoria.replace(/_/g, ' ')}
                       </span>
@@ -381,7 +381,7 @@ export const FluxoCaixaPage: React.FC = () => {
                   style={{
                     flex: 1,
                     backgroundColor: tipo === 'DESPESA' ? 'var(--danger)' : 'var(--bg-surface)',
-                    color: '#fff'
+                    color: tipo === 'DESPESA' ? '#fff' : 'var(--text-main)'
                   }}
                 >
                   <ArrowDownRight size={16} /> Despesa (Saída)
@@ -393,7 +393,7 @@ export const FluxoCaixaPage: React.FC = () => {
                   style={{
                     flex: 1,
                     backgroundColor: tipo === 'RECEITA' ? 'var(--success)' : 'var(--bg-surface)',
-                    color: '#fff'
+                    color: tipo === 'RECEITA' ? '#fff' : 'var(--text-main)'
                   }}
                 >
                   <ArrowUpRight size={16} /> Receita (Entrada)
