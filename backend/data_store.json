@@ -76,6 +76,23 @@
       "saldo_atual": 12800,
       "created_at": "2026-08-21T22:54:10.091Z",
       "updated_at": "2026-08-21T22:54:10.091Z"
+    },
+    {
+      "id": "04634fc7-e703-4caf-bb9c-f9764c65cdd0",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "nome": "Teste Obra #0",
+      "cliente_nome": "João Novaes",
+      "cliente_telefone": "48998222051",
+      "cliente_email": "",
+      "endereco_completo": "",
+      "cidade": "Tubarão",
+      "estado_uf": "SP",
+      "data_inicio": "2026-08-22",
+      "status": "EM_ANDAMENTO",
+      "orcamento_previsto": 200000,
+      "saldo_atual": 0,
+      "created_at": "2026-08-22T16:35:30.956Z",
+      "updated_at": "2026-08-22T16:35:30.956Z"
     }
   ],
   "transacoes": [
@@ -107,11 +124,11 @@
       "valor": 60000,
       "data_competencia": "2026-07-10",
       "data_vencimento": "2026-07-10",
-      "data_pagamento": "2026-07-10",
+      "data_pagamento": "2026-08-22",
       "status": "PAGO",
       "origem_lancamento": "WEB",
       "created_at": "2026-08-21T22:54:10.091Z",
-      "updated_at": "2026-08-21T22:54:10.091Z"
+      "updated_at": "2026-08-22T16:14:16.856Z"
     },
     {
       "id": "ef68ec90-f301-4cdb-b753-7116a67b61dd",
@@ -219,6 +236,24 @@
       "origem_lancamento": "MOBILE",
       "created_at": "2026-08-21T22:54:10.091Z",
       "updated_at": "2026-08-21T22:54:10.091Z"
+    },
+    {
+      "id": "4c82583a-3a8f-45cb-b354-6c805ffe8e73",
+      "tenant_id": "f3b24761-af0b-4394-b4d9-bbb49fcda5b9",
+      "obra_id": "04634fc7-e703-4caf-bb9c-f9764c65cdd0",
+      "user_id": "268f9116-88ca-4552-bf97-1d24d1aa2c2b",
+      "tipo": "DESPESA",
+      "categoria": "MATERIAL_BASICO",
+      "descricao": "Compra de Casa",
+      "valor": 180000,
+      "data_competencia": "2026-08-22",
+      "data_vencimento": "2026-08-22",
+      "data_pagamento": "2026-08-22",
+      "status": "PAGO",
+      "fornecedor_beneficiario": "Teste",
+      "origem_lancamento": "WEB",
+      "created_at": "2026-08-22T16:36:39.474Z",
+      "updated_at": "2026-08-22T16:36:39.474Z"
     }
   ],
   "contas_receber": [
