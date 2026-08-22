@@ -1,30 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
-import { InadimplenciaRadarData, TransacaoFinanceira } from '../types/index.js';
+import { Obra, InadimplenciaRadarData, TransacaoFinanceira } from '../types/index.js';
 import { api } from '../services/api.js';
-
 import {
   DollarSign,
-  AlertTriangle,
   TrendingUp,
+  AlertTriangle,
   Building2,
+  Calendar,
+  CheckCircle2,
+  Clock,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  ExternalLink
 } from 'lucide-react';
 
 interface DashboardPageProps {
+  setCurrentView?: (view: string) => void;
   openNewObraModal?: () => void;
 }
 
-export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
+export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, openNewObraModal }) => {
   const navigate = useNavigate();
-  const outletContext = useOutletContext<{ openNewObraModal: () => void } | null>();
-  const openNewObraModal = props.openNewObraModal || outletContext?.openNewObraModal || (() => {});
+  const outletCtx = useOutletContext<{ openNewObraModal?: () => void }>() || {};
   const { obras, setSelectedObra } = useAuth();
   const [inadimplencia, setInadimplencia] = useState<InadimplenciaRadarData | null>(null);
   const [recentTransacoes, setRecentTransacoes] = useState<TransacaoFinanceira[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleNavigate = (view: string) => {
+    if (setCurrentView) {
+      setCurrentView(view);
+    } else {
+      if (view === 'field') navigate('/campo');
+      else if (view === 'fluxo') navigate('/fluxo');
+      else if (view === 'inadimplencia') navigate('/inadimplencia');
+      else if (view === 'diario') navigate('/diario');
+      else if (view === 'sinapi') navigate('/sinapi');
+      else navigate('/dashboard');
+    }
+  };
+
+  const handleOpenModal = () => {
+    if (openNewObraModal) openNewObraModal();
+    else if (outletCtx.openNewObraModal) outletCtx.openNewObraModal();
+  };
 
   useEffect(() => {
     Promise.all([
@@ -60,17 +81,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
         }}
       >
         <div>
-          <h2 style={{ fontSize: '24px', fontWeight: 800 }}>Visão Executiva da Construtora</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
+          <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 800 }}>Visão Executiva da Construtora</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
             Acompanhe o saldo individual de cada canteiro de obras e o fluxo financeiro consolidado.
           </p>
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => navigate('/campo')} className="btn btn-secondary">
+          <button onClick={() => handleNavigate('field')} className="btn btn-secondary">
             📱 Modo Canteiro
           </button>
-          <button onClick={openNewObraModal} className="btn btn-primary">
+          <button onClick={handleOpenModal} className="btn btn-primary">
             + Cadastrar Nova Obra
           </button>
         </div>
@@ -87,40 +108,40 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
       >
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
               Saldo Consolidado em Caixa
             </span>
-            <div style={{ backgroundColor: 'var(--success-light)', padding: '6px', borderRadius: '8px' }}>
+            <div style={{ backgroundColor: 'var(--success-light)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <DollarSign size={18} color="#10b981" />
             </div>
           </div>
-          <p style={{ fontSize: '26px', fontWeight: 800, color: totalSaldoGeral >= 0 ? '#10b981' : '#ef4444' }}>
+          <p style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, color: totalSaldoGeral >= 0 ? '#10b981' : '#ef4444' }}>
             {formatMoney(totalSaldoGeral)}
           </p>
-          <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)' }}>
             Somatória real de todos os centros de custo
           </span>
         </div>
 
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
               Recebíveis Vencidos (Inadimplência)
             </span>
-            <div style={{ backgroundColor: 'var(--danger-light)', padding: '6px', borderRadius: '8px' }}>
+            <div style={{ backgroundColor: 'var(--danger-light)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <AlertTriangle size={18} color="#ef4444" />
             </div>
           </div>
-          <p style={{ fontSize: '26px', fontWeight: 800, color: '#ef4444' }}>
+          <p style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, color: '#ef4444' }}>
             {formatMoney(inadimplencia?.total_vencido || 0)}
           </p>
           <button
-            onClick={() => navigate('/inadimplencia')}
+            onClick={() => handleNavigate('inadimplencia')}
             style={{
               background: 'none',
               border: 'none',
-              color: '#60a5fa',
-              fontSize: '12px',
+              color: '#0073ff',
+              fontSize: 'var(--text-xs)',
               textAlign: 'left',
               cursor: 'pointer',
               display: 'flex',
@@ -134,34 +155,34 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
 
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
               Total de Entradas Recebidas
             </span>
-            <div style={{ backgroundColor: 'var(--primary-light)', padding: '6px', borderRadius: '8px' }}>
+            <div style={{ backgroundColor: 'var(--primary-light)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <TrendingUp size={18} color="#3b82f6" />
             </div>
           </div>
-          <p style={{ fontSize: '26px', fontWeight: 800, color: '#3b82f6' }}>
+          <p style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, color: '#3b82f6' }}>
             {formatMoney(totalReceitasGeral)}
           </p>
-          <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)' }}>
             Total faturado e creditado no caixa
           </span>
         </div>
 
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
               Obras em Execução
             </span>
-            <div style={{ backgroundColor: 'var(--bg-surface)', padding: '6px', borderRadius: '8px' }}>
+            <div style={{ backgroundColor: 'var(--bg-surface)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Building2 size={18} color="#94a3b8" />
             </div>
           </div>
-          <p style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text-main)' }}>
+          <p style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, color: 'var(--text-main)' }}>
             {obras.filter((o) => o.status === 'EM_ANDAMENTO').length} ativas
           </p>
-          <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)' }}>
             Total de {obras.length} obras cadastradas
           </span>
         </div>
@@ -171,8 +192,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
       <div style={{ marginBottom: '32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div>
-            <h3 style={{ fontSize: '18px', fontWeight: 700 }}>Centros de Custo por Obra</h3>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+            <h3 style={{ fontSize: 'var(--text-xl)', fontWeight: 700 }}>Centros de Custo por Obra</h3>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
               Cada obra possui contas e saldo totalmente independentes.
             </p>
           </div>
@@ -191,8 +212,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
                     <span className="badge badge-primary" style={{ marginBottom: '6px' }}>
                       {obra.estado_uf} • {obra.status}
                     </span>
-                    <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)' }}>{obra.nome}</h4>
-                    <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Cliente: {obra.cliente_nome}</p>
+                    <h4 style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text-main)' }}>{obra.nome}</h4>
+                    <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>Cliente: {obra.cliente_nome}</p>
                   </div>
                   <div
                     style={{
@@ -203,10 +224,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
                       border: '1px solid var(--border-light)'
                     }}
                   >
-                    <span style={{ fontSize: '10px', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Saldo da Obra</span>
+                    <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Saldo da Obra</span>
                     <p
                       style={{
-                        fontSize: '15px',
+                        fontSize: 'var(--text-base)',
                         fontWeight: 800,
                         color: (obra.saldo_atual || 0) >= 0 ? '#10b981' : '#ef4444'
                       }}
@@ -218,7 +239,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
 
                 {/* Barra de Progresso do Orçamento Previsto */}
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', marginBottom: '4px' }}>
                     <span style={{ color: 'var(--text-muted)' }}>Orçamento Gasto:</span>
                     <span style={{ fontWeight: 700, color: isDanger ? '#ef4444' : isWarning ? '#f59e0b' : '#34d399' }}>
                       {formatMoney(obra.total_despesas || 0)} ({perc}%)
@@ -235,7 +256,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
                       }}
                     />
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-dim)', marginTop: '4px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-2xs)', color: 'var(--text-dim)', marginTop: '4px' }}>
                     <span>Início: {obra.data_inicio}</span>
                     <span>Teto: {formatMoney(obra.orcamento_previsto)}</span>
                   </div>
@@ -246,10 +267,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
                   <button
                     onClick={() => {
                       setSelectedObra(obra);
-                      navigate('/fluxo');
+                      handleNavigate('fluxo');
                     }}
                     className="btn btn-secondary"
-                    style={{ flex: 1, fontSize: '12px', padding: '8px' }}
+                    style={{ flex: 1, fontSize: 'var(--text-xs)', padding: '8px' }}
                   >
                     Ver Extrato
                   </button>
@@ -257,10 +278,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
                   <button
                     onClick={() => {
                       setSelectedObra(obra);
-                      navigate('/diario');
+                      handleNavigate('diario');
                     }}
                     className="btn btn-secondary"
-                    style={{ flex: 1, fontSize: '12px', padding: '8px' }}
+                    style={{ flex: 1, fontSize: 'var(--text-xs)', padding: '8px' }}
                   >
                     📷 Fotos ({obra.total_fotos || 0})
                   </button>
@@ -275,10 +296,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
       <div className="glass-card">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div>
-            <h3 style={{ fontSize: '16px', fontWeight: 700 }}>Últimos Lançamentos em Campo & Escritório</h3>
-            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Despesas e pagamentos lançados recentemente.</p>
+            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Últimos Lançamentos em Campo & Escritório</h3>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>Despesas e pagamentos lançados recentemente.</p>
           </div>
-          <button onClick={() => navigate('/fluxo')} className="btn btn-secondary" style={{ fontSize: '12px', padding: '6px 12px' }}>
+          <button onClick={() => handleNavigate('fluxo')} className="btn btn-secondary" style={{ fontSize: 'var(--text-xs)', padding: '6px 12px' }}>
             Ver Fluxo Completo <ArrowUpRight size={14} />
           </button>
         </div>
@@ -300,19 +321,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
                   border: '1px solid var(--border)'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
                   <div
                     style={{
                       backgroundColor: isReceita ? 'var(--success-light)' : 'var(--danger-light)',
-                      padding: '8px',
+                      padding: '8px', 
                       borderRadius: '8px'
                     }}
                   >
                     {isReceita ? <ArrowUpRight size={16} color="#10b981" /> : <ArrowDownRight size={16} color="#ef4444" />}
                   </div>
                   <div>
-                    <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-main)' }}>{item.descricao}</p>
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    <p style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-main)' }}>{item.descricao}</p>
+                    <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)' }}>
                       {item.categoria.replace(/_/g, ' ')} • {item.origem_lancamento === 'MOBILE' ? '📱 Canteiro' : '💻 Escritório'}
                     </span>
                   </div>
@@ -321,14 +342,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = (props) => {
                 <div style={{ textAlign: 'right' }}>
                   <p
                     style={{
-                      fontSize: '15px',
+                      fontSize: 'var(--text-base)',
                       fontWeight: 700,
-                      color: isReceita ? '#10b981' : '#f87171'
+                      color: isReceita ? 'var(--success)' : 'var(--danger)'
                     }}
                   >
                     {isReceita ? '+' : '-'} {formatMoney(item.valor)}
                   </p>
-                  <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>{item.data_vencimento}</span>
+                  <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>{item.data_vencimento}</span>
                 </div>
               </div>
             );

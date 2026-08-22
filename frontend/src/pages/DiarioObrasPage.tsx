@@ -133,11 +133,11 @@ export const DiarioObrasPage: React.FC = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span className="badge badge-primary">Diário de Canteiro</span>
-            <h2 style={{ fontSize: '24px', fontWeight: 800 }}>
+            <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 800 }}>
               {selectedObra ? selectedObra.nome : 'Galeria de Obras'}
             </h2>
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
             Registro visual da evolução física da obra por etapas construtivas.
           </p>
         </div>
@@ -165,35 +165,35 @@ export const DiarioObrasPage: React.FC = () => {
         <button
           onClick={() => setFiltroEtapa('')}
           className={`btn ${filtroEtapa === '' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: '12px', padding: '6px 14px' }}
+          style={{ fontSize: 'var(--text-xs)', padding: '6px 14px' }}
         >
           Todas as Etapas
         </button>
         <button
           onClick={() => setFiltroEtapa('FUNDACAO_ESTRUTURA')}
           className={`btn ${filtroEtapa === 'FUNDACAO_ESTRUTURA' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: '12px', padding: '6px 14px' }}
+          style={{ fontSize: 'var(--text-xs)', padding: '6px 14px' }}
         >
           Fundação & Estrutura
         </button>
         <button
           onClick={() => setFiltroEtapa('ALVENARIA_VEDACAO')}
           className={`btn ${filtroEtapa === 'ALVENARIA_VEDACAO' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: '12px', padding: '6px 14px' }}
+          style={{ fontSize: 'var(--text-xs)', padding: '6px 14px' }}
         >
           Alvenaria
         </button>
         <button
           onClick={() => setFiltroEtapa('INSTALACOES_ELETRICA_HIDRAULICA')}
           className={`btn ${filtroEtapa === 'INSTALACOES_ELETRICA_HIDRAULICA' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: '12px', padding: '6px 14px' }}
+          style={{ fontSize: 'var(--text-xs)', padding: '6px 14px' }}
         >
           Instalações
         </button>
         <button
           onClick={() => setFiltroEtapa('REVESTIMENTO_ACABAMENTO')}
           className={`btn ${filtroEtapa === 'REVESTIMENTO_ACABAMENTO' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: '12px', padding: '6px 14px' }}
+          style={{ fontSize: 'var(--text-xs)', padding: '6px 14px' }}
         >
           Acabamentos
         </button>
@@ -203,8 +203,8 @@ export const DiarioObrasPage: React.FC = () => {
       {fotos.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '48px', color: 'var(--text-muted)' }}>
           <Camera size={40} style={{ margin: '0 auto 12px auto', opacity: 0.5 }} />
-          <h3 style={{ fontSize: '16px', color: 'var(--text-main)', marginBottom: '4px' }}>Nenhuma foto nesta etapa</h3>
-          <p style={{ fontSize: '13px' }}>Clique em "+ Nova Foto de Campo" ou use o app mobile no canteiro.</p>
+          <h3 style={{ fontSize: 'var(--text-md)', color: 'var(--text-main)', marginBottom: '4px' }}>Nenhuma foto nesta etapa</h3>
+          <p style={{ fontSize: 'var(--text-sm)' }}>Clique em "+ Nova Foto de Campo" ou use o app mobile no canteiro.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
@@ -254,12 +254,12 @@ export const DiarioObrasPage: React.FC = () => {
                 </div>
 
                 <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
                     <Calendar size={13} />
                     <span>{foto.data_registro}</span>
                   </div>
 
-                  <p style={{ fontSize: '13.5px', color: '#f1f5f9', lineHeight: 1.4, flex: 1 }}>
+                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-main)', lineHeight: 1.4, flex: 1 }}>
                     {foto.descricao || 'Sem anotações complementares.'}
                   </p>
                 </div>
@@ -282,7 +282,7 @@ export const DiarioObrasPage: React.FC = () => {
                 borderBottom: '1px solid var(--border-light)'
               }}
             >
-              <h3 style={{ fontSize: '16px' }}>Registrar Foto no Diário de Obra</h3>
+              <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Registrar Foto no Diário de Obra</h3>
               <button
                 onClick={() => setModalNovaFoto(false)}
                 style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
@@ -371,7 +371,7 @@ export const DiarioObrasPage: React.FC = () => {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <FileText size={18} color="var(--primary)" />
-                <h3 style={{ fontSize: '16px' }}>Relatório Visual de Evolução (Visão do Cliente)</h3>
+                <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Relatório Visual de Evolução (Visão do Cliente)</h3>
               </div>
               <button
                 onClick={() => setModalRelatorioCliente(false)}
@@ -391,12 +391,12 @@ export const DiarioObrasPage: React.FC = () => {
                   border: '1px solid var(--border)'
                 }}
               >
-                <h4 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-main)' }}>{relatorioData.obra.nome}</h4>
-                <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                <h4 style={{ fontSize: 'var(--text-lg)', fontWeight: 800, color: 'var(--text-main)' }}>{relatorioData.obra.nome}</h4>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
                   Proprietário: <strong>{relatorioData.obra.cliente_nome}</strong> | Construtora:{' '}
                   <strong>{relatorioData.construtora.nome}</strong>
                 </p>
-                <p style={{ fontSize: '12px', color: 'var(--text-dim)', marginTop: '4px' }}>
+                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)', marginTop: '4px' }}>
                   Total de registros fotográficos: {relatorioData.total_fotos} fotos catalogadas
                 </p>
               </div>
@@ -408,10 +408,10 @@ export const DiarioObrasPage: React.FC = () => {
                     <div key={f.id} style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
                       <img src={url} style={{ width: '100%', height: '120px', objectFit: 'cover' }} alt="Obra" />
                       <div style={{ padding: '8px', backgroundColor: 'var(--bg-card)' }}>
-                        <span style={{ fontSize: '10px', color: '#60a5fa', fontWeight: 700 }}>
+                        <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--primary)', fontWeight: 700 }}>
                           {formatEtapa(f.etapa)}
                         </span>
-                        <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{f.data_registro}</p>
+                        <p style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)', marginTop: '2px' }}>{f.data_registro}</p>
                       </div>
                     </div>
                   );

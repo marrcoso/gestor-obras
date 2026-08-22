@@ -81,7 +81,7 @@ export const LoginPage: React.FC = () => {
           title={theme === 'dark' ? 'Mudar para Tema Claro' : 'Mudar para Tema Escuro'}
         >
           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          <span style={{ fontSize: '12px' }}>{theme === 'dark' ? 'Claro' : 'Escuro'}</span>
+          <span style={{ fontSize: 'var(--text-xs)' }}>{theme === 'dark' ? 'Claro' : 'Escuro'}</span>
         </button>
       </div>
 
@@ -104,8 +104,8 @@ export const LoginPage: React.FC = () => {
           >
             <HardHat size={32} />
           </div>
-          <h2 style={{ fontSize: '24px', fontWeight: 800 }}>ERP LEVE DE OBRAS</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '4px' }}>
+          <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 800 }}>ERP LEVE DE OBRAS</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginTop: '4px' }}>
             Fluxo de Caixa Segregado, SINAPI & Canteiro Mobile
           </p>
         </div>
@@ -120,7 +120,7 @@ export const LoginPage: React.FC = () => {
 
           {/* Atalhos de Acesso Instantâneo Demo */}
           <div style={{ marginBottom: '24px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase' }}>
+            <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase' }}>
               ⚡ Acesso Rápido de Demonstração (1 Clique):
             </span>
 
@@ -134,15 +134,15 @@ export const LoginPage: React.FC = () => {
                   justifyContent: 'flex-start',
                   padding: '12px',
                   backgroundColor: 'var(--bg-input)',
-                  border: '1px solid var(--border-light)'
+                  border: '1px solid var(--border)'
                 }}
               >
                 <ShieldCheck size={18} color="#f59e0b" />
                 <div style={{ textAlign: 'left' }}>
-                  <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
+                  <p style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
                     Entrar como Dono / Engenheiro
                   </p>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)' }}>
                     Visão financeira completa & SINAPI
                   </span>
                 </div>
@@ -157,15 +157,15 @@ export const LoginPage: React.FC = () => {
                   justifyContent: 'flex-start',
                   padding: '12px',
                   backgroundColor: 'var(--bg-input)',
-                  border: '1px solid var(--border-light)'
+                  border: '1px solid var(--border)'
                 }}
               >
-                <Smartphone size={18} color="#60a5fa" />
+                <Smartphone size={18} color="var(--primary)" />
                 <div style={{ textAlign: 'left' }}>
-                  <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
+                  <p style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
                     Entrar como Mestre de Obras
                   </p>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)' }}>
                     Visão de campo / fotos e cupons
                   </span>
                 </div>
@@ -180,7 +180,7 @@ export const LoginPage: React.FC = () => {
               gap: '10px',
               margin: '20px 0',
               color: 'var(--text-dim)',
-              fontSize: '12px'
+              fontSize: 'var(--text-xs)'
             }}
           >
             <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
@@ -224,7 +224,7 @@ export const LoginPage: React.FC = () => {
           </form>
         </div>
 
-        <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--text-dim)', marginTop: '20px' }}>
+        <p style={{ textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--text-dim)', marginTop: '20px' }}>
           ERP Leve de Obras • Multi-Tenant SaaS B2B
         </p>
       </div>

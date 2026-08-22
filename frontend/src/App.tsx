@@ -67,7 +67,7 @@ const ProtectedRoute: React.FC = () => {
       >
         <div style={{ textAlign: 'center' }}>
           <div className="pulse-dot" style={{ width: '16px', height: '16px', marginBottom: '12px' }} />
-          <p style={{ fontSize: '14px', fontWeight: 600 }}>Carregando ERP Leve de Obras...</p>
+          <p style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>Carregando ERP Leve de Obras...</p>
         </div>
       </div>
     );
