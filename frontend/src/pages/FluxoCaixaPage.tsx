@@ -139,11 +139,11 @@ export const FluxoCaixaPage: React.FC = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span className="badge badge-primary">Centro de Custo</span>
-            <h2 style={{ fontSize: '22px', fontWeight: 800 }}>
+            <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 800 }}>
               {selectedObra ? selectedObra.nome : 'Todas as Obras'}
             </h2>
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
             Fluxo de caixa segregado. Despesas e entradas vinculadas exclusivamente a esta obra.
           </p>
         </div>
@@ -163,26 +163,26 @@ export const FluxoCaixaPage: React.FC = () => {
         }}
       >
         <div className="stat-card">
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>ENTRADAS DA OBRA</span>
-          <p style={{ fontSize: '20px', fontWeight: 800, color: '#10b981' }}>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 700 }}>ENTRADAS DA OBRA</span>
+          <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 800, color: 'var(--success)' }}>
             {formatMoney(resumo?.total_receitas || 0)}
           </p>
         </div>
 
         <div className="stat-card">
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>DESPESAS PAGAS</span>
-          <p style={{ fontSize: '20px', fontWeight: 800, color: '#f87171' }}>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 700 }}>DESPESAS PAGAS</span>
+          <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 800, color: 'var(--danger)' }}>
             {formatMoney(resumo?.total_despesas || 0)}
           </p>
         </div>
 
         <div className="stat-card">
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>SALDO ATUAL DA OBRA</span>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 700 }}>SALDO ATUAL DA OBRA</span>
           <p
             style={{
-              fontSize: '20px',
+              fontSize: 'var(--text-2xl)',
               fontWeight: 800,
-              color: (resumo?.saldo_liquido || 0) >= 0 ? '#10b981' : '#ef4444'
+              color: (resumo?.saldo_liquido || 0) >= 0 ? 'var(--success)' : 'var(--danger)'
             }}
           >
             {formatMoney(resumo?.saldo_liquido || 0)}
@@ -190,8 +190,8 @@ export const FluxoCaixaPage: React.FC = () => {
         </div>
 
         <div className="stat-card">
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>CONTAS A PAGAR PENDENTES</span>
-          <p style={{ fontSize: '20px', fontWeight: 800, color: '#fbbf24' }}>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 700 }}>CONTAS A PAGAR PENDENTES</span>
+          <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 800, color: 'var(--warning)' }}>
             {formatMoney(resumo?.total_despesas_pendentes || 0)}
           </p>
         </div>
@@ -209,13 +209,13 @@ export const FluxoCaixaPage: React.FC = () => {
           alignItems: 'center'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '13px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
           <Filter size={14} /> Filtros:
         </div>
 
         <select
           className="form-select"
-          style={{ width: 'auto', padding: '6px 12px', fontSize: '13px' }}
+          style={{ width: 'auto', padding: '6px 12px', fontSize: 'var(--text-sm)' }}
           value={filtroTipo}
           onChange={(e) => setFiltroTipo(e.target.value)}
         >
@@ -226,7 +226,7 @@ export const FluxoCaixaPage: React.FC = () => {
 
         <select
           className="form-select"
-          style={{ width: 'auto', padding: '6px 12px', fontSize: '13px' }}
+          style={{ width: 'auto', padding: '6px 12px', fontSize: 'var(--text-sm)' }}
           value={filtroCategoria}
           onChange={(e) => setFiltroCategoria(e.target.value)}
         >
@@ -245,7 +245,7 @@ export const FluxoCaixaPage: React.FC = () => {
       <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
-            <tr style={{ backgroundColor: 'var(--bg-input)', borderBottom: '1px solid var(--border)', fontSize: '12px', color: 'var(--text-muted)' }}>
+            <tr style={{ backgroundColor: 'var(--table-header-bg)', borderBottom: '2px solid var(--border-strong)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
               <th style={{ padding: '12px 16px' }}>Status</th>
               <th style={{ padding: '12px 16px' }}>Descrição & Categoria</th>
               <th style={{ padding: '12px 16px' }}>Fornecedor / Origem</th>
@@ -271,7 +271,7 @@ export const FluxoCaixaPage: React.FC = () => {
                     key={t.id}
                     style={{
                       borderBottom: '1px solid var(--border)',
-                      fontSize: '13.5px',
+                      fontSize: 'var(--text-sm)',
                       transition: 'background 0.1s ease'
                     }}
                   >
@@ -288,11 +288,11 @@ export const FluxoCaixaPage: React.FC = () => {
                         }}
                       >
                         {isPago ? (
-                          <span className="badge badge-success" style={{ fontSize: '10px' }}>
+                          <span className="badge badge-success" style={{ fontSize: 'var(--text-2xs)' }}>
                             <CheckCircle2 size={12} /> Pago
                           </span>
                         ) : (
-                          <span className="badge badge-warning" style={{ fontSize: '10px' }}>
+                          <span className="badge badge-warning" style={{ fontSize: 'var(--text-2xs)' }}>
                             <Clock size={12} /> Pendente
                           </span>
                         )}
@@ -301,19 +301,19 @@ export const FluxoCaixaPage: React.FC = () => {
 
                     <td style={{ padding: '12px 16px' }}>
                       <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t.descricao}</p>
-                      <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
+                      <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>
                         {t.categoria.replace(/_/g, ' ')}
                       </span>
                     </td>
 
-                    <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '12.5px' }}>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
                       {t.fornecedor_beneficiario || '—'}
-                      <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>
+                      <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>
                         {t.origem_lancamento === 'MOBILE' ? '📱 Mestre (Campo)' : '💻 Gestor (Web)'}
                       </div>
                     </td>
 
-                    <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '12.5px' }}>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
                       {t.data_vencimento}
                     </td>
 
@@ -322,12 +322,12 @@ export const FluxoCaixaPage: React.FC = () => {
                         <button
                           onClick={() => setSelectedComprovante(t.comprovante_url || null)}
                           className="btn btn-secondary"
-                          style={{ padding: '4px 8px', fontSize: '11px', gap: '4px' }}
+                          style={{ padding: '4px 8px', fontSize: 'var(--text-2xs)', gap: '4px' }}
                         >
                           <Paperclip size={12} /> Ver Cupom
                         </button>
                       ) : (
-                        <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Sem anexo</span>
+                        <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>Sem anexo</span>
                       )}
                     </td>
 
@@ -336,8 +336,8 @@ export const FluxoCaixaPage: React.FC = () => {
                         padding: '12px 16px',
                         textAlign: 'right',
                         fontWeight: 700,
-                        color: isReceita ? '#10b981' : '#f87171',
-                        fontSize: '14px'
+                        color: isReceita ? 'var(--success)' : 'var(--danger)',
+                        fontSize: 'var(--text-sm)'
                       }}
                     >
                       {isReceita ? '+' : '-'} {formatMoney(t.valor)}
@@ -363,7 +363,7 @@ export const FluxoCaixaPage: React.FC = () => {
                 borderBottom: '1px solid var(--border-light)'
               }}
             >
-              <h3 style={{ fontSize: '16px' }}>Novo Lançamento Financeiro</h3>
+              <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Novo Lançamento Financeiro</h3>
               <button
                 onClick={() => setModalNovoAberto(false)}
                 style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}

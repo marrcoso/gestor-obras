@@ -165,24 +165,24 @@ export const MobileFieldPage: React.FC = () => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          {isOnline ? <Wifi size={16} color="#10b981" /> : <WifiOff size={16} color="#ef4444" />}
-          <span style={{ fontSize: '12px', fontWeight: 600, color: isOnline ? '#34d399' : '#f87171' }}>
+          {isOnline ? <Wifi size={16} color="var(--success)" /> : <WifiOff size={16} color="var(--danger)" />}
+          <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: isOnline ? 'var(--success)' : 'var(--danger)' }}>
             {isOnline ? 'Sinal 4G Conectado' : 'Sem Sinal (Modo Offline Ativo)'}
           </span>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)' }}>
           {user?.nome ? `👷 ${user.nome.split(' ')[0]}` : ''}
         </span>
       </div>
 
       {/* Seletor Rápido de Obra */}
       <div className="glass-card" style={{ padding: '14px', marginBottom: '16px' }}>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+        <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
           Você está no Canteiro:
         </span>
         <select
           className="form-select"
-          style={{ marginTop: '6px', fontWeight: 700, fontSize: '15px' }}
+          style={{ marginTop: '6px', fontWeight: 700, fontSize: 'var(--text-base)' }}
           value={selectedObra?.id || ''}
           onChange={(e) => {
             const f = obras.find((o) => o.id === e.target.value);
@@ -212,8 +212,8 @@ export const MobileFieldPage: React.FC = () => {
               <Receipt size={36} />
             </div>
             <div>
-              <span>Lançar Cupom / Despesa</span>
-              <p style={{ fontSize: '12px', fontWeight: 400, opacity: 0.9, marginTop: '2px' }}>
+              <span style={{ fontSize: 'var(--text-lg)', fontWeight: 700 }}>Lançar Cupom / Despesa</span>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 400, opacity: 0.9, marginTop: '2px' }}>
                 Foto do recibo + valor em 3 toques
               </p>
             </div>
@@ -231,8 +231,8 @@ export const MobileFieldPage: React.FC = () => {
               <Camera size={36} />
             </div>
             <div>
-              <span>Tirar Foto da Evolução</span>
-              <p style={{ fontSize: '12px', fontWeight: 400, opacity: 0.9, marginTop: '2px' }}>
+              <span style={{ fontSize: 'var(--text-lg)', fontWeight: 700 }}>Tirar Foto da Evolução</span>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 400, opacity: 0.9, marginTop: '2px' }}>
                 Salvar avanço no Diário da Obra
               </p>
             </div>
@@ -244,11 +244,11 @@ export const MobileFieldPage: React.FC = () => {
       {activeFlow === 'despesa' && (
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>🧾 Lançamento Rápido</h3>
+            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800 }}>🧾 Lançamento Rápido</h3>
             <button
               onClick={() => setActiveFlow('home')}
               className="btn btn-secondary"
-              style={{ padding: '4px 10px', fontSize: '12px' }}
+              style={{ padding: '4px 10px', fontSize: 'var(--text-xs)' }}
             >
               Voltar
             </button>
@@ -283,7 +283,7 @@ export const MobileFieldPage: React.FC = () => {
                 type="number"
                 step="0.01"
                 className="form-input"
-                style={{ fontSize: '24px', fontWeight: 800, textAlign: 'center', padding: '14px' }}
+                style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, textAlign: 'center', padding: '14px' }}
                 placeholder="R$ 0,00"
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
@@ -304,11 +304,11 @@ export const MobileFieldPage: React.FC = () => {
                     style={{
                       padding: '10px 8px',
                       borderRadius: '8px',
-                      fontSize: '12.5px',
+                      fontSize: 'var(--text-xs)',
                       fontWeight: 600,
-                      border: `1px solid ${categoria === cat.id ? 'var(--primary)' : 'var(--border-light)'}`,
+                      border: `1px solid ${categoria === cat.id ? 'var(--primary)' : 'var(--border)'}`,
                       backgroundColor: categoria === cat.id ? 'var(--primary-light)' : 'var(--bg-input)',
-                      color: categoria === cat.id ? '#60a5fa' : 'var(--text-muted)',
+                      color: categoria === cat.id ? 'var(--primary)' : 'var(--text-muted)',
                       cursor: 'pointer',
                       textAlign: 'center'
                     }}
@@ -347,11 +347,11 @@ export const MobileFieldPage: React.FC = () => {
       {activeFlow === 'foto' && (
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>📸 Foto do Diário</h3>
+            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800 }}>📸 Foto do Diário</h3>
             <button
               onClick={() => setActiveFlow('home')}
               className="btn btn-secondary"
-              style={{ padding: '4px 10px', fontSize: '12px' }}
+              style={{ padding: '4px 10px', fontSize: 'var(--text-xs)' }}
             >
               Voltar
             </button>
@@ -390,11 +390,11 @@ export const MobileFieldPage: React.FC = () => {
                     style={{
                       padding: '10px 8px',
                       borderRadius: '8px',
-                      fontSize: '12px',
+                      fontSize: 'var(--text-xs)',
                       fontWeight: 600,
-                      border: `1px solid ${etapa === et.id ? 'var(--primary)' : 'var(--border-light)'}`,
+                      border: `1px solid ${etapa === et.id ? 'var(--primary)' : 'var(--border)'}`,
                       backgroundColor: etapa === et.id ? 'var(--primary-light)' : 'var(--bg-input)',
-                      color: etapa === et.id ? '#60a5fa' : 'var(--text-muted)',
+                      color: etapa === et.id ? 'var(--primary)' : 'var(--text-muted)',
                       cursor: 'pointer',
                       textAlign: 'center'
                     }}
@@ -446,10 +446,10 @@ export const MobileFieldPage: React.FC = () => {
             <Check size={36} color="#10b981" />
           </div>
 
-          <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
+          <h3 style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
             Registro Concluído!
           </h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>{sucessoMsg}</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginBottom: '24px' }}>{sucessoMsg}</p>
 
           <button
             onClick={() => setActiveFlow('home')}

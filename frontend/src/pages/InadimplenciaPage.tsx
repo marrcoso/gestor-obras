@@ -113,8 +113,8 @@ export const InadimplenciaPage: React.FC = () => {
         }}
       >
         <div>
-          <h2 style={{ fontSize: '24px', fontWeight: 800 }}>Radar de Inadimplência & Contas a Receber</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+          <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 800 }}>Radar de Inadimplência & Contas a Receber</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
             Controle de medições atrasadas e acionamento de cobrança profissional em 1 clique via WhatsApp.
           </p>
         </div>
@@ -133,38 +133,38 @@ export const InadimplenciaPage: React.FC = () => {
           marginBottom: '24px'
         }}
       >
-        <div className="stat-card" style={{ borderLeft: '4px solid #ef4444' }}>
-          <span style={{ fontSize: '11px', color: '#f87171', fontWeight: 700 }}>TOTAL VENCIDO (INADIMPLENTE)</span>
-          <p style={{ fontSize: '22px', fontWeight: 800, color: '#ef4444' }}>
+        <div className="stat-card">
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--danger)', fontWeight: 700 }}>TOTAL VENCIDO (INADIMPLENTE)</span>
+          <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 800, color: 'var(--danger)' }}>
             {formatMoney(radar?.total_vencido || 0)}
           </p>
-          <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
+          <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>
             {radar?.total_clientes_inadimplentes || 0} título(s) em atraso
           </span>
         </div>
 
-        <div className="stat-card" style={{ borderLeft: '4px solid #f59e0b' }}>
-          <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 700 }}>VENCIDO DE 1 A 15 DIAS</span>
-          <p style={{ fontSize: '20px', fontWeight: 800, color: '#fbbf24' }}>
+        <div className="stat-card">
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--warning)', fontWeight: 700 }}>VENCIDO DE 1 A 15 DIAS</span>
+          <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 800, color: 'var(--warning)' }}>
             {formatMoney(radar?.aging.vencido_1_a_15_dias || 0)}
           </p>
-          <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Atraso leve (Lembrete cordial)</span>
+          <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>Atraso leve (Lembrete cordial)</span>
         </div>
 
-        <div className="stat-card" style={{ borderLeft: '4px solid #f97316' }}>
-          <span style={{ fontSize: '11px', color: '#fb923c', fontWeight: 700 }}>VENCIDO DE 16 A 30 DIAS</span>
-          <p style={{ fontSize: '20px', fontWeight: 800, color: '#fb923c' }}>
+        <div className="stat-card">
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--warning)', fontWeight: 700 }}>VENCIDO DE 16 A 30 DIAS</span>
+          <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 800, color: 'var(--warning)' }}>
             {formatMoney(radar?.aging.vencido_16_a_30_dias || 0)}
           </p>
-          <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Atraso médio (Aviso de paralisação)</span>
+          <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>Atraso médio (Aviso de paralisação)</span>
         </div>
 
-        <div className="stat-card" style={{ borderLeft: '4px solid #dc2626' }}>
-          <span style={{ fontSize: '11px', color: '#f87171', fontWeight: 700 }}>VENCIDO HÁ MAIS DE 30 DIAS</span>
-          <p style={{ fontSize: '20px', fontWeight: 800, color: '#dc2626' }}>
+        <div className="stat-card">
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--danger)', fontWeight: 700 }}>VENCIDO HÁ MAIS DE 30 DIAS</span>
+          <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 800, color: 'var(--danger)' }}>
             {formatMoney(radar?.aging.vencido_mais_30_dias || 0)}
           </p>
-          <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Atraso crítico</span>
+          <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)' }}>Atraso crítico</span>
         </div>
       </div>
 
@@ -174,9 +174,9 @@ export const InadimplenciaPage: React.FC = () => {
           <thead>
             <tr
               style={{
-                backgroundColor: 'var(--bg-input)',
-                borderBottom: '1px solid var(--border)',
-                fontSize: '12px',
+                backgroundColor: 'var(--table-header-bg)',
+                borderBottom: '2px solid var(--border-strong)',
+                fontSize: 'var(--text-xs)',
                 color: 'var(--text-muted)'
               }}
             >
@@ -205,21 +205,21 @@ export const InadimplenciaPage: React.FC = () => {
                     key={conta.id}
                     style={{
                       borderBottom: '1px solid var(--border)',
-                      fontSize: '13.5px',
+                      fontSize: 'var(--text-sm)',
                       backgroundColor: isAtrasado ? 'rgba(239, 68, 68, 0.04)' : 'transparent'
                     }}
                   >
                     <td style={{ padding: '12px 16px' }}>
                       {isRecebido ? (
-                        <span className="badge badge-success" style={{ fontSize: '10px' }}>
+                        <span className="badge badge-success" style={{ fontSize: 'var(--text-2xs)' }}>
                           <CheckCircle2 size={12} /> Recebido
                         </span>
                       ) : isAtrasado ? (
-                        <span className="badge badge-danger" style={{ fontSize: '10px' }}>
+                        <span className="badge badge-danger" style={{ fontSize: 'var(--text-2xs)' }}>
                           <AlertTriangle size={12} /> {conta.dias_atraso || 1} dias de atraso
                         </span>
                       ) : (
-                        <span className="badge badge-neutral" style={{ fontSize: '10px' }}>
+                        <span className="badge badge-neutral" style={{ fontSize: 'var(--text-2xs)' }}>
                           <Clock size={12} /> A Vencer
                         </span>
                       )}
@@ -227,14 +227,14 @@ export const InadimplenciaPage: React.FC = () => {
 
                     <td style={{ padding: '12px 16px' }}>
                       <p style={{ fontWeight: 700, color: 'var(--text-main)' }}>{conta.obra_nome}</p>
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
                         {conta.cliente_nome} {conta.cliente_telefone ? `• ${conta.cliente_telefone}` : ''}
                       </span>
                     </td>
 
                     <td style={{ padding: '12px 16px' }}>
                       <p style={{ fontWeight: 600 }}>{conta.numero_parcela}ª Parcela</p>
-                      <span style={{ fontSize: '12px', color: 'var(--text-dim)' }}>{conta.descricao_medicao}</span>
+                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)' }}>{conta.descricao_medicao}</span>
                     </td>
 
                     <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{conta.data_vencimento}</td>
@@ -252,7 +252,7 @@ export const InadimplenciaPage: React.FC = () => {
                               className="btn"
                               style={{
                                 padding: '6px 12px',
-                                fontSize: '12px',
+                                fontSize: 'var(--text-xs)',
                                 backgroundColor: '#25D366',
                                 color: '#fff',
                                 gap: '6px'
@@ -265,7 +265,7 @@ export const InadimplenciaPage: React.FC = () => {
                             <button
                               onClick={() => handleMarcarRecebido(conta.id)}
                               className="btn btn-success"
-                              style={{ padding: '6px 12px', fontSize: '12px', gap: '4px' }}
+                              style={{ padding: '6px 12px', fontSize: 'var(--text-xs)', gap: '4px' }}
                               title="Dar Baixa e creditar no caixa da obra"
                             >
                               <CheckCircle2 size={14} /> Dar Baixa
@@ -273,7 +273,7 @@ export const InadimplenciaPage: React.FC = () => {
                           </>
                         )}
                         {isRecebido && (
-                          <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 600 }}>
+                          <span style={{ fontSize: 'var(--text-xs)', color: '#10b981', fontWeight: 600 }}>
                             Creditado no Caixa
                           </span>
                         )}
@@ -300,7 +300,7 @@ export const InadimplenciaPage: React.FC = () => {
                 borderBottom: '1px solid var(--border-light)'
               }}
             >
-              <h3 style={{ fontSize: '16px' }}>Cadastrar Nova Parcela / Medição</h3>
+              <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Cadastrar Nova Parcela / Medição</h3>
               <button
                 onClick={() => setModalNovaConta(false)}
                 style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
