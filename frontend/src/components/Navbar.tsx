@@ -10,7 +10,7 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { user, tenant, obras, selectedObra, setSelectedObra, isOnline, refreshObras, logout } = useAuth();
+  const { user, tenant, obras, selectedObra, setSelectedObra, refreshObras, logout } = useAuth();
   const [syncing, setSyncing] = React.useState(false);
   const pendingCount = offlineQueue.count();
 
@@ -63,8 +63,8 @@ export const Navbar: React.FC = () => {
             <HardHat size={22} />
           </div>
           <div>
-            <h1 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>ERP LEVE DE OBRAS</h1>
-            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{tenant?.nome_fantasia || 'Construtora'}</p>
+            <h1 style={{ fontSize: 'var(--text-md)', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1.2 }}>ERP LEVE DE OBRAS</h1>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{tenant?.nome_fantasia || 'Construtora'}</p>
           </div>
         </div>
 
@@ -76,11 +76,11 @@ export const Navbar: React.FC = () => {
               className="form-select"
               style={{
                 padding: '6px 12px',
-                fontSize: '13px',
+                fontSize: 'var(--text-sm)',
                 width: 'auto',
                 maxWidth: '260px',
                 borderRadius: '8px',
-                borderColor: 'var(--border-light)'
+                borderColor: 'var(--border)'
               }}
               value={selectedObra?.id || ''}
               onChange={(e) => {
@@ -105,7 +105,7 @@ export const Navbar: React.FC = () => {
             backgroundColor: 'var(--bg-input)',
             padding: '4px',
             borderRadius: '10px',
-            border: '1px solid var(--border-light)',
+            border: '1px solid var(--border)',
             display: 'flex',
             gap: '4px'
           }}
@@ -117,7 +117,7 @@ export const Navbar: React.FC = () => {
               alignItems: 'center',
               gap: '6px',
               padding: '6px 12px',
-              fontSize: '12px',
+              fontSize: 'var(--text-xs)',
               fontWeight: 600,
               borderRadius: '6px',
               border: 'none',
@@ -137,7 +137,7 @@ export const Navbar: React.FC = () => {
               alignItems: 'center',
               gap: '6px',
               padding: '6px 12px',
-              fontSize: '12px',
+              fontSize: 'var(--text-xs)',
               fontWeight: 600,
               borderRadius: '6px',
               border: 'none',
@@ -149,32 +149,6 @@ export const Navbar: React.FC = () => {
             <Monitor size={14} />
             Gestão (Web)
           </button>
-        </div>
-
-        {/* Indicador Online / Offline */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          {isOnline ? (
-            <span className="badge badge-success" style={{ fontSize: '11px', padding: '4px 8px' }}>
-              <Wifi size={12} /> Online
-            </span>
-          ) : (
-            <span className="badge badge-danger" style={{ fontSize: '11px', padding: '4px 8px' }}>
-              <WifiOff size={12} /> Offline
-            </span>
-          )}
-
-          {pendingCount > 0 && (
-            <button
-              onClick={handleSync}
-              disabled={syncing}
-              className="btn btn-secondary"
-              style={{ padding: '4px 10px', fontSize: '11px', gap: '4px' }}
-              title="Sincronizar lançamentos locais com o servidor"
-            >
-              <RefreshCw size={12} className={syncing ? 'animate-spin' : ''} />
-              {pendingCount} pendente(s)
-            </button>
-          )}
         </div>
 
         {/* Alternador de Tema Claro / Escuro */}
@@ -198,12 +172,12 @@ export const Navbar: React.FC = () => {
         {/* Perfil & Logout */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderLeft: '1px solid var(--border)', paddingLeft: '12px' }}>
           <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.1 }}>{user?.nome}</p>
+            <p style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.1 }}>{user?.nome}</p>
             <span
               style={{
-                fontSize: '10px',
+                fontSize: 'var(--text-2xs)',
                 fontWeight: 700,
-                color: user?.perfil === 'ADMIN' ? 'var(--warning)' : '#60a5fa'
+                color: user?.perfil === 'ADMIN' ? 'var(--warning)' : 'var(--primary)'
               }}
             >
               {user?.perfil === 'ADMIN' ? '👑 GESTOR / ENG.' : '👷 MESTRE DE OBRAS'}

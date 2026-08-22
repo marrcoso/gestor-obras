@@ -28,14 +28,14 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ url, onClose }) => {
             borderBottom: '1px solid var(--border-light)'
           }}
         >
-          <h3 style={{ fontSize: '16px' }}>Comprovante Fiscal / Recibo</h3>
+          <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Comprovante Fiscal / Recibo</h3>
           <div style={{ display: 'flex', gap: '8px' }}>
             <a
               href={fullUrl}
               target="_blank"
               rel="noreferrer"
               className="btn btn-secondary"
-              style={{ padding: '6px 10px', fontSize: '12px' }}
+              style={{ padding: '6px 10px', fontSize: 'var(--text-xs)' }}
             >
               <ExternalLink size={14} /> Abrir Original
             </a>

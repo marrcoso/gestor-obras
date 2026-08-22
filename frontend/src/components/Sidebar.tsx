@@ -30,7 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
   return (
     <aside
       style={{
-        width: '240px',
+        width: '15%',
         backgroundColor: 'var(--bg-card)',
         borderRight: '1px solid var(--border)',
         padding: '20px 12px',
@@ -43,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <p
           style={{
-            fontSize: '11px',
+            fontSize: 'var(--text-2xs)',
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
             fontWeight: 700,
@@ -68,7 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
                 justifyContent: 'space-between',
                 padding: '10px 12px',
                 borderRadius: 'var(--radius-md)',
-                fontSize: '13.5px',
+                fontSize: 'var(--text-sm)',
                 fontWeight: isActive ? 700 : 500,
                 border: 'none',
                 cursor: 'pointer',
@@ -77,36 +77,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
                 backgroundColor: isActive
                   ? 'var(--primary)'
                   : item.highlight
-                  ? 'rgba(37, 99, 235, 0.08)'
+                  ? 'var(--primary-light)'
                   : 'transparent',
-                color: isActive ? '#fff' : item.highlight ? '#60a5fa' : 'var(--text-muted)',
+                color: isActive ? '#fff' : item.highlight ? 'var(--primary)' : 'var(--text-muted)',
                 transition: 'all 0.15s ease'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Icon size={18} color={isActive ? '#fff' : item.highlight ? '#3b82f6' : 'var(--text-muted)'} />
+                <Icon size={18} color={isActive ? '#fff' : item.highlight ? 'var(--primary)' : 'var(--text-muted)'} />
                 <span>{item.label}</span>
               </div>
 
               {item.badge && !isActive && (
-                <span className="badge badge-danger" style={{ fontSize: '9px', padding: '2px 6px' }}>
+                <span className="badge badge-danger" style={{ fontSize: 'var(--text-2xs)', padding: '2px 6px' }}>
                   {item.badge}
                 </span>
               )}
             </button>
           );
         })}
-      </div>
 
-      <div>
+        <div style={{ paddingTop: '12px' }}>
         <button
           onClick={openNewObraModal}
           className="btn btn-primary"
-          style={{ width: '100%', padding: '10px', fontSize: '13px', gap: '6px' }}
+          style={{ width: '100%', padding: '10px', fontSize: 'var(--text-sm)', gap: '6px' }}
         >
           <PlusCircle size={16} />
           Nova Obra (Centro de Custo)
         </button>
+      </div>
       </div>
     </aside>
   );

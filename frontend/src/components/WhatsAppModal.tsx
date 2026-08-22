@@ -57,7 +57,7 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({ contaId, onClose, 
             <div style={{ backgroundColor: 'rgba(37, 211, 102, 0.15)', padding: '6px', borderRadius: '8px' }}>
               <MessageSquare size={18} color="#25D366" />
             </div>
-            <h3 style={{ fontSize: '16px' }}>Lembrete de Cobrança WhatsApp</h3>
+            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Lembrete de Cobrança WhatsApp</h3>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
             <X size={18} />

@@ -68,7 +68,7 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Building2 size={20} color="var(--primary)" />
-            <h3 style={{ fontSize: '16px' }}>Cadastrar Nova Obra (Centro de Custo)</h3>
+            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Cadastrar Nova Obra (Centro de Custo)</h3>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
             <X size={18} />

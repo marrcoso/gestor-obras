@@ -46,7 +46,7 @@ export const MobileBottomNav: React.FC = () => {
               background: 'none',
               border: 'none',
               color: isActive ? 'var(--primary)' : 'var(--text-dim)',
-              fontSize: '11px',
+              fontSize: 'var(--text-2xs)',
               fontWeight: isActive ? 700 : 500,
               cursor: 'pointer',
               flex: 1,
