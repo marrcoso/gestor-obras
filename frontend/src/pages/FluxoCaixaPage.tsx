@@ -16,8 +16,7 @@ import {
   ArrowUp,
   Clock,
   Download,
-  Building2,
-  Calendar
+  Building2
 } from 'lucide-react';
 
 export const FluxoCaixaPage: React.FC = () => {
@@ -136,7 +135,7 @@ export const FluxoCaixaPage: React.FC = () => {
   });
 
   return (
-    <div className="page-body" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2.5vw, 24px)' }}>
+    <div className="p-4 md:p-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
       <ReceiptModal url={selectedComprovante} onClose={() => setSelectedComprovante(null)} />
 
       <NewTransactionModal
@@ -150,8 +149,8 @@ export const FluxoCaixaPage: React.FC = () => {
       <PageHeader
         title="Fluxo de Caixa"
         subtitle={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Building2 size={16} color="var(--technical-blue)" />
+          <div className="flex items-center gap-1.5">
+            <Building2 size={16} className="text-tech" />
             <span>{selectedObra ? selectedObra.nome : 'Todas as Obras • Centro Consolidado'}</span>
           </div>
         }
@@ -168,13 +167,7 @@ export const FluxoCaixaPage: React.FC = () => {
       />
 
       {/* 4 KPI Cards */}
-      <section
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: 'clamp(12px, 1.5vw, 20px)'
-        }}
-      >
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           title="ENTRADAS RECEBIDAS"
           value={formatMoney(resumo?.total_receitas || 0)}
@@ -205,32 +198,16 @@ export const FluxoCaixaPage: React.FC = () => {
       </section>
 
       {/* Main Table Container & Filters */}
-      <div
-        className="card-constructo"
-        style={{
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden'
-        }}
-      >
+      <div className="bg-card border border-border rounded-lg shadow-sm flex flex-col overflow-hidden">
         {/* Filter Bar */}
-        <div
-          style={{
-            padding: '16px 20px',
-            backgroundColor: 'var(--bg-surface-low)',
-            borderBottom: '1px solid var(--border)',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '14px',
-            alignItems: 'flex-end'
-          }}
-        >
+        <div className="p-4 md:px-5 bg-surface-low border-b border-border grid grid-cols-1 sm:grid-cols-3 gap-3.5 items-end">
           {/* Categoria */}
-          <div className="form-group-constructo" style={{ marginBottom: 0 }}>
-            <label className="form-label-constructo">CATEGORIA</label>
+          <div className="flex flex-col gap-1">
+            <label className="font-body text-fluid-mono font-bold uppercase tracking-wider text-content-muted">
+              CATEGORIA
+            </label>
             <select
-              className="form-select-constructo"
+              className="bg-input border border-border rounded-md px-3.5 py-2 font-body text-xs md:text-sm text-content-main w-full min-h-[38px] outline-none focus:border-tech"
               value={filtroCategoria}
               onChange={(e) => setFiltroCategoria(e.target.value)}
             >
@@ -246,10 +223,12 @@ export const FluxoCaixaPage: React.FC = () => {
           </div>
 
           {/* Status */}
-          <div className="form-group-constructo" style={{ marginBottom: 0 }}>
-            <label className="form-label-constructo">STATUS</label>
+          <div className="flex flex-col gap-1">
+            <label className="font-body text-fluid-mono font-bold uppercase tracking-wider text-content-muted">
+              STATUS
+            </label>
             <select
-              className="form-select-constructo"
+              className="bg-input border border-border rounded-md px-3.5 py-2 font-body text-xs md:text-sm text-content-main w-full min-h-[38px] outline-none focus:border-tech"
               value={filtroStatus}
               onChange={(e) => setFiltroStatus(e.target.value)}
             >
@@ -260,8 +239,10 @@ export const FluxoCaixaPage: React.FC = () => {
           </div>
 
           {/* Busca */}
-          <div className="form-group-constructo" style={{ marginBottom: 0 }}>
-            <label className="form-label-constructo">BUSCA</label>
+          <div className="flex flex-col gap-1">
+            <label className="font-body text-fluid-mono font-bold uppercase tracking-wider text-content-muted">
+              BUSCA
+            </label>
             <SearchBar
               placeholder="Buscar descrição ou fornecedor..."
               value={searchQuery}
@@ -271,7 +252,7 @@ export const FluxoCaixaPage: React.FC = () => {
         </div>
 
         {/* Data Table */}
-        <div style={{ padding: '16px' }}>
+        <div className="p-4">
           {loading ? (
             <LoadingState message="Carregando transações financeiras..." minHeight="200px" />
           ) : (
@@ -286,53 +267,26 @@ export const FluxoCaixaPage: React.FC = () => {
         </div>
 
         {/* Footer info */}
-        <div
-          style={{
-            padding: '12px 20px',
-            borderTop: '1px solid var(--border-light)',
-            backgroundColor: 'var(--bg-surface-low)',
-            fontSize: '12px',
-            color: 'var(--text-dim)'
-          }}
-        >
+        <div className="px-5 py-3 border-t border-border-light bg-surface-low text-xs text-content-dim font-body">
           Mostrando {filteredTransacoes.length} de {transacoes.length} lançamentos
         </div>
       </div>
 
       {/* Visual Projection Chart Card */}
-      <div
-        style={{
-          borderRadius: 'var(--radius-xl)',
-          overflow: 'hidden',
-          position: 'relative',
-          height: '160px',
-          backgroundColor: '#0f172a',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
+      <div className="rounded-xl overflow-hidden relative h-40 bg-slate-900 shadow-sm border border-border">
         <img
           src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80"
           alt="Análise Visual de Fluxo de Caixa"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35 }}
+          className="w-full h-full object-cover opacity-35"
         />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 100%)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            padding: '20px'
-          }}
-        >
-          <span className="text-mono-tag" style={{ fontSize: '11px', color: '#38bdf8' }}>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent flex flex-col justify-end p-5">
+          <span className="font-body text-[11px] font-bold text-[#38bdf8] uppercase tracking-wider">
             ANÁLISE FINANCEIRA AUTOMATIZADA
           </span>
-          <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#ffffff', marginTop: '2px' }}>
+          <h3 className="font-headline text-base md:text-lg font-bold text-white mt-0.5">
             Curva de Desembolso & Projeção de Saldo da Obra
           </h3>
-          <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.75)', marginTop: '2px' }}>
+          <p className="font-body text-xs text-white/75 mt-0.5">
             O caixa isolado desta obra garante segurança jurídica e controle absoluto contra desvios de centro de custo.
           </p>
         </div>

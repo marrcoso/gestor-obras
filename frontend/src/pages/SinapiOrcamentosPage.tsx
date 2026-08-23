@@ -110,7 +110,6 @@ export const SinapiOrcamentosPage: React.FC = () => {
     if (!window.confirm('Deseja remover este item da planilha orçamentária?')) return;
 
     try {
-      // Remove item locally and refetch
       const updatedItens = (activeOrcamento.itens || []).filter((i) => i.id !== itemId);
       setActiveOrcamento({
         ...activeOrcamento,
@@ -126,7 +125,7 @@ export const SinapiOrcamentosPage: React.FC = () => {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
 
   return (
-    <div className="page-body" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2.5vw, 24px)' }}>
+    <div className="p-4 md:p-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
       <NewOrcamentoModal
         isOpen={modalNovoOrcamento}
         onClose={() => setModalNovoOrcamento(false)}
@@ -147,14 +146,8 @@ export const SinapiOrcamentosPage: React.FC = () => {
         }
       />
 
-      {/* Grid: Search Left (1.2fr) vs Active Budget Right (1fr) */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-          gap: 'clamp(16px, 2vw, 24px)'
-        }}
-      >
+      {/* Grid: Search Left vs Active Budget Right */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column: SINAPI Search */}
         <SinapiCatalog
           items={sinapiResults}

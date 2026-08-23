@@ -9,12 +9,11 @@ import {
   Camera,
   Receipt,
   Check,
-  Building2,
   ArrowLeft
 } from 'lucide-react';
 
 export const MobileFieldPage: React.FC = () => {
-  const { selectedObra, obras, setSelectedObra, isOnline, user } = useAuth();
+  const { selectedObra, obras, setSelectedObra, isOnline } = useAuth();
 
   // Active Flow: 'home' | 'despesa' | 'foto' | 'sucesso'
   const [activeFlow, setActiveFlow] = useState<'home' | 'despesa' | 'foto' | 'sucesso'>('home');
@@ -148,18 +147,17 @@ export const MobileFieldPage: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px 12px 64px 12px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="max-w-md mx-auto p-4 pb-20 flex flex-col gap-4">
       {/* Network Status Beacon */}
       <NetworkBeacon isOnline={isOnline} />
 
       {/* Obra Selector */}
-      <div className="card-constructo" style={{ padding: '14px' }}>
-        <span className="text-mono-tag">
+      <div className="bg-card border border-border rounded-lg p-3.5 shadow-sm">
+        <span className="font-body text-[10px] font-bold uppercase tracking-wider text-content-dim block">
           OBRA ATIVA NO CANTEIRO
         </span>
         <select
-          className="form-select-constructo"
-          style={{ marginTop: '6px', fontWeight: 700, fontSize: '15px' }}
+          className="bg-input border border-border rounded-md px-3 py-2 font-headline font-bold text-sm md:text-base text-content-main w-full mt-1.5 outline-none focus:border-tech"
           value={selectedObra?.id || ''}
           onChange={(e) => {
             const f = obras.find((o) => o.id === e.target.value);
@@ -176,7 +174,7 @@ export const MobileFieldPage: React.FC = () => {
 
       {/* TELA INICIAL: BOTÕES TÁTEIS GIGANTES */}
       {activeFlow === 'home' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="flex flex-col gap-4">
           <TactileActionCard
             icon={Receipt}
             title="Lançar Cupom / Despesa"
@@ -197,9 +195,11 @@ export const MobileFieldPage: React.FC = () => {
 
       {/* FLUXO: LANÇAR DESPESA RÁPIDA */}
       {activeFlow === 'despesa' && (
-        <div className="card-constructo">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 className="heading-card" style={{ fontSize: '18px' }}>Lançamento Rápido</h3>
+        <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-headline text-base md:text-lg font-bold text-content-main">
+              Lançamento Rápido
+            </h3>
             <Button
               variant="secondary"
               size="sm"
@@ -210,22 +210,22 @@ export const MobileFieldPage: React.FC = () => {
             </Button>
           </div>
 
-          <form onSubmit={handleSalvarDespesaRapida} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleSalvarDespesaRapida} className="flex flex-col gap-3.5">
             {/* Foto do Cupom */}
             <FormGroup label="1. FOTO DO CUPOM / RECIBO">
               <input
                 type="file"
                 accept="image/*"
                 capture="environment"
-                className="form-input-constructo"
+                className="bg-input border border-border rounded-md px-3.5 py-2 font-body text-xs text-content-main w-full cursor-pointer"
                 onChange={(e) => handleFileChange(e, true)}
               />
               {comprovantePreview && (
-                <div style={{ marginTop: '8px', textAlign: 'center' }}>
+                <div className="mt-2 text-center">
                   <img
                     src={comprovantePreview}
                     alt="Preview"
-                    style={{ maxHeight: '140px', borderRadius: '8px', objectFit: 'contain' }}
+                    className="max-h-36 mx-auto rounded-md object-contain border border-border"
                   />
                 </div>
               )}
@@ -236,7 +236,7 @@ export const MobileFieldPage: React.FC = () => {
               label="2. VALOR TOTAL PAGO (R$) *"
               type="number"
               step="0.01"
-              style={{ fontSize: '28px', fontWeight: 800, textAlign: 'center', padding: '12px' }}
+              className="text-2xl font-extrabold text-center py-3 font-headline tabular-nums"
               placeholder="0,00"
               value={valor}
               onChange={(e) => setValor(e.target.value)}
@@ -246,23 +246,17 @@ export const MobileFieldPage: React.FC = () => {
 
             {/* Chips de Categorias Rápidas */}
             <FormGroup label="3. CATEGORIA">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <div className="grid grid-cols-2 gap-2">
                 {categoriasRapidas.map((cat) => (
                   <button
                     key={cat.id}
                     type="button"
                     onClick={() => setCategoria(cat.id)}
-                    style={{
-                      padding: '10px 8px',
-                      borderRadius: '8px',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      border: `1px solid ${categoria === cat.id ? 'var(--primary)' : 'var(--border)'}`,
-                      backgroundColor: categoria === cat.id ? 'var(--primary-light)' : 'var(--bg-surface-low)',
-                      color: categoria === cat.id ? 'var(--primary)' : 'var(--text-muted)',
-                      cursor: 'pointer',
-                      textAlign: 'center'
-                    }}
+                    className={`p-2.5 rounded-md text-xs font-semibold text-center border transition-colors cursor-pointer ${
+                      categoria === cat.id
+                        ? 'bg-brand/15 border-brand text-brand font-bold'
+                        : 'bg-surface-low border-border text-content-muted hover:bg-surface-container'
+                    }`}
                   >
                     {cat.label}
                   </button>
@@ -285,6 +279,7 @@ export const MobileFieldPage: React.FC = () => {
               fullWidth
               isLoading={enviando}
               disabled={!valor}
+              className="mt-2"
             >
               {enviando ? 'Gravando Lançamento...' : 'Salvar no Caixa'}
             </Button>
@@ -294,9 +289,11 @@ export const MobileFieldPage: React.FC = () => {
 
       {/* FLUXO: FOTO DIÁRIO RÁPIDO */}
       {activeFlow === 'foto' && (
-        <div className="card-constructo">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 className="heading-card" style={{ fontSize: '18px' }}>Foto do Diário</h3>
+        <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-headline text-base md:text-lg font-bold text-content-main">
+              Foto do Diário
+            </h3>
             <Button
               variant="secondary"
               size="sm"
@@ -307,45 +304,39 @@ export const MobileFieldPage: React.FC = () => {
             </Button>
           </div>
 
-          <form onSubmit={handleSalvarFotoRapida} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleSalvarFotoRapida} className="flex flex-col gap-3.5">
             <FormGroup label="1. CÂMERA / SELECIONAR IMAGEM *" required>
               <input
                 type="file"
                 accept="image/*"
                 capture="environment"
-                className="form-input-constructo"
+                className="bg-input border border-border rounded-md px-3.5 py-2 font-body text-xs text-content-main w-full cursor-pointer"
                 onChange={(e) => handleFileChange(e, false)}
                 required
               />
               {fotoPreview && (
-                <div style={{ marginTop: '8px', textAlign: 'center' }}>
+                <div className="mt-2 text-center">
                   <img
                     src={fotoPreview}
                     alt="Preview"
-                    style={{ maxHeight: '160px', borderRadius: '8px', objectFit: 'contain' }}
+                    className="max-h-40 mx-auto rounded-md object-contain border border-border"
                   />
                 </div>
               )}
             </FormGroup>
 
             <FormGroup label="2. ETAPA CONSTRUTIVA ATUAL">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <div className="grid grid-cols-2 gap-2">
                 {etapasRapidas.map((et) => (
                   <button
                     key={et.id}
                     type="button"
                     onClick={() => setEtapa(et.id)}
-                    style={{
-                      padding: '10px 8px',
-                      borderRadius: '8px',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      border: `1px solid ${etapa === et.id ? 'var(--technical-blue)' : 'var(--border)'}`,
-                      backgroundColor: etapa === et.id ? 'var(--technical-blue-light)' : 'var(--bg-surface-low)',
-                      color: etapa === et.id ? 'var(--technical-blue)' : 'var(--text-muted)',
-                      cursor: 'pointer',
-                      textAlign: 'center'
-                    }}
+                    className={`p-2.5 rounded-md text-xs font-semibold text-center border transition-colors cursor-pointer ${
+                      etapa === et.id
+                        ? 'bg-tech/15 border-tech text-tech font-bold'
+                        : 'bg-surface-low border-border text-content-muted hover:bg-surface-container'
+                    }`}
                   >
                     {et.label}
                   </button>
@@ -366,6 +357,7 @@ export const MobileFieldPage: React.FC = () => {
               size="lg"
               fullWidth
               isLoading={enviando}
+              className="mt-2"
             >
               {enviando ? 'Gravando Foto...' : 'Salvar no Diário'}
             </Button>
@@ -375,27 +367,15 @@ export const MobileFieldPage: React.FC = () => {
 
       {/* FLUXO: SUCESSO */}
       {activeFlow === 'sucesso' && (
-        <div className="card-constructo" style={{ textAlign: 'center', padding: '40px 20px' }}>
-          <div
-            style={{
-              backgroundColor: 'var(--status-paid-bg)',
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px auto',
-              color: 'var(--status-paid)'
-            }}
-          >
+        <div className="bg-card border border-border rounded-lg p-8 text-center shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-status-paid-bg text-status-paid flex items-center justify-center mx-auto mb-4">
             <Check size={36} />
           </div>
 
-          <h3 className="heading-section" style={{ color: 'var(--text-main)', marginBottom: '8px' }}>
+          <h3 className="font-headline text-lg md:text-xl font-bold text-content-main mb-2">
             Registro Concluído!
           </h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>{sucessoMsg}</p>
+          <p className="text-sm text-content-muted mb-6">{sucessoMsg}</p>
 
           <Button
             variant="primary"

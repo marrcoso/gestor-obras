@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
-import { Obra, InadimplenciaRadarData, TransacaoFinanceira } from '../types/index.js';
+import { InadimplenciaRadarData, TransacaoFinanceira } from '../types/index.js';
 import { api } from '../services/api.js';
 import { PageHeader } from '../components/layout/PageHeader.js';
 import { KpiCard } from '../components/ui/KpiCard.js';
@@ -17,7 +17,8 @@ import {
   Filter,
   Download,
   Plus,
-  ArrowUpRight
+  ArrowUpRight,
+  ArrowRight
 } from 'lucide-react';
 
 interface DashboardPageProps {
@@ -72,14 +73,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
 
   if (loading) {
     return (
-      <div className="page-body">
+      <div className="p-4 md:p-6 max-w-7xl mx-auto w-full">
         <LoadingState message="Carregando dados executivos..." minHeight="400px" />
       </div>
     );
   }
 
   return (
-    <div className="page-body" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2.5vw, 24px)' }}>
+    <div className="p-4 md:p-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
       {/* Page Header */}
       <PageHeader
         title="Visão Executiva da Construtora"
@@ -100,13 +101,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
       />
 
       {/* KPI Cards Section */}
-      <section
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: 'clamp(12px, 1.5vw, 20px)'
-        }}
-      >
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           title="SALDO CONSOLIDADO"
           value={formatMoney(totalSaldoGeral)}
@@ -122,7 +117,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
           variant="red"
           onClick={() => handleNavigate('inadimplencia')}
           subtitle={
-            <span style={{ color: 'var(--status-late)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span className="text-status-late font-bold flex items-center gap-1">
               {inadimplencia?.total_clientes_inadimplentes || 0} contratos pendentes <ArrowUpRight size={13} />
             </span>
           }
@@ -146,42 +141,23 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
       </section>
 
       {/* Main Content Split: Centros de Custo (2/3) vs Últimos Lançamentos (1/3) */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: 'clamp(16px, 2vw, 24px)'
-        }}
-      >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column (Centros de Custo) */}
-        <section style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 className="heading-section" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Building2 size={20} color="var(--technical-blue)" />
+        <section className="lg:col-span-2 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-headline text-lg font-bold text-content-main flex items-center gap-2">
+              <Building2 size={20} className="text-tech" />
               Centros de Custo por Obra
             </h2>
             <button
               onClick={() => handleNavigate('fluxo')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--technical-blue)',
-                fontSize: '13px',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
+              className="text-xs font-bold text-tech hover:text-tech-hover flex items-center gap-1 cursor-pointer transition-colors"
             >
-              Ver todas as obras →
+              Ver todas as obras <ArrowRight size={13} />
             </button>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '16px'
-            }}
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {obras.map((obra) => (
               <ObraCard
                 key={obra.id}
@@ -196,45 +172,20 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
           </div>
 
           {/* Reference Construction Site Overview Banner Card */}
-          <div
-            style={{
-              borderRadius: 'var(--radius-lg)',
-              overflow: 'hidden',
-              position: 'relative',
-              boxShadow: 'var(--shadow-sm)',
-              height: '180px',
-              backgroundColor: '#0f172a',
-              border: '1px solid var(--border)'
-            }}
-          >
+          <div className="rounded-xl overflow-hidden relative shadow-sm h-44 bg-slate-900 border border-border">
             <img
               src="https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80"
               alt="Canteiro de Obras: Visão Geral"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                opacity: 0.65
-              }}
+              className="w-full h-full object-cover opacity-65"
             />
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.3) 100%)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-                padding: '20px'
-              }}
-            >
-              <span className="text-mono-tag" style={{ color: 'var(--primary)' }}>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent flex flex-col justify-end p-5">
+              <span className="font-body text-[10px] font-bold tracking-wider text-brand uppercase">
                 CANTEIRO DE OBRAS • CONECTIVIDADE TOTAL
               </span>
-              <h3 style={{ fontSize: 'var(--text-fluid-section)', fontWeight: 800, color: '#ffffff' }}>
+              <h3 className="font-headline text-base md:text-lg font-extrabold text-white mt-0.5">
                 Diário Fotográfico & Lançamentos Offline do Mestre de Obras
               </h3>
-              <p style={{ fontSize: 'var(--text-fluid-body)', color: 'rgba(255, 255, 255, 0.85)', marginTop: '2px' }}>
+              <p className="font-body text-xs text-white/85 mt-0.5">
                 Todos os lançamentos do canteiro são sincronizados automaticamente com o fluxo financeiro da construtora.
               </p>
             </div>
@@ -242,7 +193,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
         </section>
 
         {/* Right Column (Últimos Lançamentos) */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <section className="flex flex-col gap-4">
           <RecentTransactionsFeed
             transacoes={recentTransacoes}
             formatMoney={formatMoney}

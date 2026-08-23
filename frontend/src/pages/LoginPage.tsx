@@ -51,19 +51,9 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px 16px',
-        backgroundColor: 'var(--bg-app)',
-        position: 'relative'
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center p-4 md:p-6 bg-app relative">
       {/* Top Bar Theme Switcher */}
-      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+      <div className="absolute top-5 right-5">
         <Button
           variant="secondary"
           size="sm"
@@ -75,97 +65,49 @@ export const LoginPage: React.FC = () => {
         </Button>
       </div>
 
-      <div style={{ width: '100%', maxWidth: '440px' }}>
+      <div className="w-full max-w-md">
         {/* Brand Header */}
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <div
-            style={{
-              backgroundColor: 'var(--primary)',
-              width: '56px',
-              height: '56px',
-              borderRadius: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px auto',
-              color: '#ffffff',
-              boxShadow: '0 8px 24px rgba(249, 115, 22, 0.3)'
-            }}
-          >
+        <div className="text-center mb-7">
+          <div className="w-14 h-14 bg-brand rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-primary">
             <HardHat size={32} />
           </div>
-          <h1 className="heading-hero">
+          <h1 className="font-headline text-fluid-hero font-extrabold text-content-main tracking-tight leading-tight">
             ERP LEVE CONSTRUTORA
           </h1>
-          <p className="text-subtitle" style={{ marginTop: '4px' }}>
+          <p className="font-body text-fluid-body text-content-muted mt-1">
             Fluxo de Caixa Segregado, SINAPI & Canteiro Mobile
           </p>
         </div>
 
         {/* Card Principal */}
-        <div className="card-constructo" style={{ padding: '28px' }}>
+        <div className="bg-card border border-border rounded-xl p-6 md:p-7 shadow-sm">
           {error && (
-            <div
-              style={{
-                backgroundColor: 'var(--status-late-bg)',
-                color: 'var(--status-late)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                fontSize: '13px',
-                marginBottom: '18px'
-              }}
-            >
+            <div className="bg-status-late-bg text-status-late border border-status-late/30 p-3 rounded-lg text-xs md:text-sm font-medium mb-4">
               {error}
             </div>
           )}
 
           {/* Atalhos de Acesso Instantâneo Demo */}
-          <div style={{ marginBottom: '24px' }}>
-            <span
-              className="text-mono-tag"
-              style={{ color: 'var(--text-dim)', display: 'block', marginBottom: '8px' }}
-            >
+          <div className="mb-6">
+            <span className="font-body text-[11px] font-bold text-content-dim block mb-2 uppercase tracking-wider">
               ACESSO RÁPIDO DE DEMONSTRAÇÃO (1 CLIQUE):
             </span>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className="flex flex-col gap-2">
               <button
                 type="button"
                 onClick={() => handleDemo('ADMIN')}
                 disabled={loading}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '12px 14px',
-                  backgroundColor: 'var(--bg-surface-low)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.15s ease'
-                }}
+                className="flex items-center gap-3 p-3 bg-surface-low border border-border rounded-lg text-left transition-all hover:bg-surface-container hover:border-border-strong cursor-pointer disabled:opacity-50"
               >
-                <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#f59e0b'
-                  }}
-                >
+                <div className="w-9 h-9 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center flex-shrink-0">
                   <ShieldCheck size={20} />
                 </div>
                 <div>
-                  <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)', lineHeight: '1.2' }}>
+                  <p className="text-xs md:text-sm font-bold text-content-main leading-tight">
                     Engenheiro / Gestor Geral
                   </p>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  <span className="text-[11px] text-content-muted">
                     Visão financeira completa & SINAPI
                   </span>
                 </div>
@@ -175,38 +117,16 @@ export const LoginPage: React.FC = () => {
                 type="button"
                 onClick={() => handleDemo('MESTRE_OBRA')}
                 disabled={loading}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '12px 14px',
-                  backgroundColor: 'var(--bg-surface-low)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.15s ease'
-                }}
+                className="flex items-center gap-3 p-3 bg-surface-low border border-border rounded-lg text-left transition-all hover:bg-surface-container hover:border-border-strong cursor-pointer disabled:opacity-50"
               >
-                <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--technical-blue)'
-                  }}
-                >
+                <div className="w-9 h-9 rounded-lg bg-tech/15 text-tech flex items-center justify-center flex-shrink-0">
                   <Smartphone size={20} />
                 </div>
                 <div>
-                  <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)', lineHeight: '1.2' }}>
+                  <p className="text-xs md:text-sm font-bold text-content-main leading-tight">
                     Mestre de Obras (Canteiro)
                   </p>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  <span className="text-[11px] text-content-muted">
                     Lançamentos de campo & diário fotográfico
                   </span>
                 </div>
@@ -214,25 +134,13 @@ export const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              margin: '20px 0',
-              color: 'var(--text-dim)',
-              fontSize: '11px',
-              fontFamily: 'var(--font-body)',
-              letterSpacing: '0.04em',
-              fontWeight: 600
-            }}
-          >
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
+          <div className="flex items-center gap-2.5 my-5 text-content-dim text-[11px] font-body font-bold uppercase tracking-wider">
+            <div className="flex-1 h-px bg-border" />
             <span>OU ENTRAR COM EMAIL</span>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
+            <div className="flex-1 h-px bg-border" />
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
             <FormInput
               label="Email Corporativo"
               type="email"
@@ -257,16 +165,14 @@ export const LoginPage: React.FC = () => {
               size="lg"
               fullWidth
               isLoading={loading}
+              className="mt-1.5"
             >
               Entrar no Sistema
             </Button>
           </form>
         </div>
 
-        <p
-          className="text-mono-tag"
-          style={{ textAlign: 'center', fontSize: '10px', color: 'var(--text-dim)', marginTop: '20px', display: 'block' }}
-        >
+        <p className="font-body text-[10px] font-bold text-content-dim tracking-widest text-center mt-5 uppercase">
           CONSTRUCTO PRO • MULTI-TENANT ISOLATED CENTROS DE CUSTO
         </p>
       </div>

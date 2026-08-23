@@ -19,20 +19,21 @@ import { SinapiOrcamentosPage } from './pages/SinapiOrcamentosPage.js';
 import { DiarioObrasPage } from './pages/DiarioObrasPage.js';
 import { MobileFieldPage } from './pages/MobileFieldPage.js';
 import { NewObraModal } from './components/NewObraModal.js';
+import { LoadingState } from './components/ui/LoadingState.js';
 
 const AppLayout: React.FC = () => {
   const { refreshObras } = useAuth();
   const [newObraModalOpen, setNewObraModalOpen] = useState(false);
 
   return (
-    <div className="app-container">
+    <div className="flex min-h-screen bg-app">
       {/* Sidebar para desktop */}
       <Sidebar openNewObraModal={() => setNewObraModalOpen(true)} />
 
-      <div className="main-content">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto pb-20 lg:pb-8 lg:ml-[280px]">
         <Navbar openNewObraModal={() => setNewObraModalOpen(true)} />
 
-        <main style={{ flex: 1 }}>
+        <main className="flex-1">
           <Outlet context={{ openNewObraModal: () => setNewObraModalOpen(true) }} />
         </main>
 
@@ -55,20 +56,8 @@ const ProtectedRoute: React.FC = () => {
 
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'var(--bg-dark)',
-          color: 'var(--text-muted)'
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <div className="pulse-dot" style={{ width: '16px', height: '16px', marginBottom: '12px' }} />
-          <p style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>Carregando ERP Leve de Obras...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-app">
+        <LoadingState message="Carregando ERP Leve de Obras..." minHeight="200px" />
       </div>
     );
   }

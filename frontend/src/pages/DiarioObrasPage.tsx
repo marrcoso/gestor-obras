@@ -97,7 +97,7 @@ export const DiarioObrasPage: React.FC = () => {
   ];
 
   return (
-    <div className="page-body" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2.5vw, 24px)' }}>
+    <div className="p-4 md:p-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
       <ReceiptModal url={selectedFotoPreview} onClose={() => setSelectedFotoPreview(null)} />
 
       <UploadPhotoModal
@@ -118,8 +118,8 @@ export const DiarioObrasPage: React.FC = () => {
       <PageHeader
         title="Diário de Obras"
         subtitle={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Building2 size={16} color="var(--technical-blue)" />
+          <div className="flex items-center gap-1.5">
+            <Building2 size={16} className="text-tech" />
             <span>{selectedObra ? selectedObra.nome : 'Galeria Geral de Obras'} • {fotos.length} registros catalogados</span>
           </div>
         }

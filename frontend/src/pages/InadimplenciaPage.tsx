@@ -95,7 +95,7 @@ export const InadimplenciaPage: React.FC = () => {
   });
 
   return (
-    <div className="page-body" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2.5vw, 24px)' }}>
+    <div className="p-4 md:p-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
       <WhatsAppModal
         contaId={selectedContaIdWhatsApp}
         onClose={() => setSelectedContaIdWhatsApp(null)}
@@ -128,13 +128,7 @@ export const InadimplenciaPage: React.FC = () => {
       />
 
       {/* 4 Aging KPI Cards */}
-      <section
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: 'clamp(12px, 1.5vw, 20px)'
-        }}
-      >
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           title="TOTAL VENCIDO"
           value={formatMoney(radar?.total_vencido || 0)}
@@ -169,39 +163,14 @@ export const InadimplenciaPage: React.FC = () => {
       </section>
 
       {/* 2-Column Split Layout: Table (2/3) vs Visual Insight (1/3) */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: 'clamp(16px, 2vw, 24px)'
-        }}
-      >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Overdue Invoices Table (2/3) */}
-        <section style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column' }}>
-          <div
-            className="card-constructo"
-            style={{
-              padding: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden'
-            }}
-          >
+        <section className="lg:col-span-2 flex flex-col">
+          <div className="bg-card border border-border rounded-lg shadow-sm flex flex-col overflow-hidden">
             {/* Table Header Bar */}
-            <div
-              style={{
-                padding: '16px 20px',
-                backgroundColor: 'var(--bg-surface-low)',
-                borderBottom: '2px solid var(--border)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '10px'
-              }}
-            >
-              <h2 className="heading-section" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <AlertTriangle size={18} color="var(--status-late)" />
+            <div className="p-4 md:px-5 bg-surface-low border-b-2 border-border flex items-center justify-between flex-wrap gap-2.5">
+              <h2 className="font-headline text-base font-bold text-content-main flex items-center gap-2">
+                <AlertTriangle size={18} className="text-status-late" />
                 Faturas & Medições em Atraso
               </h2>
 
@@ -209,12 +178,12 @@ export const InadimplenciaPage: React.FC = () => {
                 placeholder="Buscar cliente ou obra..."
                 value={searchQuery}
                 onChange={setSearchQuery}
-                style={{ maxWidth: '260px' }}
+                className="max-w-xs"
               />
             </div>
 
             {/* Table */}
-            <div style={{ padding: '16px' }}>
+            <div className="p-4">
               {loading ? (
                 <LoadingState message="Carregando faturas e recebíveis..." minHeight="200px" />
               ) : (
@@ -230,55 +199,30 @@ export const InadimplenciaPage: React.FC = () => {
         </section>
 
         {/* Right: Visual Analysis Card (1/3) */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div
-            className="card-constructo"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: '100%'
-            }}
-          >
+        <section className="flex flex-col gap-4">
+          <div className="bg-card border border-border rounded-lg p-5 shadow-sm flex flex-col justify-between h-full">
             <div>
-              <h3 className="heading-card" style={{ marginBottom: '12px' }}>
+              <h3 className="font-headline text-base font-bold text-content-main mb-3">
                 Análise Visual de Inadimplência
               </h3>
 
-              <div
-                style={{
-                  height: '180px',
-                  borderRadius: 'var(--radius-md)',
-                  overflow: 'hidden',
-                  position: 'relative',
-                  backgroundColor: '#0f172a'
-                }}
-              >
+              <div className="h-44 rounded-md overflow-hidden relative bg-slate-900">
                 <img
                   src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
                   alt="Análise visual de recebíveis"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }}
+                  className="w-full h-full object-cover opacity-40"
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.2) 100%)',
-                    display: 'flex',
-                    alignItems: 'flex-end',
-                    padding: '14px'
-                  }}
-                >
-                  <span className="text-mono-tag" style={{ fontSize: '10px', color: '#ffb690' }}>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex items-end p-3.5">
+                  <span className="font-body text-[10px] font-bold text-[#ffb690] uppercase tracking-wider">
                     CURVA DE RECEBÍVEIS • CONCENTRAÇÃO RESIDENCIAL
                   </span>
                 </div>
               </div>
             </div>
 
-            <div style={{ marginTop: '16px' }}>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
-                A régua inteligente de cobrança via WhatsApp reduz em até <strong>78%</strong> os atrasos médios na entrega de chaves e marcos estruturais.
+            <div className="mt-4">
+              <p className="font-body text-xs md:text-sm text-content-muted leading-relaxed">
+                A régua inteligente de cobrança via WhatsApp reduz em até <strong className="text-content-main">78%</strong> os atrasos médios na entrega de chaves e marcos estruturais.
               </p>
             </div>
           </div>
