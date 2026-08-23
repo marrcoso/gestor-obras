@@ -4,12 +4,18 @@ import { X } from 'lucide-react';
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: React.ReactNode;
+  title: React.ReactNode;
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  maxWidth?: string;
-  showCloseButton?: boolean;
+  className?: string;
 }
+
+const sizeClasses = {
+  sm: 'max-w-[420px]',
+  md: 'max-w-[560px]',
+  lg: 'max-w-[760px]',
+  xl: 'max-w-[960px]'
+};
 
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -17,81 +23,51 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
   size = 'md',
-  maxWidth,
-  showCloseButton = true
+  className = ''
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
+      if (e.key === 'Escape') onClose();
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const sizeWidthMap = {
-    sm: '420px',
-    md: '540px',
-    lg: '680px',
-    xl: '860px'
-  };
-
-  const finalMaxWidth = maxWidth || sizeWidthMap[size];
-
   return (
     <div
-      className="modal-overlay"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center z-[1000] p-4"
+      onClick={onClose}
     >
       <div
-        className="modal-content"
-        style={{
-          maxWidth: finalMaxWidth,
-          display: 'flex',
-          flexDirection: 'column'
-        }}
+        className={`bg-card border border-border rounded-xl w-full max-h-[90vh] overflow-y-auto shadow-lg animate-modal-in ${sizeClasses[size]} ${className}`}
+        onClick={(e) => e.stopPropagation()}
       >
-        {title && (
-          <div
-            style={{
-              padding: '16px 20px',
-              borderBottom: '1px solid var(--border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: 'var(--bg-surface-low)'
-            }}
-          >
-            <div style={{ fontWeight: 700, fontSize: '16px', color: 'var(--text-main)', fontFamily: 'var(--font-headline)' }}>
-              {title}
-            </div>
-            {showCloseButton && (
-              <button
-                onClick={onClose}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-dim)',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '4px'
-                }}
-                aria-label="Fechar"
-              >
-                <X size={18} />
-              </button>
-            )}
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-surface-low">
+          <div className="font-headline text-lg font-extrabold text-content-main">
+            {title}
           </div>
-        )}
-        <div style={{ padding: '20px', overflowY: 'auto' }}>
+          <button
+            onClick={onClose}
+            className="p-1 text-content-dim hover:text-content-main hover:bg-surface-container rounded-md transition-colors cursor-pointer"
+            aria-label="Fechar"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-5">
           {children}
         </div>
       </div>

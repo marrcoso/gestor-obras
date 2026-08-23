@@ -38,22 +38,21 @@ export const SinapiCatalog: React.FC<SinapiCatalogProps> = ({
   const estados = ['SP', 'RJ', 'MG', 'PR', 'SC', 'RS', 'BA', 'PE', 'CE', 'GO', 'DF', 'AM', 'PA'];
 
   return (
-    <div className="card-constructo" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="bg-card border border-border rounded-lg p-5 shadow-sm flex flex-col gap-4">
       {/* Search Header */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Database size={18} color="var(--technical-blue)" />
-            <h3 className="heading-card" style={{ fontSize: '15px' }}>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Database size={18} className="text-tech" />
+            <h3 className="font-headline text-sm md:text-base font-bold text-content-main">
               Catálogo Oficial SINAPI / Caixa
             </h3>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: 700 }}>ESTADO:</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] font-bold text-content-dim">ESTADO:</span>
             <select
-              className="form-select-constructo"
-              style={{ width: '80px', height: '34px', minHeight: '34px', padding: '4px 8px', fontSize: '12px', fontWeight: 700 }}
+              className="bg-input border border-border rounded px-2 py-1 text-xs font-bold text-content-main outline-none focus:border-tech"
               value={selectedUf}
               onChange={(e) => onUfChange(e.target.value)}
             >
@@ -72,10 +71,10 @@ export const SinapiCatalog: React.FC<SinapiCatalogProps> = ({
             e.preventDefault();
             onSearch();
           }}
-          style={{ display: 'flex', gap: '8px' }}
+          className="flex gap-2"
         >
           <SearchBar
-            placeholder="Buscar por composição, insumo ou código SINAPI..."
+            placeholder="Buscar composição, insumo ou código SINAPI..."
             value={searchQuery}
             onChange={onSearchChange}
           />
@@ -95,87 +94,48 @@ export const SinapiCatalog: React.FC<SinapiCatalogProps> = ({
           description="Digite um termo como 'concreto', 'alvenaria' ou 'tinta' para consultar os custos de referência."
         />
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '560px', overflowY: 'auto' }}>
+        <div className="flex flex-col gap-2.5 max-h-[560px] overflow-y-auto pr-1">
           {items.map((item) => {
             const currentQty = quantities[item.id] || 1;
 
             return (
               <div
                 key={item.id}
-                style={{
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '12px 14px',
-                  backgroundColor: 'var(--bg-surface-low)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '10px'
-                }}
+                className="border border-border rounded-md p-3 bg-surface-low flex flex-col gap-2.5 transition-colors hover:border-border-strong"
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+                <div className="flex justify-between items-start gap-2.5">
                   <div>
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '6px' }}>
-                      <span
-                        className="text-mono-tag"
-                        style={{
-                          fontSize: '10px',
-                          color: 'var(--technical-blue)',
-                          backgroundColor: 'var(--technical-blue-light)',
-                          padding: '2px 6px',
-                          borderRadius: '4px'
-                        }}
-                      >
+                    <div className="flex gap-1.5 items-center mb-1.5">
+                      <span className="text-[10px] font-bold text-tech bg-tech/15 px-1.5 py-0.5 rounded font-body">
                         CÓD {item.codigo_sinapi}
                       </span>
-                      <span
-                        className="text-mono-tag"
-                        style={{
-                          fontSize: '10px',
-                          color: 'var(--text-dim)',
-                          backgroundColor: 'var(--bg-surface-high)',
-                          padding: '2px 6px',
-                          borderRadius: '4px'
-                        }}
-                      >
+                      <span className="text-[10px] font-bold text-content-dim bg-surface-high px-1.5 py-0.5 rounded font-body">
                         UN: {item.unidade}
                       </span>
                     </div>
-                    <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', lineHeight: '1.4' }}>
+                    <p className="text-xs md:text-sm font-semibold text-content-main leading-snug">
                       {item.descricao}
                     </p>
                   </div>
 
-                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <span className="text-mono-tag" style={{ fontSize: '9px', color: 'var(--text-dim)' }}>
+                  <div className="text-right flex-shrink-0">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-content-dim font-body">
                       PREÇO BASE
                     </span>
-                    <p
-                      className="text-tabular"
-                      style={{ fontSize: '15px', fontWeight: 800, color: 'var(--status-paid)' }}
-                    >
+                    <p className="font-body text-sm md:text-base font-extrabold tabular-nums text-status-paid">
                       {formatMoney(item.custo_nao_desonerado)}
                     </p>
                   </div>
                 </div>
 
                 {/* Add quantity & action */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: '10px',
-                    borderTop: '1px solid var(--border-light)',
-                    paddingTop: '8px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: 600 }}>Qtd:</span>
+                <div className="flex items-center justify-end gap-2.5 border-t border-border-light pt-2">
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs font-semibold text-content-dim">Qtd:</span>
                     <input
                       type="number"
                       min="1"
-                      className="form-input-constructo"
-                      style={{ width: '60px', height: '30px', minHeight: '30px', padding: '2px 6px', textAlign: 'center', fontSize: '12px' }}
+                      className="bg-input border border-border rounded w-14 h-7 text-center text-xs font-bold text-content-main outline-none focus:border-tech"
                       value={currentQty}
                       onChange={(e) => handleQtyChange(item.id, Number(e.target.value))}
                     />

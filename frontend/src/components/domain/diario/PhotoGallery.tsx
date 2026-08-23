@@ -21,99 +21,45 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ fotos, onSelectPhoto
   }
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '20px'
-      }}
-    >
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
       {fotos.map((foto) => {
         const url = foto.foto_url || foto.miniatura_url;
 
         return (
           <div
             key={foto.id}
-            className="card-constructo"
-            style={{
-              padding: 0,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              cursor: 'pointer'
-            }}
+            className="bg-card border border-border rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-sm hover:shadow-md hover:border-border-strong transition-all group"
             onClick={() => onSelectPhoto(url)}
           >
             {/* Image Container */}
-            <div style={{ position: 'relative', height: '200px', backgroundColor: '#0f172a', overflow: 'hidden' }}>
+            <div className="relative h-48 bg-slate-900 overflow-hidden">
               <img
                 src={url}
                 alt={foto.descricao || 'Foto do Diário'}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transition: 'transform 0.3s ease'
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.04)')}
-                onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1.0)')}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
 
               {/* Stage Badge on Top Left */}
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '12px',
-                  left: '12px'
-                }}
-              >
+              <div className="absolute top-3 left-3">
                 <EtapaBadge
                   etapa={foto.etapa}
-                  style={{
-                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                    backdropFilter: 'blur(6px)',
-                    color: '#38bdf8'
-                  }}
+                  className="bg-slate-950/85 backdrop-blur-sm text-[#38bdf8] border-none"
                 />
-              </span>
+              </div>
 
               {/* Zoom Icon Overlay Top Right */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '12px',
-                  right: '12px',
-                  backgroundColor: 'rgba(15, 23, 42, 0.65)',
-                  padding: '6px',
-                  borderRadius: '50%',
-                  color: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
+              <div className="absolute top-3 right-3 bg-slate-950/65 p-1.5 rounded-full text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <Maximize2 size={14} />
               </div>
             </div>
 
             {/* Content & Metadata */}
-            <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', lineHeight: '1.4' }}>
+            <div className="p-3.5 flex flex-col gap-1.5 flex-1">
+              <p className="text-xs md:text-sm font-semibold text-content-main leading-snug line-clamp-2">
                 {foto.descricao || 'Registro diário de evolução da obra'}
               </p>
 
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '11px',
-                  color: 'var(--text-dim)',
-                  marginTop: 'auto',
-                  borderTop: '1px solid var(--border-light)',
-                  paddingTop: '8px'
-                }}
-              >
+              <div className="flex items-center gap-1.5 text-xs text-content-dim mt-auto border-t border-border-light pt-2 font-body tabular-nums">
                 <Calendar size={13} />
                 <span>{foto.data_registro}</span>
               </div>

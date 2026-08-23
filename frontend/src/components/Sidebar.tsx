@@ -22,105 +22,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
   const { user } = useAuth();
 
   const menuItems = [
-    { path: '/dashboard', label: 'Painel Executivo', icon: LayoutDashboard, iconName: 'dashboard' },
-    { path: '/fluxo', label: 'Fluxo de Caixa', icon: DollarSign, iconName: 'payments' },
-    { path: '/inadimplencia', label: 'Radar de Inadimplência', icon: AlertTriangle, iconName: 'warning', badge: 'Crítico' },
-    { path: '/sinapi', label: 'Orçador SINAPI', icon: FileSpreadsheet, iconName: 'calculate' },
-    { path: '/diario', label: 'Diário de Fotos', icon: Camera, iconName: 'photo_camera' }
+    { path: '/dashboard', label: 'Painel Executivo', icon: LayoutDashboard },
+    { path: '/fluxo', label: 'Fluxo de Caixa', icon: DollarSign },
+    { path: '/inadimplencia', label: 'Radar de Inadimplência', icon: AlertTriangle, badge: 'Crítico' },
+    { path: '/sinapi', label: 'Orçador SINAPI', icon: FileSpreadsheet },
+    { path: '/diario', label: 'Diário de Fotos', icon: Camera }
   ];
 
   return (
-    <aside
-      style={{
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        width: '280px',
-        backgroundColor: 'var(--bg-sidebar)',
-        borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-        display: 'none',
-        flexDirection: 'column',
-        zIndex: 100,
-        boxShadow: '4px 0 24px rgba(0, 0, 0, 0.25)'
-      }}
-      className="lg-sidebar"
-    >
+    <aside className="fixed left-0 top-0 bottom-0 w-[280px] bg-sidebar border-r border-white/10 hidden lg:flex flex-col z-[100] shadow-[4px_0_24px_rgba(0,0,0,0.25)]">
       {/* Brand Header */}
-      <div
-        style={{
-          padding: '24px 20px 16px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}
-      >
-        <div
-          style={{
-            width: '42px',
-            height: '42px',
-            backgroundColor: 'var(--primary)',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#ffffff',
-            boxShadow: '0 4px 12px rgba(249, 115, 22, 0.35)',
-            flexShrink: 0
-          }}
-        >
+      <div className="p-5 pb-4 flex items-center gap-3">
+        <div className="w-[42px] h-[42px] bg-brand rounded-lg flex items-center justify-center text-white shadow-primary flex-shrink-0">
           <HardHat size={24} />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-headline)',
-              fontSize: '18px',
-              fontWeight: 800,
-              color: '#ffffff',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.1
-            }}
-          >
+        <div className="flex flex-col">
+          <span className="font-headline text-lg font-extrabold text-white tracking-tight leading-tight">
             ERP LEVE
           </span>
-          <span
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '10px',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              color: '#ffb690',
-              textTransform: 'uppercase'
-            }}
-          >
+          <span className="font-body text-[10px] font-bold tracking-widest text-[#ffb690] uppercase">
             CONSTRUTORA
           </span>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav
-        style={{
-          flex: 1,
-          padding: '12px 14px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px',
-          overflowY: 'auto'
-        }}
-      >
-        <span
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '11px',
-            fontWeight: 700,
-            letterSpacing: '0.05em',
-            color: 'rgba(255, 255, 255, 0.4)',
-            textTransform: 'uppercase',
-            padding: '8px 12px 4px 12px'
-          }}
-        >
+      <nav className="flex-1 px-3.5 py-3 flex flex-col gap-1 overflow-y-auto">
+        <span className="font-body text-[11px] font-bold tracking-wider text-white/40 uppercase px-3 py-2">
           Módulos de Gestão
         </span>
 
@@ -132,53 +60,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: isActive ? 700 : 500,
-                border: isActive ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid transparent',
-                cursor: 'pointer',
-                textAlign: 'left',
-                width: '100%',
-                backgroundColor: isActive ? 'rgba(59, 130, 246, 0.16)' : 'transparent',
-                color: isActive ? '#38bdf8' : 'rgba(248, 250, 252, 0.75)',
-                transition: 'all 0.15s ease'
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                  e.currentTarget.style.color = '#ffffff';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = 'rgba(248, 250, 252, 0.75)';
-                }
-              }}
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-md text-sm transition-all w-full text-left cursor-pointer ${
+                isActive
+                  ? 'bg-tech/15 text-[#38bdf8] font-bold border border-[#38bdf8]/35'
+                  : 'text-white/75 font-medium border border-transparent hover:bg-white/5 hover:text-white'
+              }`}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Icon size={18} color={isActive ? '#38bdf8' : 'rgba(248, 250, 252, 0.65)'} />
+              <div className="flex items-center gap-3">
+                <Icon size={18} className={isActive ? 'text-[#38bdf8]' : 'text-white/65'} />
                 <span>{item.label}</span>
               </div>
 
               {item.badge && !isActive && (
-                <span
-                  style={{
-                    backgroundColor: '#ef4444',
-                    color: '#ffffff',
-                    fontSize: '9px',
-                    fontWeight: 700,
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    fontFamily: 'var(--font-body)',
-                    letterSpacing: '0.04em'
-                  }}
-                >
+                <span className="bg-status-late text-white text-[9px] font-bold px-1.5 py-0.5 rounded tracking-wider">
                   {item.badge}
                 </span>
               )}
@@ -187,55 +81,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
         })}
 
         {/* Separator for Canteiro */}
-        <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+        <div className="mt-4 pt-4 border-t border-white/10">
           <button
             onClick={() => navigate('/campo')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '12px 14px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: 700,
-              border: '1px solid rgba(249, 115, 22, 0.3)',
-              cursor: 'pointer',
-              textAlign: 'left',
-              width: '100%',
-              backgroundColor: location.pathname === '/campo' || location.pathname === '/field'
-                ? 'rgba(249, 115, 22, 0.2)'
-                : 'rgba(249, 115, 22, 0.08)',
-              color: '#fdba74',
-              transition: 'all 0.15s ease'
-            }}
+            className={`flex items-center justify-between px-3.5 py-3 rounded-md text-sm font-bold border border-brand/30 w-full text-left transition-all cursor-pointer ${
+              location.pathname === '/campo' || location.pathname === '/field'
+                ? 'bg-brand/20 text-[#fdba74]'
+                : 'bg-brand/10 text-[#fdba74] hover:bg-brand/15'
+            }`}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Smartphone size={18} color="#f97316" />
+            <div className="flex items-center gap-3">
+              <Smartphone size={18} className="text-brand" />
               <span>App do Canteiro</span>
             </div>
-            <span
-              style={{
-                backgroundColor: 'var(--primary)',
-                color: '#ffffff',
-                fontSize: '9px',
-                fontWeight: 800,
-                padding: '2px 6px',
-                borderRadius: '4px',
-                fontFamily: 'var(--font-body)',
-                letterSpacing: '0.04em'
-              }}
-            >
+            <span className="bg-brand text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded tracking-wider">
               CAMPO
             </span>
           </button>
         </div>
 
         {/* Nova Obra Action Button */}
-        <div style={{ marginTop: '12px' }}>
+        <div className="mt-3">
           <button
             onClick={openNewObraModal}
-            className="btn-constructo btn-primary-orange"
-            style={{ width: '100%', padding: '10px 14px', gap: '8px' }}
+            className="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-md bg-brand hover:bg-brand-hover text-white text-xs font-bold tracking-wider uppercase shadow-primary transition-all active:scale-95 cursor-pointer"
           >
             <Plus size={16} />
             NOVA OBRA
@@ -244,64 +113,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
       </nav>
 
       {/* User Profile Card Footer */}
-      <div
-        style={{
-          padding: '16px',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            padding: '10px 12px',
-            backgroundColor: 'rgba(255, 255, 255, 0.04)',
-            borderRadius: '10px',
-            border: '1px solid rgba(255, 255, 255, 0.06)'
-          }}
-        >
-          <div
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(59, 130, 246, 0.25)',
-              border: '1px solid rgba(59, 130, 246, 0.4)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#38bdf8',
-              fontWeight: 700,
-              fontSize: '14px',
-              flexShrink: 0
-            }}
-          >
+      <div className="p-4 border-t border-white/10">
+        <div className="flex items-center gap-3 p-2.5 bg-white/5 rounded-lg border border-white/5">
+          <div className="w-9 h-9 rounded-full bg-tech/25 border border-tech/40 flex items-center justify-center text-[#38bdf8] font-bold text-sm flex-shrink-0">
             {user?.nome ? user.nome.charAt(0).toUpperCase() : 'U'}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <span
-              style={{
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#ffffff',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
+          <div className="flex flex-col overflow-hidden">
+            <span className="text-xs font-semibold text-white truncate">
               {user?.nome || 'Carlos Silva'}
             </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '10px',
-                color: 'rgba(255, 255, 255, 0.45)',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
+            <span className="text-[10px] text-white/45 truncate">
               {user?.perfil === 'ADMIN' ? 'Engenheiro & Dono' : 'Mestre de Obras'}
             </span>
           </div>
@@ -310,4 +131,3 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
     </aside>
   );
 };
-

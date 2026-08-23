@@ -5,6 +5,7 @@ export interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  onClear?: () => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -13,60 +14,31 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
   placeholder = 'Buscar...',
+  onClear,
   className = '',
   style
 }) => {
   return (
-    <div
-      className={className}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        flex: 1,
-        minWidth: '220px',
-        ...style
-      }}
-    >
+    <div className={`relative flex items-center w-full ${className}`} style={style}>
       <Search
         size={16}
-        color="var(--text-dim)"
-        style={{
-          position: 'absolute',
-          left: '12px',
-          pointerEvents: 'none'
-        }}
+        className="absolute left-3 text-content-dim pointer-events-none"
       />
       <input
         type="text"
-        className="form-input-constructo"
-        placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={{
-          paddingLeft: '36px',
-          paddingRight: value ? '34px' : '14px',
-          height: '38px',
-          minHeight: '38px',
-          fontSize: '13px'
-        }}
+        placeholder={placeholder}
+        className="bg-input border border-border rounded-md pl-9 pr-8 py-2 font-body text-fluid-body text-content-main w-full min-h-[38px] transition-all outline-none focus:border-tech focus:ring-2 focus:ring-tech/20 placeholder:text-content-dim/70 text-xs md:text-sm"
       />
       {value && (
         <button
           type="button"
-          onClick={() => onChange('')}
-          style={{
-            position: 'absolute',
-            right: '10px',
-            background: 'none',
-            border: 'none',
-            color: 'var(--text-dim)',
-            cursor: 'pointer',
-            padding: '2px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+          onClick={() => {
+            onChange('');
+            if (onClear) onClear();
           }}
+          className="absolute right-2.5 p-1 text-content-dim hover:text-content-main cursor-pointer"
           aria-label="Limpar busca"
         >
           <X size={14} />

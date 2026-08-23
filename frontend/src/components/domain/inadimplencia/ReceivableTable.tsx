@@ -1,8 +1,9 @@
 import React from 'react';
 import { ContaReceber } from '../../../types/index.js';
 import { StatusBadge } from '../../ui/Badge.js';
+import { Button } from '../../ui/Button.js';
 import { EmptyState } from '../../ui/EmptyState.js';
-import { MessageSquare, Check, Calendar, AlertTriangle } from 'lucide-react';
+import { MessageSquare, Check, AlertTriangle } from 'lucide-react';
 
 export interface ReceivableTableProps {
   contas: ContaReceber[];
@@ -20,141 +21,126 @@ export const ReceivableTable: React.FC<ReceivableTableProps> = ({
   if (contas.length === 0) {
     return (
       <EmptyState
-        title="Nenhuma conta a receber encontrada"
-        description="Não há parcelas pendentes ou vencidas cadastradas para esta seleção."
+        icon={AlertTriangle}
+        title="Nenhuma fatura em atraso"
+        description="Não há recebíveis pendentes para esta obra ou todos os contratos estão em dia."
       />
     );
   }
 
   return (
-    <div className="table-constructo-wrapper">
-      <table className="table-constructo">
+    <div className="w-full overflow-x-auto border border-border rounded-lg bg-card shadow-sm">
+      <table className="w-full border-collapse text-left min-w-[760px]">
         <thead>
-          <tr>
-            <th>CLIENTE & OBRA</th>
-            <th>MEDIÇÃO / PARCELA</th>
-            <th style={{ width: '130px' }}>VENCIMENTO</th>
-            <th style={{ width: '120px' }}>ATRASO</th>
-            <th style={{ textAlign: 'right', width: '130px' }}>VALOR</th>
-            <th style={{ width: '110px' }}>STATUS</th>
-            <th style={{ textAlign: 'center', width: '150px' }}>COBRANÇA</th>
+          <tr className="bg-surface-low text-content-muted font-body text-fluid-mono font-bold uppercase tracking-wider border-b-2 border-border">
+            <th className="py-3.5 px-4 w-[28%]">Cliente / Obra</th>
+            <th className="py-3.5 px-4">Parcela</th>
+            <th className="text-right py-3.5 px-4">Vencimento</th>
+            <th className="text-right py-3.5 px-4">Valor</th>
+            <th className="text-center py-3.5 px-4 w-[15%]">Status</th>
+            <th className="text-right py-3.5 px-4 w-[18%]">Ações</th>
           </tr>
         </thead>
-        <tbody>
-          {contas.map((c) => {
-            const dias = c.dias_atraso || 0;
-            const isVencido = c.is_vencido || dias > 0;
-            const isRecebido = c.status === 'RECEBIDO';
+        <tbody className="divide-y divide-border-light">
+          {contas.map((conta) => {
+            const isRecebido = conta.status === 'RECEBIDO';
+            const isLate = conta.is_vencido || conta.status === 'ATRASADO';
+            const dias = conta.dias_atraso || 0;
 
             return (
-              <tr key={c.id}>
-                {/* Cliente & Obra */}
-                <td>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>
-                      {c.cliente_nome || 'Cliente da Obra'}
+              <tr
+                key={conta.id}
+                className={`transition-colors ${
+                  isLate && !isRecebido ? 'bg-status-late-bg/60' : 'hover:bg-surface-low/80'
+                }`}
+              >
+                {/* Cliente / Obra */}
+                <td className="py-3.5 px-4">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-xs md:text-sm text-content-main">
+                      {conta.cliente_nome}
                     </span>
-                    <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
-                      {c.obra_nome || 'Centro de Custo'}
-                    </span>
-                  </div>
-                </td>
-
-                {/* Medição / Parcela */}
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span
-                      style={{
-                        backgroundColor: 'var(--bg-surface-high)',
-                        color: 'var(--text-muted)',
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        fontSize: '10px',
-                        fontWeight: 700
-                      }}
-                    >
-                      P{c.numero_parcela}
-                    </span>
-                    <span style={{ fontSize: '13px', color: 'var(--text-main)' }}>
-                      {c.descricao_medicao}
+                    <span className="text-xs text-content-dim">
+                      {conta.obra_nome}
                     </span>
                   </div>
                 </td>
 
-                {/* Vencimento */}
-                <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                  {c.data_vencimento}
+                {/* Parcela */}
+                <td className="py-3.5 px-4 text-content-muted">
+                  <div className="flex flex-col">
+                    <span className="text-xs md:text-sm font-medium">{conta.numero_parcela}ª Parcela</span>
+                    <span className="text-xs text-content-dim">
+                      {conta.descricao_medicao}
+                    </span>
+                  </div>
                 </td>
 
-                {/* Atraso */}
-                <td>
-                  {isVencido && !isRecebido ? (
-                    <span
-                      style={{
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        backgroundColor: dias > 30 ? 'var(--status-late)' : 'var(--status-warning)',
-                        color: '#ffffff',
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        display: 'inline-block'
-                      }}
-                    >
-                      {dias} dias
+                {/* Vencimento com Dias de Atraso */}
+                <td className="py-3.5 px-4 text-right">
+                  <div className="flex flex-col items-end">
+                    <span className={`font-body text-xs md:text-sm tabular-nums font-semibold ${
+                      isLate ? 'text-status-late' : 'text-content-main'
+                    }`}>
+                      {conta.data_vencimento ? conta.data_vencimento.split('-').reverse().join('/') : '—'}
                     </span>
-                  ) : (
-                    <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>No prazo</span>
-                  )}
+                    {isLate && !isRecebido && (
+                      <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded text-white mt-0.5 ${
+                        dias > 30 ? 'bg-status-late' : 'bg-status-warning'
+                      }`}>
+                        {dias} dias
+                      </span>
+                    )}
+                  </div>
                 </td>
 
                 {/* Valor */}
-                <td style={{ textAlign: 'right' }}>
-                  <span
-                    className="text-tabular"
-                    style={{
-                      fontWeight: 700,
-                      color: isVencido ? 'var(--status-late)' : 'var(--text-main)',
-                      fontSize: '13px'
-                    }}
-                  >
-                    {formatMoney(c.valor)}
-                  </span>
+                <td className="py-3.5 px-4 text-right font-body text-xs md:text-sm font-bold tabular-nums text-content-main">
+                  {formatMoney(conta.valor)}
                 </td>
 
                 {/* Status */}
-                <td>
-                  <StatusBadge status={c.status} />
+                <td className="text-center py-3.5 px-4">
+                  {isRecebido ? (
+                    <StatusBadge status="RECEBIDO" />
+                  ) : dias > 30 ? (
+                    <StatusBadge status="CRITICO" />
+                  ) : dias > 15 ? (
+                    <StatusBadge status="ATENCAO" />
+                  ) : (
+                    <StatusBadge status="RECENTE" />
+                  )}
                 </td>
 
-                {/* Ações de Cobrança */}
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                {/* Ações */}
+                <td className="text-right py-3.5 px-4">
+                  <div className="flex items-center justify-end gap-1.5">
                     {!isRecebido && (
-                      <button
-                        onClick={() => onOpenWhatsApp(c.id)}
-                        className="btn-constructo btn-whatsapp"
-                        style={{ padding: '6px 10px', minHeight: '30px', fontSize: '11px', gap: '4px' }}
-                        title="Enviar Cobrança WhatsApp"
-                      >
-                        <MessageSquare size={13} />
-                        <span>COBRAR</span>
-                      </button>
-                    )}
+                      <>
+                        <Button
+                          variant="whatsapp"
+                          size="sm"
+                          icon={MessageSquare}
+                          onClick={() => onOpenWhatsApp(conta.id)}
+                          title="Disparar Lembrete no WhatsApp"
+                          className="px-2.5 py-1 text-[11px]"
+                        >
+                          WhatsApp
+                        </Button>
 
-                    {!isRecebido && (
-                      <button
-                        onClick={() => onMarkPaid(c.id)}
-                        className="btn-constructo btn-secondary-slate"
-                        style={{ padding: '6px', minHeight: '30px' }}
-                        title="Dar Baixa (Confirmar Recebimento)"
-                      >
-                        <Check size={14} color="var(--status-paid)" />
-                      </button>
+                        <Button
+                          variant="tech-blue"
+                          size="sm"
+                          icon={Check}
+                          onClick={() => onMarkPaid(conta.id)}
+                          title="Dar Baixa e creditar no caixa"
+                          className="px-2.5 py-1 text-[11px]"
+                        />
+                      </>
                     )}
-
                     {isRecebido && (
-                      <span style={{ fontSize: '11px', color: 'var(--status-paid)', fontWeight: 600 }}>
-                        Quitado
+                      <span className="text-xs text-status-paid font-semibold">
+                        ✓ Liquidado
                       </span>
                     )}
                   </div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Loader2 } from 'lucide-react';
 
 export interface LoadingStateProps {
   message?: string;
@@ -8,25 +7,17 @@ export interface LoadingStateProps {
 }
 
 export const LoadingState: React.FC<LoadingStateProps> = ({
-  message = 'Carregando dados...',
+  message = 'Carregando...',
   minHeight = '240px',
   className = ''
 }) => {
   return (
     <div
-      className={`card-constructo ${className}`}
-      style={{
-        minHeight,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '12px',
-        color: 'var(--text-dim)'
-      }}
+      style={{ minHeight }}
+      className={`flex flex-col items-center justify-center gap-3 p-6 text-center text-content-muted ${className}`}
     >
-      <Loader2 size={32} className="animate-spin" color="var(--primary)" />
-      <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>
+      <div className="w-8 h-8 border-3 border-tech/30 border-t-tech rounded-full animate-spin" />
+      <span className="font-body text-xs md:text-sm font-medium text-content-dim">
         {message}
       </span>
     </div>

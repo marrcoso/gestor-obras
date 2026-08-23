@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal } from '../../ui/Modal.js';
 import { Button } from '../../ui/Button.js';
 import { EtapaBadge } from '../../ui/Badge.js';
-import { MessageSquare, Share2, Building2, UserCheck, Calendar } from 'lucide-react';
+import { MessageSquare, Share2, Building2 } from 'lucide-react';
 
 export interface ClientReportModalProps {
   isOpen: boolean;
@@ -31,66 +31,46 @@ export const ClientReportModal: React.FC<ClientReportModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Share2 size={18} color="var(--primary)" />
+        <div className="flex items-center gap-2">
+          <Share2 size={18} className="text-brand" />
           <span>Relatório de Evolução da Obra para o Cliente</span>
         </div>
       }
       size="lg"
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="flex flex-col gap-4">
         {/* Header Summary */}
-        <div
-          style={{
-            backgroundColor: 'var(--bg-surface-low)',
-            padding: '16px',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <Building2 size={18} color="var(--technical-blue)" />
-            <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>
+        <div className="bg-surface-low p-4 rounded-lg border border-border">
+          <div className="flex items-center gap-2 mb-1">
+            <Building2 size={18} className="text-tech" />
+            <h4 className="font-headline text-sm md:text-base font-bold text-content-main">
               {obraNome}
             </h4>
           </div>
-          <p style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
-            Proprietário: <strong>{relatorioData.cliente?.nome || 'Cliente'}</strong> • Status:{' '}
-            <strong>{relatorioData.obra?.status || 'Em Andamento'}</strong>
+          <p className="text-xs text-content-dim">
+            Proprietário: <strong className="text-content-main">{relatorioData.cliente?.nome || 'Cliente'}</strong> • Status:{' '}
+            <strong className="text-content-main">{relatorioData.obra?.status || 'Em Andamento'}</strong>
           </p>
         </div>
 
         {/* Gallery Preview */}
         <div>
-          <h5 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '10px' }}>
+          <h5 className="text-xs md:text-sm font-bold text-content-muted mb-2.5">
             Fotos Selecionadas para o Relatório ({fotos.length})
           </h5>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-              gap: '12px',
-              maxHeight: '320px',
-              overflowY: 'auto'
-            }}
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[320px] overflow-y-auto">
             {fotos.map((f: any, idx: number) => {
               const url = f.foto_url || f.miniatura_url;
               return (
                 <div
                   key={idx}
-                  style={{
-                    border: '1px solid var(--border)',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    backgroundColor: 'var(--bg-card)'
-                  }}
+                  className="border border-border rounded-lg overflow-hidden bg-card shadow-xs"
                 >
-                  <img src={url} style={{ width: '100%', height: '110px', objectFit: 'cover' }} alt="Obra" />
-                  <div style={{ padding: '8px' }}>
-                    <EtapaBadge etapa={f.etapa} style={{ fontSize: '9px', padding: '2px 6px' }} />
-                    <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                  <img src={url} className="w-full h-24 object-cover" alt="Obra" />
+                  <div className="p-2">
+                    <EtapaBadge etapa={f.etapa} className="text-[9px] px-1.5 py-0.5" />
+                    <p className="text-[10px] text-content-muted mt-1 font-body tabular-nums">
                       {f.data_registro}
                     </p>
                   </div>
@@ -101,7 +81,7 @@ export const ClientReportModal: React.FC<ClientReportModalProps> = ({
         </div>
 
         {/* Actions */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+        <div className="flex justify-end gap-2.5 mt-2">
           <Button variant="secondary" onClick={onClose}>
             Fechar
           </Button>

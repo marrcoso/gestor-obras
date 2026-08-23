@@ -1,152 +1,144 @@
 import React from 'react';
 
 export interface FormGroupProps {
-  label?: string;
+  label?: React.ReactNode;
   error?: string;
   helperText?: string;
   required?: boolean;
   children: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 export const FormGroup: React.FC<FormGroupProps> = ({
   label,
   error,
   helperText,
-  required,
+  required = false,
   children,
-  className = '',
-  style
+  className = ''
 }) => {
   return (
-    <div className={`form-group-constructo ${className}`} style={style}>
+    <div className={`flex flex-col gap-1.5 mb-3.5 ${className}`}>
       {label && (
-        <label className="form-label-constructo" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span>{label}</span>
-          {required && <span style={{ color: 'var(--status-late)' }}>*</span>}
+        <label className="font-body text-fluid-mono font-bold uppercase tracking-wider text-content-muted">
+          {label} {required && <span className="text-status-late">*</span>}
         </label>
       )}
       {children}
-      {error && (
-        <span style={{ fontSize: '11px', color: 'var(--status-late)', fontWeight: 600, marginTop: '2px' }}>
-          {error}
-        </span>
-      )}
-      {helperText && !error && (
-        <span style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
-          {helperText}
-        </span>
-      )}
+      {error && <span className="text-xs text-status-late font-medium">{error}</span>}
+      {helperText && !error && <span className="text-xs text-content-dim">{helperText}</span>}
     </div>
   );
 };
 
 export interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  label?: React.ReactNode;
   error?: string;
   helperText?: string;
 }
 
-export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
-  ({ label, error, helperText, required, className = '', id, ...props }, ref) => {
-    const inputElement = (
-      <input
-        ref={ref}
-        id={id}
-        required={required}
-        className={`form-input-constructo ${className}`}
-        style={{
-          borderColor: error ? 'var(--status-late)' : undefined,
-          ...props.style
-        }}
-        {...props}
-      />
-    );
+export const FormInput: React.FC<FormInputProps> = ({
+  label,
+  error,
+  helperText,
+  required,
+  className = '',
+  ...props
+}) => {
+  const inputEl = (
+    <input
+      required={required}
+      className={`bg-input border ${
+        error ? 'border-status-late' : 'border-border'
+      } rounded-md px-3.5 py-2.5 font-body text-fluid-body text-content-main w-full min-h-[42px] transition-all outline-none focus:border-tech focus:ring-2 focus:ring-tech/20 disabled:opacity-50 ${className}`}
+      {...props}
+    />
+  );
 
-    if (!label && !error && !helperText) return inputElement;
+  if (!label && !error && !helperText) return inputEl;
 
-    return (
-      <FormGroup label={label} error={error} helperText={helperText} required={required}>
-        {inputElement}
-      </FormGroup>
-    );
-  }
-);
-
-FormInput.displayName = 'FormInput';
+  return (
+    <FormGroup label={label} error={error} helperText={helperText} required={required}>
+      {inputEl}
+    </FormGroup>
+  );
+};
 
 export interface FormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string;
+  label?: React.ReactNode;
   error?: string;
   helperText?: string;
-  options?: { value: string | number; label: string }[];
+  options?: Array<{ value: string | number; label: string }>;
 }
 
-export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
-  ({ label, error, helperText, required, options, children, className = '', id, ...props }, ref) => {
-    const selectElement = (
-      <select
-        ref={ref}
-        id={id}
-        required={required}
-        className={`form-select-constructo ${className}`}
-        style={{
-          borderColor: error ? 'var(--status-late)' : undefined,
-          ...props.style
-        }}
-        {...props}
-      >
-        {options ? options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        )) : children}
-      </select>
-    );
+export const FormSelect: React.FC<FormSelectProps> = ({
+  label,
+  error,
+  helperText,
+  required,
+  options,
+  children,
+  className = '',
+  ...props
+}) => {
+  const selectEl = (
+    <select
+      required={required}
+      className={`bg-input border ${
+        error ? 'border-status-late' : 'border-border'
+      } rounded-md px-3.5 py-2.5 font-body text-fluid-body text-content-main w-full min-h-[42px] transition-all outline-none focus:border-tech focus:ring-2 focus:ring-tech/20 disabled:opacity-50 cursor-pointer ${className}`}
+      {...props}
+    >
+      {options
+        ? options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))
+        : children}
+    </select>
+  );
 
-    if (!label && !error && !helperText) return selectElement;
+  if (!label && !error && !helperText) return selectEl;
 
-    return (
-      <FormGroup label={label} error={error} helperText={helperText} required={required}>
-        {selectElement}
-      </FormGroup>
-    );
-  }
-);
-
-FormSelect.displayName = 'FormSelect';
+  return (
+    <FormGroup label={label} error={error} helperText={helperText} required={required}>
+      {selectEl}
+    </FormGroup>
+  );
+};
 
 export interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label?: string;
+  label?: React.ReactNode;
   error?: string;
   helperText?: string;
 }
 
-export const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
-  ({ label, error, helperText, required, className = '', id, ...props }, ref) => {
-    const textareaElement = (
-      <textarea
-        ref={ref}
-        id={id}
-        required={required}
-        className={`form-textarea-constructo ${className}`}
-        style={{
-          borderColor: error ? 'var(--status-late)' : undefined,
-          ...props.style
-        }}
-        {...props}
-      />
-    );
+export const FormTextarea: React.FC<FormTextareaProps> = ({
+  label,
+  error,
+  helperText,
+  required,
+  className = '',
+  rows = 3,
+  ...props
+}) => {
+  const textareaEl = (
+    <textarea
+      rows={rows}
+      required={required}
+      className={`bg-input border ${
+        error ? 'border-status-late' : 'border-border'
+      } rounded-md p-3 font-body text-fluid-body text-content-main w-full min-h-[80px] transition-all outline-none focus:border-tech focus:ring-2 focus:ring-tech/20 disabled:opacity-50 resize-y ${className}`}
+      {...props}
+    />
+  );
 
-    if (!label && !error && !helperText) return textareaElement;
+  if (!label && !error && !helperText) return textareaEl;
 
-    return (
-      <FormGroup label={label} error={error} helperText={helperText} required={required}>
-        {textareaElement}
-      </FormGroup>
-    );
-  }
-);
-
-FormTextarea.displayName = 'FormTextarea';
+  return (
+    <FormGroup label={label} error={error} helperText={helperText} required={required}>
+      {textareaEl}
+    </FormGroup>
+  );
+};

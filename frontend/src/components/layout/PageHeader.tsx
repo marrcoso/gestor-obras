@@ -6,7 +6,6 @@ export interface PageHeaderProps {
   badge?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({
@@ -14,37 +13,26 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   subtitle,
   badge,
   actions,
-  className = '',
-  style
+  className = ''
 }) => {
   return (
-    <section
-      className={`page-header ${className}`}
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'flex-end',
-        justifyContent: 'space-between',
-        gap: '16px',
-        paddingTop: '4px',
-        ...style
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '720px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <h1 className="heading-page">{title}</h1>
+    <section className={`flex flex-row flex-wrap items-end justify-between gap-4 pt-1 ${className}`}>
+      <div className="flex flex-col gap-1 max-w-[720px]">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <h1 className="font-headline text-fluid-page font-extrabold text-content-main tracking-tight leading-tight">
+            {title}
+          </h1>
           {badge}
         </div>
         {subtitle && (
-          <div className="text-subtitle">
+          <div className="font-body text-fluid-body text-content-muted leading-relaxed">
             {subtitle}
           </div>
         )}
       </div>
 
       {actions && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <div className="flex items-center gap-2 flex-wrap">
           {actions}
         </div>
       )}

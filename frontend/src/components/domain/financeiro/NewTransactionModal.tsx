@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { ArrowDown, ArrowUp, Plus } from 'lucide-react';
 import { Modal } from '../../ui/Modal.js';
 import { FormInput, FormSelect, FormGroup } from '../../ui/Input.js';
 import { Button } from '../../ui/Button.js';
-import { Paperclip, Plus, X } from 'lucide-react';
 
 export interface NewTransactionModalProps {
   isOpen: boolean;
@@ -50,7 +50,6 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
       arquivoComprovante
     });
 
-    // Reset Form
     setDescricao('');
     setValor('');
     setFornecedor('');
@@ -58,16 +57,15 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
   };
 
   const categorias = [
-    { value: 'MATERIAL_BASICO', label: 'Material Básico (Cimento, Aço, Areia)' },
-    { value: 'MATERIAL_ACABAMENTO', label: 'Material de Acabamento (Pisos, Tintas)' },
-    { value: 'MAO_DE_OBRA_DIARIA', label: 'Mão de Obra / Diárias de Pedreiro' },
-    { value: 'EMPREITEIRO_TERCEIRO', label: 'Empreiteiro / Subempreiteiro' },
-    { value: 'EQUIPAMENTO_LOCACAO', label: 'Locação de Equipamentos / Andaimes' },
-    { value: 'TRANSPORTE_FRETE', label: 'Transporte, Frete & Caçambas' },
-    { value: 'ALIMENTACAO_CAMPO', label: 'Alimentação do Canteiro' },
-    { value: 'PROJETO_TAXAS', label: 'Projetos, ART & Taxas da Prefeitura' },
-    { value: 'RECEBIMENTO_CLIENTE', label: 'Medição / Recebimento de Cliente' },
-    { value: 'OUTROS', label: 'Outras Despesas' }
+    { value: 'MATERIAL_BASICO', label: 'Material Básico' },
+    { value: 'MATERIAL_ACABAMENTO', label: 'Material Acabamento' },
+    { value: 'MAO_DE_OBRA_DIARIA', label: 'Mão de Obra Diária' },
+    { value: 'EMPREITEIRO_TERCEIRO', label: 'Empreiteiro / Terceiro' },
+    { value: 'EQUIPAMENTO_LOCACAO', label: 'Locação de Equipamento' },
+    { value: 'TRANSPORTE_FRETE', label: 'Frete / Caçamba' },
+    { value: 'ALIMENTACAO_CAMPO', label: 'Alimentação Campo' },
+    { value: 'RECEBIMENTO_CLIENTE', label: 'Recebimento de Cliente' },
+    { value: 'OUTROS', label: 'Outros' }
   ];
 
   return (
@@ -75,60 +73,49 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Plus size={18} color="var(--primary)" />
+        <div className="flex items-center gap-2">
+          <Plus size={18} className="text-brand" />
           <span>Novo Lançamento Financeiro</span>
         </div>
       }
       size="md"
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        {/* Toggle Tipo: Despesa vs Receita */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+        {/* Type Switcher */}
+        <div className="grid grid-cols-2 gap-2 mb-1">
           <button
             type="button"
             onClick={() => setTipo('DESPESA')}
-            style={{
-              padding: '10px',
-              borderRadius: '8px',
-              border: `2px solid ${tipo === 'DESPESA' ? 'var(--status-late)' : 'var(--border)'}`,
-              backgroundColor: tipo === 'DESPESA' ? 'rgba(239, 68, 68, 0.12)' : 'var(--bg-surface-low)',
-              color: tipo === 'DESPESA' ? 'var(--status-late)' : 'var(--text-muted)',
-              fontWeight: 700,
-              fontSize: '13px',
-              cursor: 'pointer'
-            }}
+            className={`p-2.5 rounded-md font-bold text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+              tipo === 'DESPESA'
+                ? 'bg-status-late text-white shadow-xs'
+                : 'bg-surface-container text-content-main hover:bg-surface-high'
+            }`}
           >
-            - DESPESA (Saída)
+            <ArrowUp size={16} /> Despesa (Saída)
           </button>
-
           <button
             type="button"
             onClick={() => setTipo('RECEITA')}
-            style={{
-              padding: '10px',
-              borderRadius: '8px',
-              border: `2px solid ${tipo === 'RECEITA' ? 'var(--status-paid)' : 'var(--border)'}`,
-              backgroundColor: tipo === 'RECEITA' ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg-surface-low)',
-              color: tipo === 'RECEITA' ? 'var(--status-paid)' : 'var(--text-muted)',
-              fontWeight: 700,
-              fontSize: '13px',
-              cursor: 'pointer'
-            }}
+            className={`p-2.5 rounded-md font-bold text-xs md:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+              tipo === 'RECEITA'
+                ? 'bg-status-paid text-white shadow-xs'
+                : 'bg-surface-container text-content-main hover:bg-surface-high'
+            }`}
           >
-            + RECEITA (Entrada)
+            <ArrowDown size={16} /> Receita (Entrada)
           </button>
         </div>
 
         <FormInput
           label="Descrição do Lançamento"
-          placeholder="Ex: 50 sacos de cimento Votoran"
+          placeholder="Ex: Concreto Usinado FCK 30 - 15m³"
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           required
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FormInput
             label="Valor (R$)"
             type="number"
@@ -137,6 +124,22 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
             value={valor}
             onChange={(e) => setValor(e.target.value)}
             required
+          />
+
+          <FormSelect
+            label="Categoria"
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            options={categorias}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <FormInput
+            label="Fornecedor / Beneficiário"
+            placeholder="Ex: Depósito São João"
+            value={fornecedor}
+            onChange={(e) => setFornecedor(e.target.value)}
           />
 
           <FormInput
@@ -148,73 +151,21 @@ export const NewTransactionModal: React.FC<NewTransactionModalProps> = ({
           />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '12px' }}>
-          <FormSelect
-            label="Categoria de Custo"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            options={categorias}
+        <FormGroup label="Anexar Comprovante / Cupom Fiscal">
+          <input
+            type="file"
+            accept="image/*,application/pdf"
+            className="bg-input border border-border rounded-md px-3.5 py-2 font-body text-xs text-content-main w-full min-h-[38px] cursor-pointer"
+            onChange={(e) => setArquivoComprovante(e.target.files ? e.target.files[0] : null)}
           />
-
-          <FormSelect
-            label="Status de Pagamento"
-            value={status}
-            onChange={(e) => setStatus(e.target.value as 'PAGO' | 'PENDENTE')}
-            options={[
-              { value: 'PAGO', label: 'Pago (Liquidado)' },
-              { value: 'PENDENTE', label: 'Pendente (A Pagar)' }
-            ]}
-          />
-        </div>
-
-        <FormInput
-          label="Fornecedor / Beneficiário"
-          placeholder="Ex: Depósito Santa Cecília Ltda"
-          value={fornecedor}
-          onChange={(e) => setFornecedor(e.target.value)}
-        />
-
-        {/* Upload Comprovante */}
-        <FormGroup label="Anexar Comprovante / Nota Fiscal">
-          <div
-            style={{
-              border: '2px dashed var(--border)',
-              borderRadius: '8px',
-              padding: '14px',
-              textAlign: 'center',
-              backgroundColor: 'var(--bg-surface-low)',
-              cursor: 'pointer'
-            }}
-          >
-            <input
-              type="file"
-              id="comprovante-input"
-              style={{ display: 'none' }}
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  setArquivoComprovante(e.target.files[0]);
-                }
-              }}
-            />
-            <label htmlFor="comprovante-input" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <Paperclip size={20} color="var(--primary)" />
-              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main)' }}>
-                {arquivoComprovante ? arquivoComprovante.name : 'Clique para selecionar foto ou PDF'}
-              </span>
-              <span style={{ fontSize: '10px', color: 'var(--text-dim)' }}>
-                PNG, JPG, PDF de até 10MB
-              </span>
-            </label>
-          </div>
         </FormGroup>
 
-        {/* Actions */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+        <div className="flex justify-end gap-2.5 mt-2">
           <Button variant="secondary" onClick={onClose} type="button">
             Cancelar
           </Button>
           <Button variant="primary" type="submit" isLoading={saving}>
-            Confirmar Lançamento
+            Salvar Lançamento
           </Button>
         </div>
       </form>

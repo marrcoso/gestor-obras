@@ -1,57 +1,45 @@
 import React from 'react';
 
-export interface PillItem {
+export interface PillFilterItem {
   key: string;
   label: string;
   count?: number;
 }
 
 export interface PillFilterProps {
-  items: PillItem[];
+  items: PillFilterItem[];
   selectedKey: string;
   onSelect: (key: string) => void;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 export const PillFilter: React.FC<PillFilterProps> = ({
   items,
   selectedKey,
   onSelect,
-  className = '',
-  style
+  className = ''
 }) => {
   return (
-    <div
-      className={className}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        overflowX: 'auto',
-        paddingBottom: '4px',
-        ...style
-      }}
-    >
+    <div className={`flex items-center gap-2 overflow-x-auto pb-1 ${className}`}>
       {items.map((item) => {
         const isActive = selectedKey === item.key;
+
         return (
           <button
             key={item.key}
-            type="button"
             onClick={() => onSelect(item.key)}
-            className={`pill-filter ${isActive ? 'active' : ''}`}
+            className={`px-3.5 py-1.5 rounded-full font-body text-fluid-mono font-bold tracking-wide uppercase transition-all cursor-pointer whitespace-nowrap text-xs border ${
+              isActive
+                ? 'bg-sidebar text-white border-sidebar dark:bg-tech dark:border-tech shadow-xs'
+                : 'bg-surface-low text-content-main border-border hover:bg-surface-container hover:border-border-strong'
+            }`}
           >
-            {item.label}
+            <span>{item.label}</span>
             {item.count !== undefined && (
-              <span
-                style={{
-                  marginLeft: '6px',
-                  opacity: isActive ? 0.9 : 0.6,
-                  fontSize: '10px'
-                }}
-              >
-                ({item.count})
+              <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] ${
+                isActive ? 'bg-white/20 text-white' : 'bg-surface-high text-content-muted'
+              }`}>
+                {item.count}
               </span>
             )}
           </button>

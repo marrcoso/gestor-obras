@@ -5,7 +5,6 @@ import { useTheme } from '../context/ThemeContext.js';
 import {
   Building2,
   HardHat,
-  Search,
   Bell,
   Sun,
   Moon,
@@ -27,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { user, tenant, obras, selectedObra, setSelectedObra, refreshObras, logout } = useAuth();
+  const { obras, selectedObra, setSelectedObra, refreshObras, logout } = useAuth();
   const [syncing, setSyncing] = useState(false);
   const pendingCount = offlineQueue.count();
 
@@ -51,72 +50,22 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
   };
 
   return (
-    <header
-      style={{
-        height: '64px',
-        padding: '0 clamp(16px, 2vw, 24px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'sticky',
-        top: 0,
-        zIndex: 40,
-        boxShadow: 'var(--shadow-xs)'
-      }}
-      className="navbar-constructo"
-    >
+    <header className="h-16 px-4 md:px-6 flex items-center justify-between sticky top-0 z-40 bg-navbar/95 backdrop-blur-md border-b border-border shadow-xs">
       {/* Left: Obra Selector & Quick New Obra CTA */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div className="flex items-center gap-3">
         {/* Mobile Brand Logo */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
-          className="mobile-brand-icon"
-        >
-          <div
-            style={{
-              width: '34px',
-              height: '34px',
-              backgroundColor: 'var(--primary)',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#ffffff'
-            }}
-          >
+        <div className="flex items-center gap-2 lg:hidden">
+          <div className="w-[34px] h-[34px] bg-brand rounded-md flex items-center justify-center text-white">
             <HardHat size={20} />
           </div>
         </div>
 
         {/* Obra Active Selector Pill */}
         {obras.length > 0 ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: 'var(--bg-surface-low)',
-              padding: '6px 12px',
-              borderRadius: '8px',
-              border: '1px solid var(--border)'
-            }}
-          >
-            <Building2 size={16} color="var(--technical-blue)" />
+          <div className="flex items-center gap-2 bg-surface-low px-3 py-1.5 rounded-md border border-border">
+            <Building2 size={16} className="text-tech" />
             <select
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--text-main)',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                outline: 'none',
-                maxWidth: '220px'
-              }}
+              className="bg-transparent border-none text-content-main text-xs md:text-sm font-semibold cursor-pointer outline-none max-w-[160px] sm:max-w-[220px]"
               value={selectedObra?.id || ''}
               onChange={(e) => {
                 const found = obras.find((o) => o.id === e.target.value);
@@ -129,10 +78,10 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
                 </option>
               ))}
             </select>
-            <ChevronDown size={14} color="var(--text-dim)" />
+            <ChevronDown size={14} className="text-content-dim" />
           </div>
         ) : (
-          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>
+          <span className="text-xs md:text-sm font-semibold text-content-muted">
             Nenhuma obra cadastrada
           </span>
         )}
@@ -141,8 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
         {openNewObraModal && (
           <button
             onClick={openNewObraModal}
-            className="btn-constructo btn-primary-orange"
-            style={{ padding: '6px 12px', minHeight: '34px', fontSize: '11px', gap: '6px' }}
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-brand hover:bg-brand-hover text-white text-[11px] font-bold tracking-wider uppercase shadow-primary transition-all active:scale-95"
           >
             <Plus size={14} />
             NOVA OBRA
@@ -151,56 +99,27 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
       </div>
 
       {/* Right: Actions, Sync, Theme, Notifications & Profile */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div className="flex items-center gap-2.5">
         {/* Toggle Mode: Desktop Gestão vs Mobile Canteiro */}
-        <div
-          style={{
-            display: 'flex',
-            backgroundColor: 'var(--bg-surface-low)',
-            padding: '3px',
-            borderRadius: '8px',
-            border: '1px solid var(--border)',
-            gap: '2px'
-          }}
-        >
+        <div className="flex bg-surface-low p-0.5 rounded-md border border-border gap-0.5">
           <button
             onClick={() => navigate('/campo')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '5px 10px',
-              fontSize: '12px',
-              fontWeight: 600,
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-              backgroundColor: isField ? 'var(--primary)' : 'transparent',
-              color: isField ? '#ffffff' : 'var(--text-muted)'
-            }}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded transition-colors ${
+              isField ? 'bg-brand text-white shadow-xs' : 'text-content-muted hover:text-content-main'
+            }`}
           >
             <Smartphone size={13} />
-            Canteiro
+            <span className="hidden sm:inline">Canteiro</span>
           </button>
 
           <button
             onClick={() => navigate('/dashboard')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '5px 10px',
-              fontSize: '12px',
-              fontWeight: 600,
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-              backgroundColor: !isField ? 'var(--technical-blue)' : 'transparent',
-              color: !isField ? '#ffffff' : 'var(--text-muted)'
-            }}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded transition-colors ${
+              !isField ? 'bg-tech text-white shadow-xs' : 'text-content-muted hover:text-content-main'
+            }`}
           >
             <Monitor size={13} />
-            Gestão
+            <span className="hidden sm:inline">Gestão</span>
           </button>
         </div>
 
@@ -209,19 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
           <button
             onClick={handleSync}
             disabled={syncing}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'var(--status-pending-bg)',
-              color: 'var(--status-pending)',
-              border: '1px solid var(--status-pending)',
-              borderRadius: '8px',
-              padding: '6px 10px',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer'
-            }}
+            className="flex items-center gap-1.5 bg-status-pending-bg text-status-pending border border-status-pending rounded-md px-2.5 py-1 text-xs font-bold transition-transform active:scale-95"
             title="Sincronizar fila offline"
           >
             <RefreshCw size={13} className={syncing ? 'animate-spin' : ''} />
@@ -232,69 +139,29 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
         {/* Dark / Light Theme Toggle */}
         <button
           onClick={toggleTheme}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-muted)',
-            cursor: 'pointer',
-            padding: '6px',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
+          className="p-1.5 rounded-md text-content-muted hover:text-content-main hover:bg-surface-low transition-colors"
           title={theme === 'dark' ? 'Alternar para Tema Claro' : 'Alternar para Tema Escuro'}
           aria-label="Alternar tema"
         >
-          {theme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} />}
+          {theme === 'dark' ? <Sun size={18} className="text-amber-500" /> : <Moon size={18} />}
         </button>
 
         {/* Notifications Icon with Badge */}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+        <div className="relative flex items-center">
           <button
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-muted)',
-              cursor: 'pointer',
-              padding: '6px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
+            className="p-1.5 rounded-md text-content-muted hover:text-content-main hover:bg-surface-low transition-colors"
             title="Notificações"
           >
             <Bell size={18} />
           </button>
-          <div
-            style={{
-              position: 'absolute',
-              top: '4px',
-              right: '4px',
-              width: '8px',
-              height: '8px',
-              backgroundColor: 'var(--status-late)',
-              borderRadius: '50%'
-            }}
-          />
+          <div className="absolute top-1 right-1 w-2 h-2 bg-status-late rounded-full" />
         </div>
 
         {/* Logout Action */}
-        <div style={{ borderLeft: '1px solid var(--border)', paddingLeft: '10px' }}>
+        <div className="border-l border-border pl-2.5">
           <button
             onClick={handleLogout}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-dim)',
-              cursor: 'pointer',
-              padding: '6px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
+            className="p-1.5 rounded-md text-content-dim hover:text-status-late transition-colors"
             title="Sair do sistema"
           >
             <LogOut size={17} />
@@ -304,4 +171,3 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
     </header>
   );
 };
-

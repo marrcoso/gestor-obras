@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { X, Building2, Plus } from 'lucide-react';
+import { Building2, Plus } from 'lucide-react';
 import { api } from '../services/api.js';
+import { Modal } from './ui/Modal.js';
+import { FormInput, FormSelect } from './ui/Input.js';
+import { Button } from './ui/Button.js';
 
 interface NewObraModalProps {
   isOpen: boolean;
@@ -50,148 +53,110 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
     }
   };
 
+  const estados = [
+    { value: 'SP', label: 'São Paulo (SP)' },
+    { value: 'RJ', label: 'Rio de Janeiro (RJ)' },
+    { value: 'MG', label: 'Minas Gerais (MG)' },
+    { value: 'BA', label: 'Bahia (BA)' },
+    { value: 'PR', label: 'Paraná (PR)' },
+    { value: 'RS', label: 'Rio Grande do Sul (RS)' },
+    { value: 'SC', label: 'Santa Catarina (SC)' },
+    { value: 'GO', label: 'Goiás (GO)' },
+    { value: 'PE', label: 'Pernambuco (PE)' },
+    { value: 'CE', label: 'Ceará (CE)' },
+    { value: 'DF', label: 'Distrito Federal (DF)' }
+  ];
+
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '580px' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px 20px',
-            borderBottom: '1px solid var(--border)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Building2 size={20} color="var(--primary)" />
-            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Cadastrar Nova Obra (Centro de Custo)</h3>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={
+        <div className="flex items-center gap-2">
+          <Building2 size={20} className="text-brand" />
+          <span>Cadastrar Nova Obra (Centro de Custo)</span>
+        </div>
+      }
+      size="md"
+    >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+        {error && (
+          <div className="bg-status-late-bg text-status-late px-3.5 py-2.5 rounded-md text-xs font-medium border border-status-late/30">
+            {error}
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}>
-            <X size={18} />
-          </button>
+        )}
+
+        <FormInput
+          label="Nome da Obra / Empreendimento"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          placeholder="Ex: Residencial Jardim Botânico"
+          required
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <FormInput
+            label="Nome do Cliente Proprietário"
+            value={clienteNome}
+            onChange={(e) => setClienteNome(e.target.value)}
+            placeholder="Ex: Carlos Eduardo Silveira"
+            required
+          />
+
+          <FormInput
+            label="WhatsApp do Cliente"
+            value={clienteTelefone}
+            onChange={(e) => setClienteTelefone(e.target.value)}
+            placeholder="Ex: (11) 98888-7777"
+          />
         </div>
 
-        <form onSubmit={handleSubmit} style={{ padding: '20px' }}>
-          {error && (
-            <div
-              style={{
-                backgroundColor: 'var(--status-late-bg)',
-                color: 'var(--status-late)',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                fontSize: '13px',
-                marginBottom: '16px',
-                border: '1px solid rgba(239, 68, 68, 0.3)'
-              }}
-            >
-              {error}
-            </div>
-          )}
-
-          <div className="form-group-constructo">
-            <label className="form-label-constructo">Nome da Obra / Empreendimento *</label>
-            <input
-              type="text"
-              className="form-input-constructo"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              placeholder="Ex: Residencial Jardim Botânico"
-              required
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="sm:col-span-2">
+            <FormInput
+              label="Cidade"
+              value={cidade}
+              onChange={(e) => setCidade(e.target.value)}
+              placeholder="Ex: São Paulo"
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">Nome do Cliente Proprietário *</label>
-              <input
-                type="text"
-                className="form-input-constructo"
-                value={clienteNome}
-                onChange={(e) => setClienteNome(e.target.value)}
-                placeholder="Ex: Carlos Eduardo Silveira"
-                required
-              />
-            </div>
+          <FormSelect
+            label="Estado (UF)"
+            value={estadoUf}
+            onChange={(e) => setEstadoUf(e.target.value)}
+            options={estados}
+          />
+        </div>
 
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">WhatsApp do Cliente</label>
-              <input
-                type="text"
-                className="form-input-constructo"
-                value={clienteTelefone}
-                onChange={(e) => setClienteTelefone(e.target.value)}
-                placeholder="Ex: (11) 98888-7777"
-              />
-            </div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <FormInput
+            label="Data de Início"
+            type="date"
+            value={dataInicio}
+            onChange={(e) => setDataInicio(e.target.value)}
+            required
+          />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">Cidade</label>
-              <input
-                type="text"
-                className="form-input-constructo"
-                value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-                placeholder="Ex: São Paulo"
-              />
-            </div>
+          <FormInput
+            label="Orçamento Previsto (R$)"
+            type="number"
+            step="0.01"
+            value={orcamentoPrevisto}
+            onChange={(e) => setOrcamentoPrevisto(e.target.value)}
+            placeholder="Ex: 500000.00"
+          />
+        </div>
 
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">Estado (UF / SINAPI)</label>
-              <select className="form-select-constructo" value={estadoUf} onChange={(e) => setEstadoUf(e.target.value)}>
-                <option value="SP">São Paulo (SP)</option>
-                <option value="RJ">Rio de Janeiro (RJ)</option>
-                <option value="MG">Minas Gerais (MG)</option>
-                <option value="BA">Bahia (BA)</option>
-                <option value="PR">Paraná (PR)</option>
-                <option value="RS">Rio Grande do Sul (RS)</option>
-                <option value="SC">Santa Catarina (SC)</option>
-                <option value="GO">Goiás (GO)</option>
-                <option value="PE">Pernambuco (PE)</option>
-                <option value="CE">Ceará (CE)</option>
-                <option value="DF">Distrito Federal (DF)</option>
-              </select>
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">Data de Início *</label>
-              <input
-                type="date"
-                className="form-input-constructo"
-                value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">Orçamento Previsto (R$)</label>
-              <input
-                type="number"
-                step="0.01"
-                className="form-input-constructo"
-                value={orcamentoPrevisto}
-                onChange={(e) => setOrcamentoPrevisto(e.target.value)}
-                placeholder="Ex: 500000.00"
-              />
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-            <button type="button" onClick={onClose} className="btn-constructo btn-secondary-slate">
-              Cancelar
-            </button>
-            <button type="submit" disabled={loading} className="btn-constructo btn-primary-orange">
-              <Plus size={16} />
-              {loading ? 'Cadastrando...' : 'Criar Obra'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className="flex justify-end gap-2.5 mt-2">
+          <Button variant="secondary" onClick={onClose} type="button">
+            Cancelar
+          </Button>
+          <Button variant="primary" type="submit" isLoading={loading} icon={Plus}>
+            Criar Obra
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 };
-

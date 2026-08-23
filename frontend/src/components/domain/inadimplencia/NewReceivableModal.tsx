@@ -56,14 +56,14 @@ export const NewReceivableModal: React.FC<NewReceivableModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Plus size={18} color="var(--primary)" />
+        <div className="flex items-center gap-2">
+          <Plus size={18} className="text-brand" />
           <span>Cadastrar Nova Parcela / Medição</span>
         </div>
       }
       size="md"
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
         <FormSelect
           label="Selecione a Obra"
           value={obraId}
@@ -72,26 +72,30 @@ export const NewReceivableModal: React.FC<NewReceivableModalProps> = ({
           required
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '12px' }}>
-          <FormInput
-            label="Nº Parcela"
-            type="number"
-            min="1"
-            value={numeroParcela}
-            onChange={(e) => setNumeroParcela(e.target.value)}
-            required
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="sm:col-span-1">
+            <FormInput
+              label="Nº Parcela"
+              type="number"
+              min="1"
+              value={numeroParcela}
+              onChange={(e) => setNumeroParcela(e.target.value)}
+              required
+            />
+          </div>
 
-          <FormInput
-            label="Descrição da Medição / Etapa"
-            placeholder="Ex: Conclusão da Alvenaria e Laje do 1º Pav."
-            value={descricaoMedicao}
-            onChange={(e) => setDescricaoMedicao(e.target.value)}
-            required
-          />
+          <div className="sm:col-span-2">
+            <FormInput
+              label="Descrição da Medição / Marco"
+              placeholder="Ex: Conclusão da Alvenaria e Laje"
+              value={descricaoMedicao}
+              onChange={(e) => setDescricaoMedicao(e.target.value)}
+              required
+            />
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FormInput
             label="Valor a Receber (R$)"
             type="number"
@@ -111,7 +115,7 @@ export const NewReceivableModal: React.FC<NewReceivableModalProps> = ({
           />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+        <div className="flex justify-end gap-2.5 mt-2">
           <Button variant="secondary" onClick={onClose} type="button">
             Cancelar
           </Button>

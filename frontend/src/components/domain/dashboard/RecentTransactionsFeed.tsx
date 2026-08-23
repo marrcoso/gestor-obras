@@ -1,8 +1,7 @@
 import React from 'react';
 import { TransacaoFinanceira } from '../../../types/index.js';
 import { StatusBadge } from '../../ui/Badge.js';
-import { EmptyState } from '../../ui/EmptyState.js';
-import { ArrowDownLeft, ArrowUpRight, Receipt } from 'lucide-react';
+import { Receipt, ArrowRight } from 'lucide-react';
 
 export interface RecentTransactionsFeedProps {
   transacoes: TransacaoFinanceira[];
@@ -16,128 +15,78 @@ export const RecentTransactionsFeed: React.FC<RecentTransactionsFeedProps> = ({
   onViewAll
 }) => {
   return (
-    <div
-      className="card-constructo"
-      style={{
-        padding: 0,
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
+    <div className="bg-card border border-border rounded-lg shadow-sm flex flex-col overflow-hidden">
       {/* Header */}
-      <div
-        style={{
-          padding: '16px 20px',
-          borderBottom: '1px solid var(--border)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: 'var(--bg-surface-low)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Receipt size={18} color="var(--primary)" />
-          <h3 className="heading-card" style={{ fontSize: '15px' }}>
-            Últimos Lançamentos de Caixa
+      <div className="px-5 py-4 border-b border-border bg-surface-low flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Receipt size={18} className="text-brand" />
+          <h3 className="font-headline text-base font-bold text-content-main">
+            Últimos Lançamentos
           </h3>
         </div>
-
         {onViewAll && (
           <button
             onClick={onViewAll}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--technical-blue)',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer'
-            }}
+            className="text-xs font-bold text-tech hover:text-tech-hover flex items-center gap-1 cursor-pointer transition-colors"
           >
-            Ver Extrato Completo →
+            Ver Fluxo <ArrowRight size={13} />
           </button>
         )}
       </div>
 
-      {/* List */}
-      {transacoes.length === 0 ? (
-        <div style={{ padding: '24px' }}>
-          <EmptyState
-            icon={Receipt}
-            title="Nenhuma movimentação recente"
-            description="Lançamentos financeiros de receitas e despesas aparecerão aqui."
-          />
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {transacoes.map((item) => {
+      {/* List Header */}
+      <div className="bg-surface-low px-4 py-2.5 border-b border-border flex justify-between text-[11px] font-bold text-content-muted uppercase tracking-wider font-body">
+        <span>Descrição & Status</span>
+        <span>Valor</span>
+      </div>
+
+      {/* List Items */}
+      <div className="flex flex-col max-h-[460px] overflow-y-auto divide-y divide-border-light">
+        {transacoes.length === 0 ? (
+          <div className="p-8 text-center text-content-dim text-xs md:text-sm">
+            Nenhum lançamento registrado recentemente.
+          </div>
+        ) : (
+          transacoes.map((item, idx) => {
             const isReceita = item.tipo === 'RECEITA';
+            const isLate = item.status === 'PENDENTE' && new Date(item.data_vencimento) < new Date();
+            const displayStatus = item.status === 'PAGO' ? 'PAGO' : isLate ? 'ATRASADO' : 'PENDENTE';
+
             return (
               <div
-                key={item.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px 20px',
-                  borderBottom: '1px solid var(--border-light)',
-                  transition: 'background-color 0.15s ease'
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-surface-low)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                key={item.id || idx}
+                onClick={onViewAll}
+                className="p-3.5 px-4 flex items-center justify-between cursor-pointer transition-colors hover:bg-surface-low"
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      backgroundColor: isReceita ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: isReceita ? 'var(--status-paid)' : 'var(--status-late)'
-                    }}
-                  >
-                    {isReceita ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
-                  </div>
-
-                  <div>
-                    <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)' }}>
-                      {item.descricao}
-                    </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
-                        {item.data_vencimento}
-                      </span>
-                      <StatusBadge status={item.status} style={{ fontSize: '9px', padding: '2px 6px' }} />
-                    </div>
+                <div className="flex flex-col gap-1 max-w-[65%]">
+                  <span className="text-xs md:text-sm font-bold text-content-main truncate">
+                    {item.descricao}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={displayStatus} />
+                    <span className="text-[11px] text-content-dim truncate">
+                      {item.fornecedor_beneficiario || 'Geral'}
+                    </span>
                   </div>
                 </div>
 
-                <div style={{ textAlign: 'right' }}>
-                  <p
-                    className="text-tabular"
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      color: isReceita ? 'var(--status-paid)' : 'var(--text-main)'
-                    }}
+                <div className="text-right flex flex-col items-end">
+                  <span
+                    className={`font-body text-xs md:text-sm font-extrabold tabular-nums ${
+                      isReceita ? 'text-status-paid' : 'text-status-late'
+                    }`}
                   >
                     {isReceita ? '+' : '-'} {formatMoney(item.valor)}
-                  </p>
-                  {item.fornecedor_beneficiario && (
-                    <span style={{ fontSize: '10px', color: 'var(--text-dim)' }}>
-                      {item.fornecedor_beneficiario}
-                    </span>
-                  )}
+                  </span>
+                  <span className="font-body text-[10px] text-content-dim">
+                    Venc: {item.data_vencimento ? item.data_vencimento.split('-').reverse().slice(0, 2).join('/') : '-'}
+                  </span>
                 </div>
               </div>
             );
-          })}
-        </div>
-      )}
+          })
+        )}
+      </div>
     </div>
   );
 };

@@ -1,66 +1,37 @@
 import React from 'react';
-import { LucideIcon, Inbox } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 export interface EmptyStateProps {
-  icon?: LucideIcon;
+  icon: LucideIcon;
   title: string;
   description?: string;
   action?: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  icon: Icon = Inbox,
+  icon: Icon,
   title,
   description,
   action,
-  className = '',
-  style
+  className = ''
 }) => {
   return (
-    <div
-      className={`card-constructo ${className}`}
-      style={{
-        padding: '48px 24px',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '12px',
-        backgroundColor: 'var(--bg-card)',
-        ...style
-      }}
-    >
-      <div
-        style={{
-          width: '52px',
-          height: '52px',
-          borderRadius: '50%',
-          backgroundColor: 'var(--bg-surface-low)',
-          border: '1px solid var(--border)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--text-dim)'
-        }}
-      >
-        <Icon size={26} />
+    <div className={`p-8 md:p-12 text-center flex flex-col items-center justify-center gap-3 bg-surface-low/50 rounded-lg border border-dashed border-border ${className}`}>
+      <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-content-dim">
+        <Icon size={24} />
       </div>
-
-      <div style={{ maxWidth: '420px' }}>
-        <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '4px' }}>
+      <div className="max-w-md">
+        <h4 className="font-headline text-base font-bold text-content-main">
           {title}
         </h4>
         {description && (
-          <p style={{ fontSize: '13px', color: 'var(--text-dim)', lineHeight: '1.4' }}>
+          <p className="font-body text-fluid-body text-content-muted mt-1 leading-relaxed">
             {description}
           </p>
         )}
       </div>
-
-      {action && <div style={{ marginTop: '8px' }}>{action}</div>}
+      {action && <div className="mt-2">{action}</div>}
     </div>
   );
 };

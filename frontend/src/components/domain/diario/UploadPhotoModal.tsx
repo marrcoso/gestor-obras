@@ -63,14 +63,14 @@ export const UploadPhotoModal: React.FC<UploadPhotoModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Camera size={18} color="var(--primary)" />
+        <div className="flex items-center gap-2">
+          <Camera size={18} className="text-brand" />
           <span>Upload de Foto do Diário de Obra</span>
         </div>
       }
       size="md"
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
         <FormSelect
           label="Etapa Construtiva"
           value={etapa}
@@ -88,33 +88,24 @@ export const UploadPhotoModal: React.FC<UploadPhotoModalProps> = ({
 
         {/* Upload Box */}
         <FormGroup label="Arquivo da Foto">
-          <div
-            style={{
-              border: '2px dashed var(--border)',
-              borderRadius: '8px',
-              padding: '16px',
-              textAlign: 'center',
-              backgroundColor: 'var(--bg-surface-low)',
-              cursor: 'pointer'
-            }}
-          >
+          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center bg-surface-low hover:bg-surface-container transition-colors cursor-pointer">
             <input
               type="file"
               id="foto-input"
               accept="image/*"
-              style={{ display: 'none' }}
+              className="hidden"
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
                   setArquivoFoto(e.target.files[0]);
                 }
               }}
             />
-            <label htmlFor="foto-input" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <UploadCloud size={24} color="var(--primary)" />
-              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)' }}>
+            <label htmlFor="foto-input" className="cursor-pointer flex flex-col items-center gap-1.5">
+              <UploadCloud size={24} className="text-brand" />
+              <span className="text-xs md:text-sm font-semibold text-content-main">
                 {arquivoFoto ? arquivoFoto.name : 'Selecionar imagem da galeria ou câmera'}
               </span>
-              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
+              <span className="text-[11px] text-content-dim">
                 JPG, PNG de alta resolução
               </span>
             </label>
@@ -128,7 +119,7 @@ export const UploadPhotoModal: React.FC<UploadPhotoModalProps> = ({
           onChange={(e) => setFotoUrlManual(e.target.value)}
         />
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+        <div className="flex justify-end gap-2.5 mt-2">
           <Button variant="secondary" onClick={onClose} type="button">
             Cancelar
           </Button>

@@ -38,14 +38,14 @@ export const NewOrcamentoModal: React.FC<NewOrcamentoModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Plus size={18} color="var(--primary)" />
+        <div className="flex items-center gap-2">
+          <Plus size={18} className="text-brand" />
           <span>Criar Nova Planilha Orçamentária</span>
         </div>
       }
       size="sm"
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
         <FormInput
           label="Título da Planilha / Versão"
           placeholder="Ex: Orçamento Executivo R01 - Reforma Geral"
@@ -54,11 +54,11 @@ export const NewOrcamentoModal: React.FC<NewOrcamentoModalProps> = ({
           required
         />
 
-        <p style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
-          O BDI inicial será configurado como <strong>{bdiPadrao}%</strong> e poderá ser ajustado a qualquer momento.
+        <p className="text-xs text-content-dim">
+          O BDI inicial será configurado como <strong className="text-content-main">{bdiPadrao}%</strong> e poderá ser ajustado a qualquer momento.
         </p>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+        <div className="flex justify-end gap-2.5 mt-2">
           <Button variant="secondary" onClick={onClose} type="button">
             Cancelar
           </Button>

@@ -16,37 +16,23 @@ export const TactileActionCard: React.FC<TactileActionCardProps> = ({
   variant,
   onClick
 }) => {
-  const bg = variant === 'orange'
-    ? 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)'
-    : 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+  const bgClass = variant === 'orange'
+    ? 'bg-gradient-to-br from-orange-500 to-orange-700 shadow-primary'
+    : 'bg-gradient-to-br from-blue-500 to-blue-700 shadow-md';
 
   return (
     <button
       onClick={onClick}
-      className="btn-tactile-field"
-      style={{
-        background: bg,
-        width: '100%'
-      }}
+      className={`w-full flex items-center gap-4 p-5 rounded-xl text-white text-left transition-all active:scale-[0.98] cursor-pointer border-2 border-white/20 ${bgClass}`}
     >
-      <div
-        style={{
-          width: '52px',
-          height: '52px',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(255, 255, 255, 0.2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Icon size={28} color="#ffffff" />
+      <div className="w-13 h-13 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+        <Icon size={28} className="text-white" />
       </div>
       <div>
-        <span style={{ fontSize: '18px', fontWeight: 800, display: 'block' }}>
+        <span className="font-headline text-base md:text-lg font-extrabold block leading-tight">
           {title}
         </span>
-        <span style={{ fontSize: '12px', fontWeight: 500, color: 'rgba(255, 255, 255, 0.85)' }}>
+        <span className="text-xs font-medium text-white/85 block mt-0.5">
           {subtitle}
         </span>
       </div>

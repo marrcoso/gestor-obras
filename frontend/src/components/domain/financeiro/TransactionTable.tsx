@@ -1,8 +1,8 @@
 import React from 'react';
 import { TransacaoFinanceira } from '../../../types/index.js';
-import { StatusBadge, CategoryBadge } from '../../ui/Badge.js';
+import { CategoryBadge } from '../../ui/Badge.js';
 import { EmptyState } from '../../ui/EmptyState.js';
-import { Paperclip, Trash2, Check, Clock, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { Check, Clock, AlertTriangle, Paperclip, Trash2, Receipt } from 'lucide-react';
 
 export interface TransactionTableProps {
   transacoes: TransacaoFinanceira[];
@@ -22,168 +22,116 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
   if (transacoes.length === 0) {
     return (
       <EmptyState
+        icon={Receipt}
         title="Nenhum lançamento encontrado"
-        description="Não há transações cadastradas com os filtros selecionados para esta obra."
+        description="Não há transações para os filtros selecionados ou cadastre um novo registro."
       />
     );
   }
 
   return (
-    <div className="table-constructo-wrapper">
-      <table className="table-constructo">
+    <div className="w-full overflow-x-auto border border-border rounded-lg bg-card shadow-sm">
+      <table className="w-full border-collapse text-left min-w-[760px]">
         <thead>
-          <tr>
-            <th style={{ width: '110px' }}>TIPO</th>
-            <th>DESCRIÇÃO / FORNECEDOR</th>
-            <th>CATEGORIA</th>
-            <th style={{ width: '120px' }}>VENCIMENTO</th>
-            <th style={{ textAlign: 'right', width: '130px' }}>VALOR</th>
-            <th style={{ width: '110px' }}>STATUS</th>
-            <th style={{ textAlign: 'center', width: '120px' }}>AÇÕES</th>
+          <tr className="bg-surface-low text-content-muted font-body text-fluid-mono font-bold uppercase tracking-wider border-b-2 border-border">
+            <th className="w-20 text-center py-3.5 px-4">Status</th>
+            <th className="w-28 py-3.5 px-4">Data</th>
+            <th className="py-3.5 px-4">Descrição & Categoria</th>
+            <th className="py-3.5 px-4">Fornecedor</th>
+            <th className="text-right w-40 py-3.5 px-4">Valor</th>
+            <th className="w-20 text-center py-3.5 px-4">Anexo</th>
+            <th className="w-16 text-center py-3.5 px-4">Ação</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-border-light">
           {transacoes.map((t) => {
-            const isReceita = t.tipo === 'RECEITA';
             const isPago = t.status === 'PAGO';
+            const isReceita = t.tipo === 'RECEITA';
+            const isLate = !isPago && new Date(t.data_vencimento) < new Date();
 
             return (
-              <tr key={t.id}>
-                {/* Tipo */}
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <div
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        backgroundColor: isReceita ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: isReceita ? 'var(--status-paid)' : 'var(--status-late)',
-                        flexShrink: 0
-                      }}
-                    >
-                      {isReceita ? <ArrowDownLeft size={14} /> : <ArrowUpRight size={14} />}
-                    </div>
-                    <span
-                      style={{
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        color: isReceita ? 'var(--status-paid)' : 'var(--status-late)'
-                      }}
-                    >
-                      {isReceita ? 'RECEITA' : 'DESPESA'}
+              <tr key={t.id} className="transition-colors hover:bg-surface-low/80">
+                {/* Circular Status Icon Button */}
+                <td className="text-center align-middle py-3.5 px-4">
+                  <button
+                    onClick={() => onToggleStatus(t)}
+                    className={`w-7 h-7 rounded-full inline-flex items-center justify-center border-none cursor-pointer text-white shadow-xs transition-transform active:scale-90 ${
+                      isPago
+                        ? 'bg-status-paid hover:bg-emerald-600'
+                        : isLate
+                        ? 'bg-status-late hover:bg-red-600'
+                        : 'bg-status-warning hover:bg-amber-600'
+                    }`}
+                    title={isPago ? 'Marcar como Pendente' : 'Marcar como Pago'}
+                  >
+                    {isPago ? (
+                      <Check size={14} />
+                    ) : isLate ? (
+                      <AlertTriangle size={13} />
+                    ) : (
+                      <Clock size={13} />
+                    )}
+                  </button>
+                </td>
+
+                {/* Date */}
+                <td className={`font-body text-xs md:text-sm tabular-nums whitespace-nowrap py-3.5 px-4 ${
+                  isLate ? 'text-status-late font-bold' : 'text-content-main'
+                }`}>
+                  {t.data_vencimento ? t.data_vencimento.split('-').reverse().join('/') : '—'}
+                </td>
+
+                {/* Description & Category */}
+                <td className="py-3.5 px-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-semibold text-xs md:text-sm text-content-main">
+                      {t.descricao}
+                    </span>
+                    <CategoryBadge categoria={t.categoria} tipo={t.tipo} />
+                  </div>
+                </td>
+
+                {/* Supplier */}
+                <td className="text-content-muted py-3.5 px-4">
+                  <div className="flex flex-col">
+                    <span className="text-xs md:text-sm font-medium">{t.fornecedor_beneficiario || 'Geral'}</span>
+                    <span className="text-[10px] text-content-dim">
+                      {t.origem_lancamento === 'MOBILE' ? '📱 Canteiro' : '💻 Escritório'}
                     </span>
                   </div>
                 </td>
 
-                {/* Descrição */}
-                <td>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t.descricao}</span>
-                    {t.fornecedor_beneficiario && (
-                      <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
-                        {t.fornecedor_beneficiario}
-                      </span>
-                    )}
-                  </div>
+                {/* Value */}
+                <td className={`text-right font-body text-xs md:text-sm font-bold tabular-nums py-3.5 px-4 ${
+                  isReceita ? 'text-status-paid' : 'text-status-late'
+                }`}>
+                  {isReceita ? '+' : '-'} {formatMoney(t.valor)}
                 </td>
 
-                {/* Categoria */}
-                <td>
-                  <CategoryBadge categoria={t.categoria} />
+                {/* Attachment */}
+                <td className="text-center py-3.5 px-4">
+                  {t.comprovante_url ? (
+                    <button
+                      onClick={() => onOpenComprovante(t.comprovante_url || '')}
+                      className="text-tech hover:text-tech-hover cursor-pointer p-1 transition-colors"
+                      title="Ver Comprovante"
+                    >
+                      <Paperclip size={18} />
+                    </button>
+                  ) : (
+                    <span className="text-border-strong text-xs">—</span>
+                  )}
                 </td>
 
-                {/* Vencimento */}
-                <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                  {t.data_vencimento}
-                </td>
-
-                {/* Valor */}
-                <td style={{ textAlign: 'right' }}>
-                  <span
-                    className="text-tabular"
-                    style={{
-                      fontWeight: 700,
-                      color: isReceita ? 'var(--status-paid)' : 'var(--text-main)',
-                      fontSize: '13px'
-                    }}
+                {/* Delete */}
+                <td className="text-center py-3.5 px-4">
+                  <button
+                    onClick={() => onDelete(t.id)}
+                    className="text-content-dim hover:text-status-late cursor-pointer p-1 transition-colors"
+                    title="Excluir Lançamento"
                   >
-                    {formatMoney(t.valor)}
-                  </span>
-                </td>
-
-                {/* Status */}
-                <td>
-                  <StatusBadge status={t.status} />
-                </td>
-
-                {/* Ações */}
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                    {/* Toggle Pago */}
-                    <button
-                      onClick={() => onToggleStatus(t)}
-                      title={isPago ? 'Marcar como Pendente' : 'Marcar como Pago'}
-                      style={{
-                        backgroundColor: isPago ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-surface-high)',
-                        color: isPago ? 'var(--status-paid)' : 'var(--text-dim)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '6px',
-                        padding: '6px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      {isPago ? <Check size={14} /> : <Clock size={14} />}
-                    </button>
-
-                    {/* Comprovante */}
-                    {t.comprovante_url && (
-                      <button
-                        onClick={() => onOpenComprovante(t.comprovante_url!)}
-                        title="Ver Comprovante"
-                        style={{
-                          backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                          color: 'var(--technical-blue)',
-                          border: '1px solid var(--border)',
-                          borderRadius: '6px',
-                          padding: '6px',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <Paperclip size={14} />
-                      </button>
-                    )}
-
-                    {/* Delete */}
-                    <button
-                      onClick={() => onDelete(t.id)}
-                      title="Excluir Lançamento"
-                      style={{
-                        backgroundColor: 'transparent',
-                        color: 'var(--text-dim)',
-                        border: '1px solid transparent',
-                        borderRadius: '6px',
-                        padding: '6px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--status-late)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-dim)')}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
+                    <Trash2 size={16} />
+                  </button>
                 </td>
               </tr>
             );
