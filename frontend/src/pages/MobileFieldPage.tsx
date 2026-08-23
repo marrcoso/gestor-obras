@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { api } from '../services/api.js';
 import {
@@ -8,12 +8,9 @@ import {
   Building2,
   WifiOff,
   Wifi,
-  Sparkles,
-  DollarSign,
-  ArrowRight,
-  Clock
+  ArrowLeft,
+  UploadCloud
 } from 'lucide-react';
-import { offlineQueue } from '../services/offlineQueue.js';
 
 export const MobileFieldPage: React.FC = () => {
   const { selectedObra, obras, setSelectedObra, isOnline, user } = useAuth();
@@ -39,22 +36,22 @@ export const MobileFieldPage: React.FC = () => {
   const [enviando, setEnviando] = useState(false);
 
   const categoriasRapidas = [
-    { id: 'MATERIAL_BASICO', label: '🧱 Material Básico' },
-    { id: 'MATERIAL_ACABAMENTO', label: '🎨 Acabamento' },
-    { id: 'MAO_DE_OBRA_DIARIA', label: '👷 Mão de Obra' },
-    { id: 'EQUIPAMENTO_LOCACAO', label: '🚜 Locação Máq.' },
-    { id: 'TRANSPORTE_FRETE', label: '🚚 Frete/Caçamba' },
-    { id: 'ALIMENTACAO_CAMPO', label: '🍲 Almoço/Refeição' },
-    { id: 'OUTROS', label: '📦 Outros' }
+    { id: 'MATERIAL_BASICO', label: 'Material Básico' },
+    { id: 'MATERIAL_ACABAMENTO', label: 'Acabamento' },
+    { id: 'MAO_DE_OBRA_DIARIA', label: 'Mão de Obra' },
+    { id: 'EQUIPAMENTO_LOCACAO', label: 'Locação Máquinas' },
+    { id: 'TRANSPORTE_FRETE', label: 'Frete / Caçamba' },
+    { id: 'ALIMENTACAO_CAMPO', label: 'Almoço / Refeição' },
+    { id: 'OUTROS', label: 'Outros' }
   ];
 
   const etapasRapidas = [
-    { id: 'FUNDACAO_ESTRUTURA', label: '🏗️ Fundação & Estrutura' },
-    { id: 'ALVENARIA_VEDACAO', label: '🧱 Alvenaria & Paredes' },
-    { id: 'COBERTURA_TELHADO', label: '🏠 Telhado & Cobertura' },
-    { id: 'INSTALACOES_ELETRICA_HIDRAULICA', label: '⚡ Elétrica & Hidráulica' },
-    { id: 'REVESTIMENTO_ACABAMENTO', label: '✨ Acabamento & Piso' },
-    { id: 'PINTURA_VIDROS', label: '🎨 Pintura' }
+    { id: 'FUNDACAO_ESTRUTURA', label: 'Fundação & Estrutura' },
+    { id: 'ALVENARIA_VEDACAO', label: 'Alvenaria & Paredes' },
+    { id: 'COBERTURA_TELHADO', label: 'Telhado & Cobertura' },
+    { id: 'INSTALACOES_ELETRICA_HIDRAULICA', label: 'Instalações' },
+    { id: 'REVESTIMENTO_ACABAMENTO', label: 'Acabamento & Piso' },
+    { id: 'PINTURA_VIDROS', label: 'Pintura & Vidros' }
   ];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, isDespesa: boolean) => {
@@ -150,39 +147,38 @@ export const MobileFieldPage: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px 12px' }}>
-      {/* Banner Superior de Conexão */}
+    <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px 12px 64px 12px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {/* Network Status Beacon */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '8px 12px',
-          backgroundColor: isOnline ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.15)',
-          borderRadius: '10px',
-          border: `1px solid ${isOnline ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.4)'}`,
-          marginBottom: '16px'
+          padding: '10px 14px',
+          backgroundColor: isOnline ? 'var(--status-paid-bg)' : 'var(--status-late-bg)',
+          borderRadius: 'var(--radius-md)',
+          border: `1px solid ${isOnline ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          {isOnline ? <Wifi size={16} color="var(--success)" /> : <WifiOff size={16} color="var(--danger)" />}
-          <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: isOnline ? 'var(--success)' : 'var(--danger)' }}>
-            {isOnline ? 'Sinal 4G Conectado' : 'Sem Sinal (Modo Offline Ativo)'}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {isOnline ? <Wifi size={16} color="var(--status-paid)" /> : <WifiOff size={16} color="var(--status-late)" />}
+          <span style={{ fontSize: '12px', fontWeight: 700, color: isOnline ? 'var(--status-paid)' : 'var(--status-late)' }}>
+            {isOnline ? 'Sincronização Online 4G' : 'Modo Offline (Offline-First)'}
           </span>
         </div>
-        <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)' }}>
-          {user?.nome ? `👷 ${user.nome.split(' ')[0]}` : ''}
+        <span className="text-mono-tag">
+          {user?.nome ? user.nome.split(' ')[0] : 'Canteiro'}
         </span>
       </div>
 
-      {/* Seletor Rápido de Obra */}
-      <div className="glass-card" style={{ padding: '14px', marginBottom: '16px' }}>
-        <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
-          Você está no Canteiro:
+      {/* Obra Selector */}
+      <div className="card-constructo" style={{ padding: '14px' }}>
+        <span className="text-mono-tag">
+          OBRA ATIVA NO CANTEIRO
         </span>
         <select
-          className="form-select"
-          style={{ marginTop: '6px', fontWeight: 700, fontSize: 'var(--text-base)' }}
+          className="form-select-constructo"
+          style={{ marginTop: '6px', fontWeight: 700, fontSize: '15px' }}
           value={selectedObra?.id || ''}
           onChange={(e) => {
             const f = obras.find((o) => o.id === e.target.value);
@@ -191,7 +187,7 @@ export const MobileFieldPage: React.FC = () => {
         >
           {obras.map((o) => (
             <option key={o.id} value={o.id}>
-              🏗️ {o.nome}
+              {o.nome} ({o.estado_uf})
             </option>
           ))}
         </select>
@@ -200,40 +196,84 @@ export const MobileFieldPage: React.FC = () => {
       {/* TELA INICIAL: BOTÕES TÁTEIS GIGANTES */}
       {activeFlow === 'home' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Lançar Despesa */}
           <button
             onClick={() => setActiveFlow('despesa')}
-            className="btn-field-action"
             style={{
-              backgroundColor: '#dc2626',
-              background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)'
+              padding: '24px 20px',
+              borderRadius: 'var(--radius-lg)',
+              backgroundColor: '#ea580c',
+              backgroundImage: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
+              color: '#ffffff',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              textAlign: 'left',
+              boxShadow: 'var(--shadow-md)',
+              transition: 'transform 0.15s ease'
             }}
           >
-            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', padding: '16px', borderRadius: '50%' }}>
-              <Receipt size={36} />
+            <div
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                padding: '16px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Receipt size={32} />
             </div>
             <div>
-              <span style={{ fontSize: 'var(--text-lg)', fontWeight: 700 }}>Lançar Cupom / Despesa</span>
-              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 400, opacity: 0.9, marginTop: '2px' }}>
-                Foto do recibo + valor em 3 toques
+              <span style={{ fontSize: 'var(--text-fluid-section)', fontWeight: 800, display: 'block' }}>
+                Lançar Cupom / Despesa
+              </span>
+              <p style={{ fontSize: 'var(--text-fluid-caption)', opacity: 0.9, marginTop: '2px' }}>
+                Foto do comprovante + valor em 3 toques
               </p>
             </div>
           </button>
 
+          {/* Tirar Foto */}
           <button
             onClick={() => setActiveFlow('foto')}
-            className="btn-field-action"
             style={{
+              padding: '24px 20px',
+              borderRadius: 'var(--radius-lg)',
               backgroundColor: '#2563eb',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+              backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+              color: '#ffffff',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              textAlign: 'left',
+              boxShadow: 'var(--shadow-md)',
+              transition: 'transform 0.15s ease'
             }}
           >
-            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', padding: '16px', borderRadius: '50%' }}>
-              <Camera size={36} />
+            <div
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                padding: '16px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Camera size={32} />
             </div>
             <div>
-              <span style={{ fontSize: 'var(--text-lg)', fontWeight: 700 }}>Tirar Foto da Evolução</span>
-              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 400, opacity: 0.9, marginTop: '2px' }}>
-                Salvar avanço no Diário da Obra
+              <span style={{ fontSize: '18px', fontWeight: 800, display: 'block' }}>
+                Foto da Evolução da Obra
+              </span>
+              <p style={{ fontSize: '12px', opacity: 0.9, marginTop: '2px' }}>
+                Salva no Diário com geolocalização e data
               </p>
             </div>
           </button>
@@ -242,27 +282,27 @@ export const MobileFieldPage: React.FC = () => {
 
       {/* FLUXO: LANÇAR DESPESA RÁPIDA */}
       {activeFlow === 'despesa' && (
-        <div className="glass-card">
+        <div className="card-constructo">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800 }}>🧾 Lançamento Rápido</h3>
+            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Lançamento Rápido</h3>
             <button
               onClick={() => setActiveFlow('home')}
-              className="btn btn-secondary"
-              style={{ padding: '4px 10px', fontSize: 'var(--text-xs)' }}
+              className="btn-constructo btn-secondary-slate"
+              style={{ padding: '6px 12px', fontSize: '12px', gap: '4px' }}
             >
-              Voltar
+              <ArrowLeft size={14} /> Voltar
             </button>
           </div>
 
-          <form onSubmit={handleSalvarDespesaRapida}>
+          <form onSubmit={handleSalvarDespesaRapida} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {/* Foto do Cupom */}
-            <div className="form-group">
-              <label className="form-label">1. Foto do Cupom / Recibo:</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">1. FOTO DO CUPOM / RECIBO</label>
               <input
                 type="file"
                 accept="image/*"
                 capture="environment"
-                className="form-input"
+                className="form-input-constructo"
                 onChange={(e) => handleFileChange(e, true)}
               />
               {comprovantePreview && (
@@ -277,14 +317,14 @@ export const MobileFieldPage: React.FC = () => {
             </div>
 
             {/* Campo Gigante de Valor */}
-            <div className="form-group">
-              <label className="form-label">2. Valor Pago (R$) *</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">2. VALOR TOTAL PAGO (R$) *</label>
               <input
                 type="number"
                 step="0.01"
-                className="form-input"
-                style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, textAlign: 'center', padding: '14px' }}
-                placeholder="R$ 0,00"
+                className="form-input-constructo font-data-tabular"
+                style={{ fontSize: '28px', fontWeight: 800, textAlign: 'center', padding: '12px' }}
+                placeholder="0.00"
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
                 required
@@ -293,8 +333,8 @@ export const MobileFieldPage: React.FC = () => {
             </div>
 
             {/* Chips de Categorias Rápidas */}
-            <div className="form-group">
-              <label className="form-label">3. Categoria:</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">3. CATEGORIA</label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 {categoriasRapidas.map((cat) => (
                   <button
@@ -304,10 +344,10 @@ export const MobileFieldPage: React.FC = () => {
                     style={{
                       padding: '10px 8px',
                       borderRadius: '8px',
-                      fontSize: 'var(--text-xs)',
+                      fontSize: '12px',
                       fontWeight: 600,
                       border: `1px solid ${categoria === cat.id ? 'var(--primary)' : 'var(--border)'}`,
-                      backgroundColor: categoria === cat.id ? 'var(--primary-light)' : 'var(--bg-input)',
+                      backgroundColor: categoria === cat.id ? 'var(--primary-light)' : 'var(--bg-surface-low)',
                       color: categoria === cat.id ? 'var(--primary)' : 'var(--text-muted)',
                       cursor: 'pointer',
                       textAlign: 'center'
@@ -320,12 +360,12 @@ export const MobileFieldPage: React.FC = () => {
             </div>
 
             {/* Descrição Opcional */}
-            <div className="form-group">
-              <label className="form-label">4. Descrição (opcional):</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">4. DESCRIÇÃO / FORNECEDOR (OPCIONAL)</label>
               <input
                 type="text"
-                className="form-input"
-                placeholder="Ex: 50 sacos de areia grossa"
+                className="form-input-constructo"
+                placeholder="Ex: 50 sacos de areia média"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
               />
@@ -334,10 +374,10 @@ export const MobileFieldPage: React.FC = () => {
             <button
               type="submit"
               disabled={enviando || !valor}
-              className="btn btn-primary btn-lg"
-              style={{ width: '100%', marginTop: '12px', fontWeight: 800 }}
+              className="btn-constructo btn-primary-orange"
+              style={{ width: '100%', padding: '14px', fontSize: '15px', fontWeight: 800, marginTop: '8px' }}
             >
-              {enviando ? 'Gravando...' : '💾 Salvar Lançamento'}
+              {enviando ? 'Gravando Lançamento...' : 'Salvar no Caixa'}
             </button>
           </form>
         </div>
@@ -345,26 +385,26 @@ export const MobileFieldPage: React.FC = () => {
 
       {/* FLUXO: FOTO DIÁRIO RÁPIDO */}
       {activeFlow === 'foto' && (
-        <div className="glass-card">
+        <div className="card-constructo">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 800 }}>📸 Foto do Diário</h3>
+            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Foto do Diário</h3>
             <button
               onClick={() => setActiveFlow('home')}
-              className="btn btn-secondary"
-              style={{ padding: '4px 10px', fontSize: 'var(--text-xs)' }}
+              className="btn-constructo btn-secondary-slate"
+              style={{ padding: '6px 12px', fontSize: '12px', gap: '4px' }}
             >
-              Voltar
+              <ArrowLeft size={14} /> Voltar
             </button>
           </div>
 
-          <form onSubmit={handleSalvarFotoRapida}>
-            <div className="form-group">
-              <label className="form-label">1. Câmera / Selecionar Imagem *</label>
+          <form onSubmit={handleSalvarFotoRapida} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">1. CÂMERA / SELECIONAR IMAGEM *</label>
               <input
                 type="file"
                 accept="image/*"
                 capture="environment"
-                className="form-input"
+                className="form-input-constructo"
                 onChange={(e) => handleFileChange(e, false)}
                 required
               />
@@ -379,8 +419,8 @@ export const MobileFieldPage: React.FC = () => {
               )}
             </div>
 
-            <div className="form-group">
-              <label className="form-label">2. Etapa Atual:</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">2. ETAPA CONSTRUTIVA ATUAL</label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 {etapasRapidas.map((et) => (
                   <button
@@ -390,11 +430,11 @@ export const MobileFieldPage: React.FC = () => {
                     style={{
                       padding: '10px 8px',
                       borderRadius: '8px',
-                      fontSize: 'var(--text-xs)',
+                      fontSize: '12px',
                       fontWeight: 600,
-                      border: `1px solid ${etapa === et.id ? 'var(--primary)' : 'var(--border)'}`,
-                      backgroundColor: etapa === et.id ? 'var(--primary-light)' : 'var(--bg-input)',
-                      color: etapa === et.id ? 'var(--primary)' : 'var(--text-muted)',
+                      border: `1px solid ${etapa === et.id ? 'var(--technical-blue)' : 'var(--border)'}`,
+                      backgroundColor: etapa === et.id ? 'var(--technical-blue-light)' : 'var(--bg-surface-low)',
+                      color: etapa === et.id ? 'var(--technical-blue)' : 'var(--text-muted)',
                       cursor: 'pointer',
                       textAlign: 'center'
                     }}
@@ -405,10 +445,10 @@ export const MobileFieldPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">3. Observação do Dia (opcional):</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">3. OBSERVAÇÃO DO DIA (OPCIONAL)</label>
               <textarea
-                className="form-textarea"
+                className="form-input-constructo"
                 rows={2}
                 placeholder="Ex: Concluída concretagem dos pilares do térreo."
                 value={observacaoFoto}
@@ -419,10 +459,10 @@ export const MobileFieldPage: React.FC = () => {
             <button
               type="submit"
               disabled={enviando}
-              className="btn btn-primary btn-lg"
-              style={{ width: '100%', marginTop: '12px', fontWeight: 800 }}
+              className="btn-constructo btn-tech-blue"
+              style={{ width: '100%', padding: '14px', fontSize: '15px', fontWeight: 800, marginTop: '8px' }}
             >
-              {enviando ? 'Gravando...' : '📷 Salvar Foto'}
+              {enviando ? 'Gravando Foto...' : 'Salvar no Diário'}
             </button>
           </form>
         </div>
@@ -430,31 +470,32 @@ export const MobileFieldPage: React.FC = () => {
 
       {/* FLUXO: SUCESSO */}
       {activeFlow === 'sucesso' && (
-        <div className="glass-card" style={{ textAlign: 'center', padding: '36px 20px' }}>
+        <div className="card-constructo" style={{ textAlign: 'center', padding: '40px 20px' }}>
           <div
             style={{
-              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+              backgroundColor: 'var(--status-paid-bg)',
               width: '64px',
               height: '64px',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 16px auto'
+              margin: '0 auto 16px auto',
+              color: 'var(--status-paid)'
             }}
           >
-            <Check size={36} color="#10b981" />
+            <Check size={36} />
           </div>
 
-          <h3 style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
+          <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
             Registro Concluído!
           </h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginBottom: '24px' }}>{sucessoMsg}</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>{sucessoMsg}</p>
 
           <button
             onClick={() => setActiveFlow('home')}
-            className="btn btn-primary btn-lg"
-            style={{ width: '100%', fontWeight: 700 }}
+            className="btn-constructo btn-primary-orange"
+            style={{ width: '100%', padding: '14px', fontSize: '15px', fontWeight: 800 }}
           >
             Fazer Novo Registro
           </button>
@@ -463,3 +504,4 @@ export const MobileFieldPage: React.FC = () => {
     </div>
   );
 };
+

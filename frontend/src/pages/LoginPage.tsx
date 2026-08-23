@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useTheme } from '../context/ThemeContext.js';
-import { HardHat, ShieldCheck, Smartphone, ArrowRight, Building2, Sun, Moon } from 'lucide-react';
+import { HardHat, ShieldCheck, Smartphone, Sun, Moon } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, login, loginDemo } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [isRegister, setIsRegister] = useState(false);
+  const [isRegister] = useState(false);
 
   // Redireciona se já autenticado
   useEffect(() => {
@@ -20,9 +20,6 @@ export const LoginPage: React.FC = () => {
   // Form State
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [nomeConstrutora, setNomeConstrutora] = useState('');
-  const [nomeUsuario, setNomeUsuario] = useState('');
-  const [telefone, setTelefone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -31,11 +28,7 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      if (isRegister) {
-        // Registro
-      } else {
-        await login(email, senha);
-      }
+      await login(email, senha);
     } catch (err: any) {
       setError(err.message || 'Erro ao autenticar. Verifique seus dados.');
     } finally {
@@ -63,25 +56,21 @@ export const LoginPage: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px',
-        backgroundColor: 'var(--bg-dark)',
+        padding: '24px 16px',
+        backgroundColor: 'var(--bg-app)',
         position: 'relative'
       }}
     >
+      {/* Top Bar Theme Switcher */}
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
         <button
           onClick={toggleTheme}
-          className="btn btn-secondary"
-          style={{
-            padding: '8px 12px',
-            borderRadius: '8px',
-            color: theme === 'dark' ? '#f59e0b' : '#3b82f6',
-            gap: '6px'
-          }}
+          className="btn-constructo btn-secondary-slate"
+          style={{ padding: '8px 12px', fontSize: '12px', gap: '6px' }}
           title={theme === 'dark' ? 'Mudar para Tema Claro' : 'Mudar para Tema Escuro'}
         >
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          <span style={{ fontSize: 'var(--text-xs)' }}>{theme === 'dark' ? 'Claro' : 'Escuro'}</span>
+          {theme === 'dark' ? <Sun size={15} color="#f59e0b" /> : <Moon size={15} color="#3b82f6" />}
+          <span>{theme === 'dark' ? 'Claro' : 'Escuro'}</span>
         </button>
       </div>
 
@@ -93,56 +82,89 @@ export const LoginPage: React.FC = () => {
               backgroundColor: 'var(--primary)',
               width: '56px',
               height: '56px',
-              borderRadius: '16px',
+              borderRadius: '14px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 16px auto',
-              color: '#fff',
-              boxShadow: 'var(--shadow-primary)'
+              color: '#ffffff',
+              boxShadow: '0 8px 24px rgba(249, 115, 22, 0.3)'
             }}
           >
             <HardHat size={32} />
           </div>
-          <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 800 }}>ERP LEVE DE OBRAS</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginTop: '4px' }}>
+          <h1 className="heading-hero">
+            ERP LEVE CONSTRUTORA
+          </h1>
+          <p className="text-subtitle" style={{ marginTop: '4px' }}>
             Fluxo de Caixa Segregado, SINAPI & Canteiro Mobile
           </p>
         </div>
 
         {/* Card Principal */}
-        <div className="glass-card" style={{ padding: '28px' }}>
+        <div className="card-constructo" style={{ padding: '28px' }}>
           {error && (
-            <div className="badge badge-danger" style={{ display: 'block', padding: '8px 12px', marginBottom: '16px' }}>
+            <div
+              style={{
+                backgroundColor: 'var(--status-late-bg)',
+                color: 'var(--status-late)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                marginBottom: '18px'
+              }}
+            >
               {error}
             </div>
           )}
 
           {/* Atalhos de Acesso Instantâneo Demo */}
           <div style={{ marginBottom: '24px' }}>
-            <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-dim)', fontWeight: 700, textTransform: 'uppercase' }}>
-              ⚡ Acesso Rápido de Demonstração (1 Clique):
+            <span
+              className="text-mono-tag"
+              style={{ color: 'var(--text-dim)', display: 'block', marginBottom: '8px' }}
+            >
+              ACESSO RÁPIDO DE DEMONSTRAÇÃO (1 CLIQUE):
             </span>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <button
                 type="button"
                 onClick={() => handleDemo('ADMIN')}
                 disabled={loading}
-                className="btn btn-secondary"
                 style={{
-                  justifyContent: 'flex-start',
-                  padding: '12px',
-                  backgroundColor: 'var(--bg-input)',
-                  border: '1px solid var(--border)'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 14px',
+                  backgroundColor: 'var(--bg-surface-low)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.15s ease'
                 }}
               >
-                <ShieldCheck size={18} color="#f59e0b" />
-                <div style={{ textAlign: 'left' }}>
-                  <p style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
-                    Entrar como Dono / Engenheiro
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#f59e0b'
+                  }}
+                >
+                  <ShieldCheck size={20} />
+                </div>
+                <div>
+                  <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)', lineHeight: '1.2' }}>
+                    Engenheiro / Gestor Geral
                   </p>
-                  <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                     Visão financeira completa & SINAPI
                   </span>
                 </div>
@@ -152,21 +174,39 @@ export const LoginPage: React.FC = () => {
                 type="button"
                 onClick={() => handleDemo('MESTRE_OBRA')}
                 disabled={loading}
-                className="btn btn-secondary"
                 style={{
-                  justifyContent: 'flex-start',
-                  padding: '12px',
-                  backgroundColor: 'var(--bg-input)',
-                  border: '1px solid var(--border)'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 14px',
+                  backgroundColor: 'var(--bg-surface-low)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.15s ease'
                 }}
               >
-                <Smartphone size={18} color="var(--primary)" />
-                <div style={{ textAlign: 'left' }}>
-                  <p style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.1 }}>
-                    Entrar como Mestre de Obras
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'var(--technical-blue)'
+                  }}
+                >
+                  <Smartphone size={20} />
+                </div>
+                <div>
+                  <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)', lineHeight: '1.2' }}>
+                    Mestre de Obras (Canteiro)
                   </p>
-                  <span style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)' }}>
-                    Visão de campo / fotos e cupons
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    Lançamentos de campo & diário fotográfico
                   </span>
                 </div>
               </button>
@@ -180,32 +220,35 @@ export const LoginPage: React.FC = () => {
               gap: '10px',
               margin: '20px 0',
               color: 'var(--text-dim)',
-              fontSize: 'var(--text-xs)'
+              fontSize: '11px',
+              fontFamily: 'var(--font-body)',
+              letterSpacing: '0.04em',
+              fontWeight: 600
             }}
           >
             <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
-            <span>ou entrar com email</span>
+            <span>OU ENTRAR COM EMAIL</span>
             <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label">Email Corporativo</label>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">Email Corporativo</label>
               <input
                 type="email"
-                className="form-input"
+                className="form-input-constructo"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu.email@empresa.com"
+                placeholder="seu.email@construtora.com"
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Senha de Acesso</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">Senha de Acesso</label>
               <input
                 type="password"
-                className="form-input"
+                className="form-input-constructo"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 placeholder="••••••••"
@@ -216,18 +259,22 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary"
-              style={{ width: '100%', padding: '12px', marginTop: '8px' }}
+              className="btn-constructo btn-primary-orange"
+              style={{ width: '100%', padding: '12px', marginTop: '6px', fontSize: '14px' }}
             >
               {loading ? 'Acessando...' : 'Entrar no Sistema'}
             </button>
           </form>
         </div>
 
-        <p style={{ textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--text-dim)', marginTop: '20px' }}>
-          ERP Leve de Obras • Multi-Tenant SaaS B2B
+        <p
+          className="text-mono-tag"
+          style={{ textAlign: 'center', fontSize: '10px', color: 'var(--text-dim)', marginTop: '20px', display: 'block' }}
+        >
+          CONSTRUCTO PRO • MULTI-TENANT ISOLATED CENTROS DE CUSTO
         </p>
       </div>
     </div>
   );
 };
+
