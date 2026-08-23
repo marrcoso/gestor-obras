@@ -2,23 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { ContaReceber, InadimplenciaRadarData } from '../types/index.js';
 import { api } from '../services/api.js';
+import { PageHeader } from '../components/layout/PageHeader.js';
+import { KpiCard } from '../components/ui/KpiCard.js';
+import { Button } from '../components/ui/Button.js';
+import { SearchBar } from '../components/ui/SearchBar.js';
+import { LoadingState } from '../components/ui/LoadingState.js';
+import { ReceivableTable } from '../components/domain/inadimplencia/ReceivableTable.js';
+import { NewReceivableModal } from '../components/domain/inadimplencia/NewReceivableModal.js';
+import { WhatsAppModal } from '../components/WhatsAppModal.js';
 import {
   AlertTriangle,
-  MessageSquare,
-  Check,
-  Calendar,
-  DollarSign,
-  Plus,
-  Clock,
   Download,
-  Search,
-  Gavel,
-  CheckCircle,
+  Plus,
   Wallet,
-  TrendingUp,
-  X
+  Clock,
+  Gavel
 } from 'lucide-react';
-import { WhatsAppModal } from '../components/WhatsAppModal.js';
 
 export const InadimplenciaPage: React.FC = () => {
   const { obras, selectedObra, refreshObras } = useAuth();
@@ -30,13 +29,6 @@ export const InadimplenciaPage: React.FC = () => {
   // Modals
   const [selectedContaIdWhatsApp, setSelectedContaIdWhatsApp] = useState<string | null>(null);
   const [modalNovaConta, setModalNovaConta] = useState(false);
-
-  // Form State
-  const [obraIdForm, setObraIdForm] = useState(selectedObra?.id || '');
-  const [numeroParcela, setNumeroParcela] = useState('1');
-  const [descricaoMedicao, setDescricaoMedicao] = useState('');
-  const [valor, setValor] = useState('');
-  const [dataVencimento, setDataVencimento] = useState('');
   const [salvando, setSalvando] = useState(false);
 
   const carregarDados = async () => {
@@ -57,7 +49,6 @@ export const InadimplenciaPage: React.FC = () => {
 
   useEffect(() => {
     carregarDados();
-    if (selectedObra) setObraIdForm(selectedObra.id);
   }, [selectedObra]);
 
   const handleMarcarRecebido = async (id: string) => {
@@ -71,23 +62,17 @@ export const InadimplenciaPage: React.FC = () => {
     }
   };
 
-  const handleSalvarConta = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!obraIdForm || !descricaoMedicao || !valor || !dataVencimento) return;
-
+  const handleSalvarConta = async (payload: {
+    obraId: string;
+    numeroParcela: number;
+    descricaoMedicao: string;
+    valor: number;
+    dataVencimento: string;
+  }) => {
     setSalvando(true);
     try {
-      await api.createContaReceber({
-        obraId: obraIdForm,
-        numeroParcela: Number(numeroParcela),
-        descricaoMedicao,
-        valor: Number(valor),
-        dataVencimento
-      });
+      await api.createContaReceber(payload);
       setModalNovaConta(false);
-      setDescricaoMedicao('');
-      setValor('');
-      setDataVencimento('');
       await carregarDados();
     } catch (e: any) {
       alert(e.message || 'Erro ao cadastrar parcela.');
@@ -117,47 +102,30 @@ export const InadimplenciaPage: React.FC = () => {
         onSuccess={() => carregarDados()}
       />
 
+      <NewReceivableModal
+        isOpen={modalNovaConta}
+        onClose={() => setModalNovaConta(false)}
+        obras={obras}
+        selectedObraId={selectedObra?.id || ''}
+        onSave={handleSalvarConta}
+        saving={salvando}
+      />
+
       {/* Header Section */}
-      <section
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          gap: '16px',
-          paddingTop: '4px'
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <h1 className="heading-page">
-            Radar de Inadimplência
-          </h1>
-          <p className="text-subtitle">
-            Visão geral dos recebimentos atrasados, réguas de cobrança e acionamento em 1 clique via WhatsApp.
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button
-            onClick={() => window.print()}
-            className="btn-constructo btn-secondary-slate"
-            style={{ gap: '6px' }}
-          >
-            <Download size={16} />
-            <span className="text-mono-tag">Exportar Relatório</span>
-          </button>
-
-          <button
-            onClick={() => setModalNovaConta(true)}
-            className="btn-constructo btn-primary-orange"
-            style={{ gap: '6px' }}
-          >
-            <Plus size={16} />
-            <span className="text-mono-tag">Nova Medição</span>
-          </button>
-        </div>
-      </section>
+      <PageHeader
+        title="Radar de Inadimplência"
+        subtitle="Visão geral dos recebimentos atrasados, réguas de cobrança e acionamento em 1 clique via WhatsApp."
+        actions={
+          <>
+            <Button variant="secondary" icon={Download} onClick={() => window.print()}>
+              Exportar Relatório
+            </Button>
+            <Button variant="primary" icon={Plus} onClick={() => setModalNovaConta(true)}>
+              Nova Medição
+            </Button>
+          </>
+        }
+      />
 
       {/* 4 Aging KPI Cards */}
       <section
@@ -167,132 +135,37 @@ export const InadimplenciaPage: React.FC = () => {
           gap: 'clamp(12px, 1.5vw, 20px)'
         }}
       >
-        {/* TOTAL VENCIDO */}
-        <div className="stat-kpi-card group">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              TOTAL VENCIDO
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--status-late)'
-              }}
-            >
-              <Wallet size={18} />
-            </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value" style={{ color: 'var(--status-late)' }}>
-              {formatMoney(radar?.total_vencido || 0)}
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
-              <TrendingUp size={14} color="var(--status-late)" />
-              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--status-late)' }}>
-                {radar?.total_clientes_inadimplentes || 0} contratos pendentes
-              </span>
-            </div>
-          </div>
-        </div>
+        <KpiCard
+          title="TOTAL VENCIDO"
+          value={formatMoney(radar?.total_vencido || 0)}
+          icon={Wallet}
+          variant="red"
+          subtitle={`${radar?.total_clientes_inadimplentes || 0} contratos pendentes`}
+        />
 
-        {/* 1-15 DIAS */}
-        <div className="stat-kpi-card group">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              1-15 DIAS
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(245, 158, 11, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--status-pending)'
-              }}
-            >
-              <Clock size={18} />
-            </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value">
-              {formatMoney(radar?.aging.vencido_1_a_15_dias || 0)}
-            </span>
-            <span className="text-caption-responsive" style={{ marginTop: '4px' }}>
-              Atraso leve (Lembrete cordial)
-            </span>
-          </div>
-        </div>
+        <KpiCard
+          title="1-15 DIAS (LEVE)"
+          value={formatMoney(radar?.aging.vencido_1_a_15_dias || 0)}
+          icon={Clock}
+          variant="amber"
+          subtitle="Lembrete cordial WhatsApp"
+        />
 
-        {/* 16-30 DIAS */}
-        <div className="stat-kpi-card group">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              16-30 DIAS
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(249, 115, 22, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--status-warning)'
-              }}
-            >
-              <AlertTriangle size={18} />
-            </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value">
-              {formatMoney(radar?.aging.vencido_16_a_30_dias || 0)}
-            </span>
-            <span className="text-caption-responsive" style={{ marginTop: '4px' }}>
-              Aviso de paralisação de etapa
-            </span>
-          </div>
-        </div>
+        <KpiCard
+          title="16-30 DIAS (ATENÇÃO)"
+          value={formatMoney(radar?.aging.vencido_16_a_30_dias || 0)}
+          icon={AlertTriangle}
+          variant="orange"
+          subtitle="Aviso de paralisação de etapa"
+        />
 
-        {/* +30 DIAS (CRÍTICO) */}
-        <div className="stat-kpi-card group">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              +30 DIAS (CRÍTICO)
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--status-late)'
-              }}
-            >
-              <Gavel size={18} />
-            </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value" style={{ color: 'var(--status-late)' }}>
-              {formatMoney(radar?.aging.vencido_mais_30_dias || 0)}
-            </span>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--status-late)', marginTop: '4px' }}>
-              Encaminhado para cobrança jurídica
-            </span>
-          </div>
-        </div>
+        <KpiCard
+          title="+30 DIAS (CRÍTICO)"
+          value={formatMoney(radar?.aging.vencido_mais_30_dias || 0)}
+          icon={Gavel}
+          variant="red"
+          subtitle="Encaminhado para jurídico"
+        />
       </section>
 
       {/* 2-Column Split Layout: Table (2/3) vs Visual Insight (1/3) */}
@@ -322,7 +195,9 @@ export const InadimplenciaPage: React.FC = () => {
                 borderBottom: '2px solid var(--border)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '10px'
               }}
             >
               <h2 className="heading-section" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -330,162 +205,26 @@ export const InadimplenciaPage: React.FC = () => {
                 Faturas & Medições em Atraso
               </h2>
 
-              <div style={{ position: 'relative', width: '220px' }}>
-                <Search
-                  size={15}
-                  color="var(--text-dim)"
-                  style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}
-                />
-                <input
-                  type="text"
-                  placeholder="Buscar cliente..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="form-input-constructo"
-                  style={{ paddingLeft: '32px', minHeight: '34px', fontSize: '13px' }}
-                />
-              </div>
+              <SearchBar
+                placeholder="Buscar cliente ou obra..."
+                value={searchQuery}
+                onChange={setSearchQuery}
+                style={{ maxWidth: '260px' }}
+              />
             </div>
 
             {/* Table */}
-            <div style={{ overflowX: 'auto', width: '100%' }}>
-              <table className="table-constructo">
-                <thead>
-                  <tr>
-                    <th style={{ width: '28%' }}>Cliente / Obra</th>
-                    <th>Parcela</th>
-                    <th style={{ textAlign: 'right' }}>Vencimento</th>
-                    <th style={{ textAlign: 'right' }}>Valor</th>
-                    <th style={{ textAlign: 'center', width: '15%' }}>Status</th>
-                    <th style={{ textAlign: 'right', width: '18%' }}>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredContas.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
-                        Nenhuma fatura em atraso encontrada.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredContas.map((conta) => {
-                      const isRecebido = conta.status === 'RECEBIDO';
-                      const isLate = conta.is_vencido || conta.status === 'ATRASADO';
-                      const dias = conta.dias_atraso || 0;
-
-                      return (
-                        <tr
-                          key={conta.id}
-                          style={{
-                            backgroundColor: isLate && !isRecebido ? 'var(--status-late-bg)' : 'transparent'
-                          }}
-                        >
-                          {/* Cliente / Obra */}
-                          <td>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                              <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>
-                                {conta.cliente_nome}
-                              </span>
-                              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
-                                {conta.obra_nome}
-                              </span>
-                            </div>
-                          </td>
-
-                          {/* Parcela */}
-                          <td style={{ color: 'var(--text-muted)' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                              <span>{conta.numero_parcela}ª Parcela</span>
-                              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
-                                {conta.descricao_medicao}
-                              </span>
-                            </div>
-                          </td>
-
-                          {/* Vencimento com Badge de Dias */}
-                          <td className="font-data-tabular" style={{ textAlign: 'right' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                              <span style={{ fontWeight: 600, color: isLate ? 'var(--status-late)' : 'var(--text-main)' }}>
-                                {conta.data_vencimento ? conta.data_vencimento.split('-').reverse().join('/') : '—'}
-                              </span>
-                              {isLate && !isRecebido && (
-                                <span
-                                  style={{
-                                    fontSize: '10px',
-                                    fontWeight: 700,
-                                    backgroundColor: dias > 30 ? 'var(--status-late)' : 'var(--status-warning)',
-                                    color: '#ffffff',
-                                    padding: '1px 6px',
-                                    borderRadius: '4px',
-                                    fontFamily: 'var(--font-body)',
-                                    letterSpacing: '0.02em',
-                                    marginTop: '2px'
-                                  }}
-                                >
-                                  {dias} dias
-                                </span>
-                              )}
-                            </div>
-                          </td>
-
-                          {/* Valor */}
-                          <td
-                            className="font-data-tabular"
-                            style={{ textAlign: 'right', fontWeight: 700, color: 'var(--text-main)' }}
-                          >
-                            {formatMoney(conta.valor)}
-                          </td>
-
-                          {/* Status */}
-                          <td style={{ textAlign: 'center' }}>
-                            {isRecebido ? (
-                              <span className="chip-status status-pago">RECEBIDO</span>
-                            ) : dias > 30 ? (
-                              <span className="chip-status status-critico">CRÍTICO</span>
-                            ) : dias > 15 ? (
-                              <span className="chip-status status-atencao">ATENÇÃO</span>
-                            ) : (
-                              <span className="chip-status status-recente">RECENTE</span>
-                            )}
-                          </td>
-
-                          {/* Ações */}
-                          <td style={{ textAlign: 'right' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
-                              {!isRecebido && (
-                                <>
-                                  <button
-                                    onClick={() => setSelectedContaIdWhatsApp(conta.id)}
-                                    className="btn-constructo btn-whatsapp"
-                                    style={{ padding: '6px 10px', minHeight: '30px', fontSize: '11px', gap: '4px' }}
-                                    title="Disparar Lembrete no WhatsApp"
-                                  >
-                                    <MessageSquare size={14} /> WhatsApp
-                                  </button>
-
-                                  <button
-                                    onClick={() => handleMarcarRecebido(conta.id)}
-                                    className="btn-constructo btn-tech-blue"
-                                    style={{ padding: '6px 10px', minHeight: '30px', fontSize: '11px', gap: '4px' }}
-                                    title="Dar Baixa e creditar no caixa"
-                                  >
-                                    <Check size={14} />
-                                  </button>
-                                </>
-                              )}
-                              {isRecebido && (
-                                <span style={{ fontSize: '12px', color: 'var(--status-paid)', fontWeight: 600 }}>
-                                  ✓ Liquidado
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
+            <div style={{ padding: '16px' }}>
+              {loading ? (
+                <LoadingState message="Carregando faturas e recebíveis..." minHeight="200px" />
+              ) : (
+                <ReceivableTable
+                  contas={filteredContas}
+                  formatMoney={formatMoney}
+                  onOpenWhatsApp={setSelectedContaIdWhatsApp}
+                  onMarkPaid={handleMarcarRecebido}
+                />
+              )}
             </div>
           </div>
         </section>
@@ -502,15 +241,7 @@ export const InadimplenciaPage: React.FC = () => {
             }}
           >
             <div>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-headline)',
-                  fontSize: '17px',
-                  fontWeight: 700,
-                  color: 'var(--text-main)',
-                  marginBottom: '12px'
-                }}
-              >
+              <h3 className="heading-card" style={{ marginBottom: '12px' }}>
                 Análise Visual de Inadimplência
               </h3>
 
@@ -553,119 +284,6 @@ export const InadimplenciaPage: React.FC = () => {
           </div>
         </section>
       </div>
-
-      {/* Modal Nova Medição / Parcela */}
-      {modalNovaConta && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '16px 20px',
-                borderBottom: '1px solid var(--border)'
-              }}
-            >
-              <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Cadastrar Nova Medição / Parcela</h3>
-              <button
-                onClick={() => setModalNovaConta(false)}
-                style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSalvarConta} style={{ padding: '20px' }}>
-              <div className="form-group-constructo">
-                <label className="form-label-constructo">Obra Vinculada *</label>
-                <select
-                  className="form-select-constructo"
-                  value={obraIdForm}
-                  onChange={(e) => setObraIdForm(e.target.value)}
-                  required
-                >
-                  <option value="">Selecione uma obra</option>
-                  {obras.map((o) => (
-                    <option key={o.id} value={o.id}>
-                      {o.nome} ({o.cliente_nome})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px' }}>
-                <div className="form-group-constructo">
-                  <label className="form-label-constructo">Nº Parcela</label>
-                  <input
-                    type="number"
-                    min="1"
-                    className="form-input-constructo"
-                    value={numeroParcela}
-                    onChange={(e) => setNumeroParcela(e.target.value)}
-                  />
-                </div>
-
-                <div className="form-group-constructo">
-                  <label className="form-label-constructo">Descrição do Marco *</label>
-                  <input
-                    type="text"
-                    className="form-input-constructo"
-                    value={descricaoMedicao}
-                    onChange={(e) => setDescricaoMedicao(e.target.value)}
-                    placeholder="Ex: Conclusão Alvenaria Térrea"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div className="form-group-constructo">
-                  <label className="form-label-constructo">Valor da Parcela (R$) *</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    className="form-input-constructo"
-                    value={valor}
-                    onChange={(e) => setValor(e.target.value)}
-                    placeholder="0.00"
-                    required
-                  />
-                </div>
-
-                <div className="form-group-constructo">
-                  <label className="form-label-constructo">Data de Vencimento *</label>
-                  <input
-                    type="date"
-                    className="form-input-constructo"
-                    value={dataVencimento}
-                    onChange={(e) => setDataVencimento(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-                <button
-                  type="button"
-                  onClick={() => setModalNovaConta(false)}
-                  className="btn-constructo btn-secondary-slate"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={salvando}
-                  className="btn-constructo btn-primary-orange"
-                >
-                  {salvando ? 'Salvando...' : 'Cadastrar Parcela'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
-

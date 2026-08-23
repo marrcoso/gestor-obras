@@ -3,18 +3,21 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { Obra, InadimplenciaRadarData, TransacaoFinanceira } from '../types/index.js';
 import { api } from '../services/api.js';
+import { PageHeader } from '../components/layout/PageHeader.js';
+import { KpiCard } from '../components/ui/KpiCard.js';
+import { Button } from '../components/ui/Button.js';
+import { LoadingState } from '../components/ui/LoadingState.js';
+import { ObraCard } from '../components/domain/dashboard/ObraCard.js';
+import { RecentTransactionsFeed } from '../components/domain/dashboard/RecentTransactionsFeed.js';
 import {
-  TrendingUp,
+  Landmark,
   AlertTriangle,
+  FileInput,
   Building2,
   Filter,
   Download,
   Plus,
-  Receipt,
-  Camera,
-  ArrowUpRight,
-  Landmark,
-  FileInput
+  ArrowUpRight
 } from 'lucide-react';
 
 interface DashboardPageProps {
@@ -67,58 +70,34 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
   const formatMoney = (val: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
 
+  if (loading) {
+    return (
+      <div className="page-body">
+        <LoadingState message="Carregando dados executivos..." minHeight="400px" />
+      </div>
+    );
+  }
+
   return (
     <div className="page-body" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2.5vw, 24px)' }}>
-      {/* Header Section */}
-      <section
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          gap: '16px',
-          paddingTop: '4px'
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <h1 className="heading-page">
-            Visão Executiva da Construtora
-          </h1>
-          <p className="text-subtitle" style={{ maxWidth: '680px' }}>
-            Acompanhamento consolidado do fluxo de caixa, orçamento de obras e saúde financeira da empresa.
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            onClick={() => handleNavigate('fluxo')}
-            className="btn-constructo btn-secondary-slate"
-            style={{ gap: '6px' }}
-          >
-            <Filter size={16} />
-            <span className="text-mono-tag">FILTRAR</span>
-          </button>
-
-          <button
-            onClick={() => window.print()}
-            className="btn-constructo btn-tech-blue"
-            style={{ gap: '6px' }}
-          >
-            <Download size={16} />
-            <span className="text-mono-tag">RELATÓRIO</span>
-          </button>
-
-          <button
-            onClick={handleOpenModal}
-            className="btn-constructo btn-primary-orange"
-            style={{ gap: '6px' }}
-          >
-            <Plus size={16} />
-            <span className="text-mono-tag">NOVA OBRA</span>
-          </button>
-        </div>
-      </section>
+      {/* Page Header */}
+      <PageHeader
+        title="Visão Executiva da Construtora"
+        subtitle="Acompanhamento consolidado do fluxo de caixa, orçamento de obras e saúde financeira da empresa."
+        actions={
+          <>
+            <Button variant="secondary" icon={Filter} onClick={() => handleNavigate('fluxo')}>
+              FILTRAR
+            </Button>
+            <Button variant="tech-blue" icon={Download} onClick={() => window.print()}>
+              RELATÓRIO
+            </Button>
+            <Button variant="primary" icon={Plus} onClick={handleOpenModal}>
+              NOVA OBRA
+            </Button>
+          </>
+        }
+      />
 
       {/* KPI Cards Section */}
       <section
@@ -128,196 +107,42 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
           gap: 'clamp(12px, 1.5vw, 20px)'
         }}
       >
-        {/* Saldo Consolidado */}
-        <div className="stat-kpi-card group">
-          <Landmark className="kpi-watermark-icon" color="var(--technical-blue)" />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--technical-blue)'
-              }}
-            >
-              <Landmark size={18} />
-            </div>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              SALDO CONSOLIDADO
-            </span>
-          </div>
+        <KpiCard
+          title="SALDO CONSOLIDADO"
+          value={formatMoney(totalSaldoGeral)}
+          icon={Landmark}
+          variant="blue"
+          trend={{ value: '+5.2%', isPositive: true, label: 'vs mês anterior' }}
+        />
 
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value">
-              {formatMoney(totalSaldoGeral)}
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '2px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: '#ffffff',
-                  backgroundColor: 'var(--status-paid)',
-                  padding: '2px 8px',
-                  borderRadius: '12px'
-                }}
-              >
-                <TrendingUp size={12} /> +5.2%
-              </span>
-              <span className="text-caption-responsive">vs mês anterior</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Recebíveis Vencidos */}
-        <div className="stat-kpi-card group">
-          <AlertTriangle className="kpi-watermark-icon" color="var(--status-late)" />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--status-late)'
-              }}
-            >
-              <AlertTriangle size={18} />
-            </div>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              RECEBÍVEIS VENCIDOS
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value" style={{ color: 'var(--status-late)' }}>
-              {formatMoney(inadimplencia?.total_vencido || 0)}
-            </span>
-            <button
-              onClick={() => handleNavigate('inadimplencia')}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontSize: '12px',
-                fontWeight: 700,
-                color: 'var(--status-late)',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                textAlign: 'left',
-                padding: 0,
-                marginTop: '6px'
-              }}
-            >
+        <KpiCard
+          title="RECEBÍVEIS VENCIDOS"
+          value={formatMoney(inadimplencia?.total_vencido || 0)}
+          icon={AlertTriangle}
+          variant="red"
+          onClick={() => handleNavigate('inadimplencia')}
+          subtitle={
+            <span style={{ color: 'var(--status-late)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
               {inadimplencia?.total_clientes_inadimplentes || 0} contratos pendentes <ArrowUpRight size={13} />
-            </button>
-          </div>
-        </div>
+            </span>
+          }
+        />
 
-        {/* Total de Entradas */}
-        <div className="stat-kpi-card group">
-          <FileInput className="kpi-watermark-icon" color="var(--status-paid)" />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--status-paid)'
-              }}
-            >
-              <FileInput size={18} />
-            </div>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              TOTAL DE ENTRADAS (MÊS)
-            </span>
-          </div>
+        <KpiCard
+          title="TOTAL DE ENTRADAS (MÊS)"
+          value={formatMoney(totalReceitasGeral)}
+          icon={FileInput}
+          variant="emerald"
+          subtitle="75% da meta mensal atingida"
+        />
 
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value">
-              {formatMoney(totalReceitasGeral)}
-            </span>
-            <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--bg-surface-high)', borderRadius: '999px', marginTop: '10px', overflow: 'hidden' }}>
-              <div style={{ width: '75%', height: '100%', backgroundColor: 'var(--status-paid)', borderRadius: '999px' }} />
-            </div>
-            <span className="text-caption-responsive" style={{ marginTop: '4px' }}>
-              75% da meta mensal atingida
-            </span>
-          </div>
-        </div>
-
-        {/* Obras em Execução */}
-        <div className="stat-kpi-card group">
-          <Building2 className="kpi-watermark-icon" color="var(--technical-blue)" />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--technical-blue)'
-              }}
-            >
-              <Building2 size={18} />
-            </div>
-            <span className="text-mono-tag" style={{ color: 'var(--text-muted)' }}>
-              OBRAS EM EXECUÇÃO
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="text-kpi-value">
-              {totalObrasAtivas}
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
-              <div style={{ display: 'flex', marginLeft: '6px' }}>
-                {obras.slice(0, 3).map((o, idx) => (
-                  <div
-                    key={o.id}
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '50%',
-                      backgroundColor: 'var(--bg-surface-container)',
-                      border: '2px solid var(--bg-card)',
-                      marginLeft: idx > 0 ? '-8px' : '0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      color: 'var(--text-muted)'
-                    }}
-                  >
-                    {o.nome.substring(0, 2).toUpperCase()}
-                  </div>
-                ))}
-              </div>
-              <span className="text-caption-responsive">
-                +{obras.length} no portfólio
-              </span>
-            </div>
-          </div>
-        </div>
+        <KpiCard
+          title="OBRAS EM EXECUÇÃO"
+          value={totalObrasAtivas}
+          icon={Building2}
+          variant="default"
+          subtitle={`+${obras.length} no portfólio`}
+        />
       </section>
 
       {/* Main Content Split: Centros de Custo (2/3) vs Últimos Lançamentos (1/3) */}
@@ -357,131 +182,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
               gap: '16px'
             }}
           >
-            {obras.map((obra, idx) => {
-              const perc = obra.percentual_orcamento_consumido || 0;
-              const isHigh = perc > 80;
-              const isWarning = perc > 60 && perc <= 80;
-
-              return (
-                <div
-                  key={obra.id}
-                  className="card-constructo"
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    gap: '14px'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <span
-                        className="text-mono-tag"
-                        style={{
-                          color: 'var(--technical-blue)',
-                          backgroundColor: 'var(--technical-blue-light)',
-                          padding: '3px 8px',
-                          borderRadius: '4px',
-                          width: 'fit-content'
-                        }}
-                      >
-                        OBRA 0{idx + 1} • {obra.estado_uf}
-                      </span>
-                      <h3 className="heading-card">
-                        {obra.nome}
-                      </h3>
-                      <span className="text-caption-responsive">
-                        Cliente: {obra.cliente_nome}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Budget Progress Box with Visible Border */}
-                  <div
-                    style={{
-                      backgroundColor: 'var(--bg-surface-low)',
-                      border: '1px solid var(--border)',
-                      padding: '12px 14px',
-                      borderRadius: 'var(--radius-md)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
-                      <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Orçamento Executado</span>
-                      <span
-                        className="text-tabular"
-                        style={{
-                          fontWeight: 800,
-                          color: isHigh ? 'var(--status-late)' : isWarning ? 'var(--status-warning)' : 'var(--text-main)'
-                        }}
-                      >
-                        {perc}%
-                      </span>
-                    </div>
-
-                    <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--bg-surface-high)', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div
-                        style={{
-                          width: `${Math.min(100, perc)}%`,
-                          height: '100%',
-                          backgroundColor: isHigh ? 'var(--status-late)' : isWarning ? 'var(--status-warning)' : 'var(--technical-blue)',
-                          borderRadius: '999px',
-                          transition: 'width 0.8s ease'
-                        }}
-                      />
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span className="text-mono-tag" style={{ fontSize: '9px', color: 'var(--text-dim)' }}>CUSTO ATUAL</span>
-                        <span
-                          className="text-tabular"
-                          style={{
-                            fontSize: '13px',
-                            fontWeight: 800,
-                            color: isHigh ? 'var(--status-late)' : 'var(--text-main)'
-                          }}
-                        >
-                          {formatMoney(obra.total_despesas || 0)}
-                        </span>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                        <span className="text-mono-tag" style={{ fontSize: '9px', color: 'var(--text-dim)' }}>ORÇADO</span>
-                        <span className="text-tabular" style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 600 }}>
-                          {formatMoney(obra.orcamento_previsto || 0)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Obra Card Quick Actions */}
-                  <div style={{ display: 'flex', gap: '8px', paddingTop: '8px', borderTop: '1px solid var(--border-light)' }}>
-                    <button
-                      onClick={() => {
-                        setSelectedObra(obra);
-                        handleNavigate('fluxo');
-                      }}
-                      className="btn-constructo btn-secondary-slate"
-                      style={{ flex: 1, fontSize: '12px', padding: '8px' }}
-                    >
-                      <Receipt size={14} /> Extrato
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedObra(obra);
-                        handleNavigate('diario');
-                      }}
-                      className="btn-constructo btn-secondary-slate"
-                      style={{ flex: 1, fontSize: '12px', padding: '8px' }}
-                    >
-                      <Camera size={14} /> Fotos ({obra.total_fotos || 0})
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+            {obras.map((obra) => (
+              <ObraCard
+                key={obra.id}
+                obra={obra}
+                formatMoney={formatMoney}
+                onSelect={(selected) => {
+                  setSelectedObra(selected);
+                  handleNavigate('fluxo');
+                }}
+              />
+            ))}
           </div>
 
           {/* Reference Construction Site Overview Banner Card */}
@@ -532,142 +243,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
 
         {/* Right Column (Últimos Lançamentos) */}
         <section style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 className="heading-section" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Receipt size={20} color="var(--primary)" />
-              Últimos Lançamentos
-            </h2>
-            <button
-              onClick={() => handleNavigate('fluxo')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--technical-blue)',
-                fontSize: '13px',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              Ver Fluxo →
-            </button>
-          </div>
-
-          <div
-            className="card-constructo"
-            style={{
-              padding: 0,
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            {/* List Header with Clear Border */}
-            <div
-              style={{
-                backgroundColor: 'var(--bg-surface-low)',
-                padding: '12px 16px',
-                borderBottom: '2px solid var(--border)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '11px',
-                fontWeight: 700,
-                color: 'var(--text-muted)',
-                fontFamily: 'var(--font-body)',
-                letterSpacing: '0.04em'
-              }}
-            >
-              <span>DESCRIÇÃO & STATUS</span>
-              <span>VALOR</span>
-            </div>
-
-            {/* List Items with Visible Lines */}
-            <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '480px', overflowY: 'auto' }}>
-              {recentTransacoes.length === 0 ? (
-                <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '13px' }}>
-                  Nenhum lançamento registrado recentemente.
-                </div>
-              ) : (
-                recentTransacoes.map((item, idx) => {
-                  const isReceita = item.tipo === 'RECEITA';
-                  const isLate = item.status === 'PENDENTE' && new Date(item.data_vencimento) < new Date();
-
-                  return (
-                    <div
-                      key={item.id || idx}
-                      onClick={() => handleNavigate('fluxo')}
-                      style={{
-                        padding: '14px 16px',
-                        borderBottom: '1px solid var(--border-light)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.15s ease'
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-surface-low)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                    >
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '65%' }}>
-                        <span
-                          style={{
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            color: 'var(--text-main)',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis'
-                          }}
-                        >
-                          {item.descricao}
-                        </span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span
-                            className={`chip-status ${
-                              item.status === 'PAGO'
-                                ? 'status-pago'
-                                : isLate
-                                ? 'status-atraso'
-                                : 'status-pendente'
-                            }`}
-                          >
-                            {item.status === 'PAGO' ? 'PAGO' : isLate ? 'ATRASO' : 'PENDENTE'}
-                          </span>
-                          <span
-                            className="text-caption-responsive"
-                            style={{
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis'
-                            }}
-                          >
-                            {item.fornecedor_beneficiario || 'Geral'}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                        <span
-                          className="text-tabular"
-                          style={{
-                            fontSize: '14px',
-                            fontWeight: 800,
-                            color: isReceita ? 'var(--status-paid)' : 'var(--status-late)'
-                          }}
-                        >
-                          {isReceita ? '+' : '-'} {formatMoney(item.valor)}
-                        </span>
-                        <span className="text-caption-responsive">
-                          Venc: {item.data_vencimento ? item.data_vencimento.split('-').reverse().slice(0, 2).join('/') : '-'}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
+          <RecentTransactionsFeed
+            transacoes={recentTransacoes}
+            formatMoney={formatMoney}
+            onViewAll={() => handleNavigate('fluxo')}
+          />
         </section>
       </div>
     </div>
   );
 };
-

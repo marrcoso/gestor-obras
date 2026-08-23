@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { api } from '../services/api.js';
+import { NetworkBeacon } from '../components/domain/canteiro/NetworkBeacon.js';
+import { TactileActionCard } from '../components/domain/canteiro/TactileActionCard.js';
+import { FormInput, FormGroup, FormTextarea } from '../components/ui/Input.js';
+import { Button } from '../components/ui/Button.js';
 import {
   Camera,
   Receipt,
   Check,
   Building2,
-  WifiOff,
-  Wifi,
-  ArrowLeft,
-  UploadCloud
+  ArrowLeft
 } from 'lucide-react';
 
 export const MobileFieldPage: React.FC = () => {
@@ -130,7 +131,7 @@ export const MobileFieldPage: React.FC = () => {
       await api.createDiarioFoto({
         obraId: selectedObra.id,
         fotoUrl,
-        etapa,
+        etapa: etapa as any,
         descricao: observacaoFoto || 'Registro diário pelo mestre de obras'
       });
 
@@ -149,27 +150,7 @@ export const MobileFieldPage: React.FC = () => {
   return (
     <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px 12px 64px 12px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Network Status Beacon */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '10px 14px',
-          backgroundColor: isOnline ? 'var(--status-paid-bg)' : 'var(--status-late-bg)',
-          borderRadius: 'var(--radius-md)',
-          border: `1px solid ${isOnline ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {isOnline ? <Wifi size={16} color="var(--status-paid)" /> : <WifiOff size={16} color="var(--status-late)" />}
-          <span style={{ fontSize: '12px', fontWeight: 700, color: isOnline ? 'var(--status-paid)' : 'var(--status-late)' }}>
-            {isOnline ? 'Sincronização Online 4G' : 'Modo Offline (Offline-First)'}
-          </span>
-        </div>
-        <span className="text-mono-tag">
-          {user?.nome ? user.nome.split(' ')[0] : 'Canteiro'}
-        </span>
-      </div>
+      <NetworkBeacon isOnline={isOnline} />
 
       {/* Obra Selector */}
       <div className="card-constructo" style={{ padding: '14px' }}>
@@ -196,87 +177,21 @@ export const MobileFieldPage: React.FC = () => {
       {/* TELA INICIAL: BOTÕES TÁTEIS GIGANTES */}
       {activeFlow === 'home' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Lançar Despesa */}
-          <button
+          <TactileActionCard
+            icon={Receipt}
+            title="Lançar Cupom / Despesa"
+            subtitle="Foto do comprovante + valor em 3 toques"
+            variant="orange"
             onClick={() => setActiveFlow('despesa')}
-            style={{
-              padding: '24px 20px',
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: '#ea580c',
-              backgroundImage: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              textAlign: 'left',
-              boxShadow: 'var(--shadow-md)',
-              transition: 'transform 0.15s ease'
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                padding: '16px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Receipt size={32} />
-            </div>
-            <div>
-              <span style={{ fontSize: 'var(--text-fluid-section)', fontWeight: 800, display: 'block' }}>
-                Lançar Cupom / Despesa
-              </span>
-              <p style={{ fontSize: 'var(--text-fluid-caption)', opacity: 0.9, marginTop: '2px' }}>
-                Foto do comprovante + valor em 3 toques
-              </p>
-            </div>
-          </button>
+          />
 
-          {/* Tirar Foto */}
-          <button
+          <TactileActionCard
+            icon={Camera}
+            title="Foto da Evolução da Obra"
+            subtitle="Salva no Diário com geolocalização e data"
+            variant="blue"
             onClick={() => setActiveFlow('foto')}
-            style={{
-              padding: '24px 20px',
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: '#2563eb',
-              backgroundImage: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              textAlign: 'left',
-              boxShadow: 'var(--shadow-md)',
-              transition: 'transform 0.15s ease'
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                padding: '16px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Camera size={32} />
-            </div>
-            <div>
-              <span style={{ fontSize: '18px', fontWeight: 800, display: 'block' }}>
-                Foto da Evolução da Obra
-              </span>
-              <p style={{ fontSize: '12px', opacity: 0.9, marginTop: '2px' }}>
-                Salva no Diário com geolocalização e data
-              </p>
-            </div>
-          </button>
+          />
         </div>
       )}
 
@@ -284,20 +199,20 @@ export const MobileFieldPage: React.FC = () => {
       {activeFlow === 'despesa' && (
         <div className="card-constructo">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Lançamento Rápido</h3>
-            <button
+            <h3 className="heading-card" style={{ fontSize: '18px' }}>Lançamento Rápido</h3>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={ArrowLeft}
               onClick={() => setActiveFlow('home')}
-              className="btn-constructo btn-secondary-slate"
-              style={{ padding: '6px 12px', fontSize: '12px', gap: '4px' }}
             >
-              <ArrowLeft size={14} /> Voltar
-            </button>
+              Voltar
+            </Button>
           </div>
 
           <form onSubmit={handleSalvarDespesaRapida} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {/* Foto do Cupom */}
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">1. FOTO DO CUPOM / RECIBO</label>
+            <FormGroup label="1. FOTO DO CUPOM / RECIBO">
               <input
                 type="file"
                 accept="image/*"
@@ -314,27 +229,23 @@ export const MobileFieldPage: React.FC = () => {
                   />
                 </div>
               )}
-            </div>
+            </FormGroup>
 
             {/* Campo Gigante de Valor */}
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">2. VALOR TOTAL PAGO (R$) *</label>
-              <input
-                type="number"
-                step="0.01"
-                className="form-input-constructo font-data-tabular"
-                style={{ fontSize: '28px', fontWeight: 800, textAlign: 'center', padding: '12px' }}
-                placeholder="0.00"
-                value={valor}
-                onChange={(e) => setValor(e.target.value)}
-                required
-                autoFocus
-              />
-            </div>
+            <FormInput
+              label="2. VALOR TOTAL PAGO (R$) *"
+              type="number"
+              step="0.01"
+              style={{ fontSize: '28px', fontWeight: 800, textAlign: 'center', padding: '12px' }}
+              placeholder="0,00"
+              value={valor}
+              onChange={(e) => setValor(e.target.value)}
+              required
+              autoFocus
+            />
 
             {/* Chips de Categorias Rápidas */}
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">3. CATEGORIA</label>
+            <FormGroup label="3. CATEGORIA">
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 {categoriasRapidas.map((cat) => (
                   <button
@@ -357,28 +268,26 @@ export const MobileFieldPage: React.FC = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </FormGroup>
 
             {/* Descrição Opcional */}
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">4. DESCRIÇÃO / FORNECEDOR (OPCIONAL)</label>
-              <input
-                type="text"
-                className="form-input-constructo"
-                placeholder="Ex: 50 sacos de areia média"
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-              />
-            </div>
+            <FormInput
+              label="4. DESCRIÇÃO / FORNECEDOR (OPCIONAL)"
+              placeholder="Ex: 50 sacos de areia média"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+            />
 
-            <button
+            <Button
               type="submit"
-              disabled={enviando || !valor}
-              className="btn-constructo btn-primary-orange"
-              style={{ width: '100%', padding: '14px', fontSize: '15px', fontWeight: 800, marginTop: '8px' }}
+              variant="primary"
+              size="lg"
+              fullWidth
+              isLoading={enviando}
+              disabled={!valor}
             >
               {enviando ? 'Gravando Lançamento...' : 'Salvar no Caixa'}
-            </button>
+            </Button>
           </form>
         </div>
       )}
@@ -387,19 +296,19 @@ export const MobileFieldPage: React.FC = () => {
       {activeFlow === 'foto' && (
         <div className="card-constructo">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Foto do Diário</h3>
-            <button
+            <h3 className="heading-card" style={{ fontSize: '18px' }}>Foto do Diário</h3>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={ArrowLeft}
               onClick={() => setActiveFlow('home')}
-              className="btn-constructo btn-secondary-slate"
-              style={{ padding: '6px 12px', fontSize: '12px', gap: '4px' }}
             >
-              <ArrowLeft size={14} /> Voltar
-            </button>
+              Voltar
+            </Button>
           </div>
 
           <form onSubmit={handleSalvarFotoRapida} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">1. CÂMERA / SELECIONAR IMAGEM *</label>
+            <FormGroup label="1. CÂMERA / SELECIONAR IMAGEM *" required>
               <input
                 type="file"
                 accept="image/*"
@@ -417,10 +326,9 @@ export const MobileFieldPage: React.FC = () => {
                   />
                 </div>
               )}
-            </div>
+            </FormGroup>
 
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">2. ETAPA CONSTRUTIVA ATUAL</label>
+            <FormGroup label="2. ETAPA CONSTRUTIVA ATUAL">
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 {etapasRapidas.map((et) => (
                   <button
@@ -443,27 +351,24 @@ export const MobileFieldPage: React.FC = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </FormGroup>
 
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">3. OBSERVAÇÃO DO DIA (OPCIONAL)</label>
-              <textarea
-                className="form-input-constructo"
-                rows={2}
-                placeholder="Ex: Concluída concretagem dos pilares do térreo."
-                value={observacaoFoto}
-                onChange={(e) => setObservacaoFoto(e.target.value)}
-              />
-            </div>
+            <FormTextarea
+              label="3. OBSERVAÇÃO DO DIA (OPCIONAL)"
+              placeholder="Ex: Concluída concretagem dos pilares do térreo."
+              value={observacaoFoto}
+              onChange={(e) => setObservacaoFoto(e.target.value)}
+            />
 
-            <button
+            <Button
               type="submit"
-              disabled={enviando}
-              className="btn-constructo btn-tech-blue"
-              style={{ width: '100%', padding: '14px', fontSize: '15px', fontWeight: 800, marginTop: '8px' }}
+              variant="tech-blue"
+              size="lg"
+              fullWidth
+              isLoading={enviando}
             >
               {enviando ? 'Gravando Foto...' : 'Salvar no Diário'}
-            </button>
+            </Button>
           </form>
         </div>
       )}
@@ -487,21 +392,21 @@ export const MobileFieldPage: React.FC = () => {
             <Check size={36} />
           </div>
 
-          <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
+          <h3 className="heading-section" style={{ color: 'var(--text-main)', marginBottom: '8px' }}>
             Registro Concluído!
           </h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>{sucessoMsg}</p>
 
-          <button
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
             onClick={() => setActiveFlow('home')}
-            className="btn-constructo btn-primary-orange"
-            style={{ width: '100%', padding: '14px', fontSize: '15px', fontWeight: 800 }}
           >
             Fazer Novo Registro
-          </button>
+          </Button>
         </div>
       )}
     </div>
   );
 };
-

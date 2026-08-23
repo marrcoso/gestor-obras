@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useTheme } from '../context/ThemeContext.js';
+import { FormInput } from '../components/ui/Input.js';
+import { Button } from '../components/ui/Button.js';
 import { HardHat, ShieldCheck, Smartphone, Sun, Moon } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, login, loginDemo } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [isRegister] = useState(false);
 
   // Redireciona se já autenticado
   useEffect(() => {
@@ -63,15 +64,15 @@ export const LoginPage: React.FC = () => {
     >
       {/* Top Bar Theme Switcher */}
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
-        <button
+        <Button
+          variant="secondary"
+          size="sm"
           onClick={toggleTheme}
-          className="btn-constructo btn-secondary-slate"
-          style={{ padding: '8px 12px', fontSize: '12px', gap: '6px' }}
+          icon={theme === 'dark' ? Sun : Moon}
           title={theme === 'dark' ? 'Mudar para Tema Claro' : 'Mudar para Tema Escuro'}
         >
-          {theme === 'dark' ? <Sun size={15} color="#f59e0b" /> : <Moon size={15} color="#3b82f6" />}
-          <span>{theme === 'dark' ? 'Claro' : 'Escuro'}</span>
-        </button>
+          {theme === 'dark' ? 'Claro' : 'Escuro'}
+        </Button>
       </div>
 
       <div style={{ width: '100%', maxWidth: '440px' }}>
@@ -232,38 +233,33 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">Email Corporativo</label>
-              <input
-                type="email"
-                className="form-input-constructo"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu.email@construtora.com"
-                required
-              />
-            </div>
+            <FormInput
+              label="Email Corporativo"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="seu.email@construtora.com"
+              required
+            />
 
-            <div className="form-group-constructo">
-              <label className="form-label-constructo">Senha de Acesso</label>
-              <input
-                type="password"
-                className="form-input-constructo"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
-            </div>
+            <FormInput
+              label="Senha de Acesso"
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
 
-            <button
+            <Button
               type="submit"
-              disabled={loading}
-              className="btn-constructo btn-primary-orange"
-              style={{ width: '100%', padding: '12px', marginTop: '6px', fontSize: '14px' }}
+              variant="primary"
+              size="lg"
+              fullWidth
+              isLoading={loading}
             >
-              {loading ? 'Acessando...' : 'Entrar no Sistema'}
-            </button>
+              Entrar no Sistema
+            </Button>
           </form>
         </div>
 
@@ -277,4 +273,3 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
-
