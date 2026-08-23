@@ -17,7 +17,7 @@ Sempre que o usuário solicitar para commitar alterações:
 3. **Padrão de Mensagem (Conventional Commits em Português)**:
    - Estrutura: `tipo(escopo): mensagem concisa`
    - Tipos comuns: `feat`, `refactor`, `fix`, `chore`, `style`, `docs`.
-   - Corpo do commit: Incluir bullet points (`- `) claros e objetivos resumindo as mudanças principais.
+   - Corpo do commit: Não incluir descrição de commits, apenas os títulos.
 
 4. **Publicação Automática (Push na Branch Ativa)**:
    - Após finalizar a criação dos commits atômicos locais, identifique a branch atual (`git branch --show-current`) e realize o envio via `git push origin <branch_atual>`.
