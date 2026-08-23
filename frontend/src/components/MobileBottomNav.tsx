@@ -26,9 +26,11 @@ export const MobileBottomNav: React.FC = () => {
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
-        padding: '8px 4px',
-        zIndex: 50
+        padding: '6px 4px 8px 4px',
+        zIndex: 50,
+        boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.05)'
       }}
+      className="mobile-bottom-nav"
     >
       {tabs.map((tab) => {
         const Icon = tab.icon;
@@ -46,14 +48,29 @@ export const MobileBottomNav: React.FC = () => {
               background: 'none',
               border: 'none',
               color: isActive ? 'var(--primary)' : 'var(--text-dim)',
-              fontSize: 'var(--text-2xs)',
+              fontSize: '11px',
               fontWeight: isActive ? 700 : 500,
+              fontFamily: 'var(--font-body)',
+              letterSpacing: '0.01em',
               cursor: 'pointer',
               flex: 1,
-              padding: '4px 0'
+              padding: '6px 0',
+              position: 'relative'
             }}
           >
-            <Icon size={20} color={isActive ? 'var(--primary)' : 'var(--text-dim)'} />
+            {isActive && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '-6px',
+                  width: '24px',
+                  height: '3px',
+                  backgroundColor: 'var(--primary)',
+                  borderRadius: '2px'
+                }}
+              />
+            )}
+            <Icon size={19} color={isActive ? 'var(--primary)' : 'var(--text-dim)'} />
             <span>{tab.label}</span>
           </button>
         );
@@ -61,3 +78,4 @@ export const MobileBottomNav: React.FC = () => {
     </nav>
   );
 };
+

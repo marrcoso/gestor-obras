@@ -12,8 +12,6 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
   const [nome, setNome] = useState('');
   const [clienteNome, setClienteNome] = useState('');
   const [clienteTelefone, setClienteTelefone] = useState('');
-  const [clienteEmail, setClienteEmail] = useState('');
-  const [enderecoCompleto, setEnderecoCompleto] = useState('');
   const [cidade, setCidade] = useState('');
   const [estadoUf, setEstadoUf] = useState('SP');
   const [dataInicio, setDataInicio] = useState(new Date().toISOString().split('T')[0]);
@@ -37,8 +35,6 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
         nome,
         clienteNome,
         clienteTelefone,
-        clienteEmail,
-        enderecoCompleto,
         cidade,
         estado_uf: estadoUf,
         dataInicio,
@@ -56,62 +52,72 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '600px' }}>
+      <div className="modal-content" style={{ maxWidth: '580px' }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '16px 20px',
-            borderBottom: '1px solid var(--border-light)'
+            borderBottom: '1px solid var(--border)'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Building2 size={20} color="var(--primary)" />
-            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Cadastrar Nova Obra (Centro de Custo)</h3>
+            <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Cadastrar Nova Obra (Centro de Custo)</h3>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}>
             <X size={18} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} style={{ padding: '20px' }}>
           {error && (
-            <div className="badge badge-danger" style={{ display: 'block', padding: '8px 12px', marginBottom: '16px' }}>
+            <div
+              style={{
+                backgroundColor: 'var(--status-late-bg)',
+                color: 'var(--status-late)',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                marginBottom: '16px',
+                border: '1px solid rgba(239, 68, 68, 0.3)'
+              }}
+            >
               {error}
             </div>
           )}
 
-          <div className="form-group">
-            <label className="form-label">Nome da Obra / Projeto *</label>
+          <div className="form-group-constructo">
+            <label className="form-label-constructo">Nome da Obra / Empreendimento *</label>
             <input
               type="text"
-              className="form-input"
+              className="form-input-constructo"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-              placeholder="Ex: Residencial Alphaville - Lote 12"
+              placeholder="Ex: Residencial Jardim Botânico"
               required
             />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div className="form-group">
-              <label className="form-label">Nome do Cliente Proprietário *</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">Nome do Cliente Proprietário *</label>
               <input
                 type="text"
-                className="form-input"
+                className="form-input-constructo"
                 value={clienteNome}
                 onChange={(e) => setClienteNome(e.target.value)}
-                placeholder="Ex: Dr. Fernando Costa"
+                placeholder="Ex: Carlos Eduardo Silveira"
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">WhatsApp do Cliente</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">WhatsApp do Cliente</label>
               <input
                 type="text"
-                className="form-input"
+                className="form-input-constructo"
                 value={clienteTelefone}
                 onChange={(e) => setClienteTelefone(e.target.value)}
                 placeholder="Ex: (11) 98888-7777"
@@ -120,20 +126,20 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
-            <div className="form-group">
-              <label className="form-label">Cidade</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">Cidade</label>
               <input
                 type="text"
-                className="form-input"
+                className="form-input-constructo"
                 value={cidade}
                 onChange={(e) => setCidade(e.target.value)}
-                placeholder="Ex: Campinas"
+                placeholder="Ex: São Paulo"
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Estado (UF / SINAPI)</label>
-              <select className="form-select" value={estadoUf} onChange={(e) => setEstadoUf(e.target.value)}>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">Estado (UF / SINAPI)</label>
+              <select className="form-select-constructo" value={estadoUf} onChange={(e) => setEstadoUf(e.target.value)}>
                 <option value="SP">São Paulo (SP)</option>
                 <option value="RJ">Rio de Janeiro (RJ)</option>
                 <option value="MG">Minas Gerais (MG)</option>
@@ -150,35 +156,35 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div className="form-group">
-              <label className="form-label">Data de Início *</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">Data de Início *</label>
               <input
                 type="date"
-                className="form-input"
+                className="form-input-constructo"
                 value={dataInicio}
                 onChange={(e) => setDataInicio(e.target.value)}
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Orçamento Previsto (R$)</label>
+            <div className="form-group-constructo">
+              <label className="form-label-constructo">Orçamento Previsto (R$)</label>
               <input
                 type="number"
                 step="0.01"
-                className="form-input"
+                className="form-input-constructo"
                 value={orcamentoPrevisto}
                 onChange={(e) => setOrcamentoPrevisto(e.target.value)}
-                placeholder="Ex: 350000.00"
+                placeholder="Ex: 500000.00"
               />
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '16px' }}>
-            <button type="button" onClick={onClose} className="btn btn-secondary">
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
+            <button type="button" onClick={onClose} className="btn-constructo btn-secondary-slate">
               Cancelar
             </button>
-            <button type="submit" disabled={loading} className="btn btn-primary">
+            <button type="submit" disabled={loading} className="btn-constructo btn-primary-orange">
               <Plus size={16} />
               {loading ? 'Cadastrando...' : 'Criar Obra'}
             </button>
@@ -188,3 +194,4 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
     </div>
   );
 };
+

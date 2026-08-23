@@ -30,7 +30,7 @@ const AppLayout: React.FC = () => {
       <Sidebar openNewObraModal={() => setNewObraModalOpen(true)} />
 
       <div className="main-content">
-        <Navbar />
+        <Navbar openNewObraModal={() => setNewObraModalOpen(true)} />
 
         <main style={{ flex: 1 }}>
           <Outlet context={{ openNewObraModal: () => setNewObraModalOpen(true) }} />

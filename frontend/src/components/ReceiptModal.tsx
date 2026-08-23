@@ -16,7 +16,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ url, onClose }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-content"
-        style={{ maxWidth: '700px' }}
+        style={{ maxWidth: '720px' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
@@ -25,37 +25,37 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ url, onClose }) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '16px 20px',
-            borderBottom: '1px solid var(--border-light)'
+            borderBottom: '1px solid var(--border)'
           }}
         >
-          <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 700 }}>Comprovante Fiscal / Recibo</h3>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 800 }}>Comprovante Fiscal / Recibo</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <a
               href={fullUrl}
               target="_blank"
               rel="noreferrer"
-              className="btn btn-secondary"
-              style={{ padding: '6px 10px', fontSize: 'var(--text-xs)' }}
+              className="btn-constructo btn-secondary-slate"
+              style={{ padding: '6px 12px', fontSize: '12px', gap: '6px' }}
             >
               <ExternalLink size={14} /> Abrir Original
             </a>
             <button
               onClick={onClose}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', padding: '4px' }}
             >
               <X size={18} />
             </button>
           </div>
         </div>
 
-        <div style={{ padding: '20px', display: 'flex', justifyContent: 'center', backgroundColor: 'var(--bg-input)' }}>
+        <div style={{ padding: '20px', display: 'flex', justifyContent: 'center', backgroundColor: 'var(--bg-surface-low)' }}>
           {isPdf ? (
-            <iframe src={fullUrl} style={{ width: '100%', height: '500px', border: 'none' }} title="PDF" />
+            <iframe src={fullUrl} style={{ width: '100%', height: '500px', border: 'none', borderRadius: '8px' }} title="PDF" />
           ) : (
             <img
               src={fullUrl}
               alt="Comprovante"
-              style={{ maxWidth: '100%', maxHeight: '600px', objectFit: 'contain', borderRadius: '8px' }}
+              style={{ maxWidth: '100%', maxHeight: '600px', objectFit: 'contain', borderRadius: '8px', boxShadow: 'var(--shadow-sm)' }}
             />
           )}
         </div>
@@ -63,3 +63,4 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ url, onClose }) => {
     </div>
   );
 };
+

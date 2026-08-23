@@ -2,16 +2,33 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { useTheme } from '../context/ThemeContext.js';
-import { HardHat, Building2, Wifi, WifiOff, RefreshCw, LogOut, Smartphone, Monitor, Sun, Moon } from 'lucide-react';
+import {
+  Building2,
+  HardHat,
+  Search,
+  Bell,
+  Sun,
+  Moon,
+  LogOut,
+  Smartphone,
+  Monitor,
+  RefreshCw,
+  ChevronDown,
+  Plus
+} from 'lucide-react';
 import { offlineQueue } from '../services/offlineQueue.js';
 import { api } from '../services/api.js';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  openNewObraModal?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { user, tenant, obras, selectedObra, setSelectedObra, refreshObras, logout } = useAuth();
-  const [syncing, setSyncing] = React.useState(false);
+  const [syncing, setSyncing] = useState(false);
   const pendingCount = offlineQueue.count();
 
   const isField = location.pathname === '/campo' || location.pathname === '/field';
@@ -36,51 +53,69 @@ export const Navbar: React.FC = () => {
   return (
     <header
       style={{
-        backgroundColor: 'var(--bg-card)',
-        borderBottom: '1px solid var(--border)',
-        padding: '12px 20px',
+        height: '64px',
+        padding: '0 clamp(16px, 2vw, 24px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'sticky',
         top: 0,
-        zIndex: 50
+        zIndex: 40,
+        boxShadow: 'var(--shadow-xs)'
       }}
+      className="navbar-constructo"
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      {/* Left: Obra Selector & Quick New Obra CTA */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {/* Mobile Brand Logo */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+          className="mobile-brand-icon"
+        >
           <div
             style={{
+              width: '34px',
+              height: '34px',
               backgroundColor: 'var(--primary)',
-              padding: '8px',
-              borderRadius: '10px',
+              borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#fff'
+              color: '#ffffff'
             }}
           >
-            <HardHat size={22} />
-          </div>
-          <div>
-            <h1 style={{ fontSize: 'var(--text-md)', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1.2 }}>ERP LEVE DE OBRAS</h1>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{tenant?.nome_fantasia || 'Construtora'}</p>
+            <HardHat size={20} />
           </div>
         </div>
 
-        {/* Seletor de Obra Ativa */}
-        {obras.length > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '12px' }}>
-            <Building2 size={16} color="var(--text-muted)" />
+        {/* Obra Active Selector Pill */}
+        {obras.length > 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              backgroundColor: 'var(--bg-surface-low)',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              border: '1px solid var(--border)'
+            }}
+          >
+            <Building2 size={16} color="var(--technical-blue)" />
             <select
-              className="form-select"
               style={{
-                padding: '6px 12px',
-                fontSize: 'var(--text-sm)',
-                width: 'auto',
-                maxWidth: '260px',
-                borderRadius: '8px',
-                borderColor: 'var(--border)'
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-main)',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                outline: 'none',
+                maxWidth: '220px'
               }}
               value={selectedObra?.id || ''}
               onChange={(e) => {
@@ -90,24 +125,42 @@ export const Navbar: React.FC = () => {
             >
               {obras.map((obra) => (
                 <option key={obra.id} value={obra.id}>
-                  🏗️ {obra.nome}
+                  {obra.nome}
                 </option>
               ))}
             </select>
+            <ChevronDown size={14} color="var(--text-dim)" />
           </div>
+        ) : (
+          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>
+            Nenhuma obra cadastrada
+          </span>
+        )}
+
+        {/* Nova Obra CTA Button */}
+        {openNewObraModal && (
+          <button
+            onClick={openNewObraModal}
+            className="btn-constructo btn-primary-orange"
+            style={{ padding: '6px 12px', minHeight: '34px', fontSize: '11px', gap: '6px' }}
+          >
+            <Plus size={14} />
+            NOVA OBRA
+          </button>
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        {/* Toggle de Modo: Campo (Mobile) vs Gestão (Web) */}
+      {/* Right: Actions, Sync, Theme, Notifications & Profile */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Toggle Mode: Desktop Gestão vs Mobile Canteiro */}
         <div
           style={{
-            backgroundColor: 'var(--bg-input)',
-            padding: '4px',
-            borderRadius: '10px',
-            border: '1px solid var(--border)',
             display: 'flex',
-            gap: '4px'
+            backgroundColor: 'var(--bg-surface-low)',
+            padding: '3px',
+            borderRadius: '8px',
+            border: '1px solid var(--border)',
+            gap: '2px'
           }}
         >
           <button
@@ -116,18 +169,18 @@ export const Navbar: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 12px',
-              fontSize: 'var(--text-xs)',
+              padding: '5px 10px',
+              fontSize: '12px',
               fontWeight: 600,
               borderRadius: '6px',
               border: 'none',
               cursor: 'pointer',
               backgroundColor: isField ? 'var(--primary)' : 'transparent',
-              color: isField ? '#fff' : 'var(--text-muted)'
+              color: isField ? '#ffffff' : 'var(--text-muted)'
             }}
           >
-            <Smartphone size={14} />
-            Canteiro (Campo)
+            <Smartphone size={13} />
+            Canteiro
           </button>
 
           <button
@@ -136,29 +189,56 @@ export const Navbar: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 12px',
-              fontSize: 'var(--text-xs)',
+              padding: '5px 10px',
+              fontSize: '12px',
               fontWeight: 600,
               borderRadius: '6px',
               border: 'none',
               cursor: 'pointer',
-              backgroundColor: !isField ? 'var(--primary)' : 'transparent',
-              color: !isField ? '#fff' : 'var(--text-muted)'
+              backgroundColor: !isField ? 'var(--technical-blue)' : 'transparent',
+              color: !isField ? '#ffffff' : 'var(--text-muted)'
             }}
           >
-            <Monitor size={14} />
-            Gestão (Web)
+            <Monitor size={13} />
+            Gestão
           </button>
         </div>
 
-        {/* Alternador de Tema Claro / Escuro */}
+        {/* Offline Sync */}
+        {pendingCount > 0 && (
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: 'var(--status-pending-bg)',
+              color: 'var(--status-pending)',
+              border: '1px solid var(--status-pending)',
+              borderRadius: '8px',
+              padding: '6px 10px',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+            title="Sincronizar fila offline"
+          >
+            <RefreshCw size={13} className={syncing ? 'animate-spin' : ''} />
+            <span>{pendingCount}</span>
+          </button>
+        )}
+
+        {/* Dark / Light Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="btn btn-secondary"
           style={{
-            padding: '8px',
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+            padding: '6px',
             borderRadius: '8px',
-            color: theme === 'dark' ? '#f59e0b' : '#3b82f6',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -166,34 +246,62 @@ export const Navbar: React.FC = () => {
           title={theme === 'dark' ? 'Alternar para Tema Claro' : 'Alternar para Tema Escuro'}
           aria-label="Alternar tema"
         >
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          {theme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} />}
         </button>
 
-        {/* Perfil & Logout */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderLeft: '1px solid var(--border)', paddingLeft: '12px' }}>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.1 }}>{user?.nome}</p>
-            <span
-              style={{
-                fontSize: 'var(--text-2xs)',
-                fontWeight: 700,
-                color: user?.perfil === 'ADMIN' ? 'var(--warning)' : 'var(--primary)'
-              }}
-            >
-              {user?.perfil === 'ADMIN' ? '👑 GESTOR / ENG.' : '👷 MESTRE DE OBRAS'}
-            </span>
-          </div>
+        {/* Notifications Icon with Badge */}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <button
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              padding: '6px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title="Notificações"
+          >
+            <Bell size={18} />
+          </button>
+          <div
+            style={{
+              position: 'absolute',
+              top: '4px',
+              right: '4px',
+              width: '8px',
+              height: '8px',
+              backgroundColor: 'var(--status-late)',
+              borderRadius: '50%'
+            }}
+          />
+        </div>
 
+        {/* Logout Action */}
+        <div style={{ borderLeft: '1px solid var(--border)', paddingLeft: '10px' }}>
           <button
             onClick={handleLogout}
-            className="btn btn-secondary"
-            style={{ padding: '8px', borderRadius: '8px', color: 'var(--text-muted)' }}
-            title="Sair da Conta"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-dim)',
+              cursor: 'pointer',
+              padding: '6px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title="Sair do sistema"
           >
-            <LogOut size={16} />
+            <LogOut size={17} />
           </button>
         </div>
       </div>
     </header>
   );
 };
+
