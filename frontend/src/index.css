@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ==========================================================================
    CONSTRUCTO PRO DESIGN SYSTEM - ERP LEVE DE OBRAS
    High-Definition Contrast, Crisp Lines & Fluid Typography
@@ -14,24 +18,18 @@
   --text-fluid-page: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);        /* 20px - 28px */
   --text-fluid-section: clamp(1.0625rem, 1.5vw + 0.25rem, 1.375rem); /* 17px - 22px */
   --text-fluid-card: clamp(0.9375rem, 1vw + 0.25rem, 1.125rem);     /* 15px - 18px */
-  --text-fluid-kpi: clamp(1.5rem, 2.8vw + 0.5rem, 2.25rem);        /* 24px - 36px (Maior impacto visual) */
+  --text-fluid-kpi: clamp(1.5rem, 2.8vw + 0.5rem, 2.25rem);        /* 24px - 36px */
   --text-fluid-body: clamp(0.8125rem, 0.8vw + 0.2rem, 0.9375rem);   /* 13px - 15px */
   --text-fluid-caption: clamp(0.6875rem, 0.6vw + 0.2rem, 0.8125rem); /* 11px - 13px */
   --text-fluid-mono: clamp(0.6875rem, 0.5vw + 0.25rem, 0.75rem);    /* 11px - 12px */
 
-  /* Line Heights */
-  --leading-none: 1;
-  --leading-tight: 1.2;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.65;
-
   /* Base Light Palette (Slate Contrast Architecture) */
-  --bg-app: #f1f5f9;              /* Slate-100: distinct backdrop separating white cards */
+  --bg-app: #f1f5f9;              /* Slate-100 */
   --bg-surface: #ffffff;
-  --bg-surface-low: #f8fafc;      /* Slate-50: inner boxes, headers & subtle containers */
-  --bg-surface-container: #f1f5f9;/* Slate-100: interactive containers */
-  --bg-surface-high: #e2e8f0;     /* Slate-200: progress tracks, divider fills */
-  --bg-surface-highest: #cbd5e1;  /* Slate-300: active highlights */
+  --bg-surface-low: #f8fafc;      /* Slate-50 */
+  --bg-surface-container: #f1f5f9;/* Slate-100 */
+  --bg-surface-high: #e2e8f0;     /* Slate-200 */
+  --bg-surface-highest: #cbd5e1;  /* Slate-300 */
   --bg-card: #ffffff;             /* Crisp Pure White */
   --bg-card-hover: #f8fafc;
   --bg-input: #ffffff;
@@ -70,10 +68,10 @@
   --text-muted: #334155;          /* Slate-700 */
   --text-dim: #64748b;            /* Slate-500 */
 
-  /* High-Definition Borders (Crisp Lines) */
-  --border: #cbd5e1;              /* Slate-300: solid, clearly defined outline */
-  --border-light: #e2e8f0;        /* Slate-200: subtle row dividers */
-  --border-strong: #94a3b8;       /* Slate-400: table headers & active inputs */
+  /* High-Definition Borders */
+  --border: #cbd5e1;              /* Slate-300 */
+  --border-light: #e2e8f0;        /* Slate-200 */
+  --border-strong: #94a3b8;       /* Slate-400 */
   --border-focus: #3b82f6;
 
   /* Radii */
@@ -84,7 +82,7 @@
   --radius-xl: 16px;
   --radius-full: 9999px;
 
-  /* Shadows (Tonal Micro-Elevation) */
+  /* Shadows */
   --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
   --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
   --shadow-md: 0 4px 8px -1px rgba(15, 23, 42, 0.09), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
@@ -147,8 +145,6 @@
 /* Reset & Box Model */
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -158,134 +154,8 @@ html, body {
   color: var(--text-main);
   font-family: var(--font-body);
   font-size: 16px;
-  line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* ==========================================================================
-   COMPONENTIZED FLUID TYPOGRAPHY CLASSES
-   ========================================================================== */
-.heading-hero {
-  font-family: var(--font-headline);
-  font-size: var(--text-fluid-hero);
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-}
-
-.heading-page {
-  font-family: var(--font-headline);
-  font-size: var(--text-fluid-page);
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
-
-.heading-section {
-  font-family: var(--font-headline);
-  font-size: var(--text-fluid-section);
-  font-weight: 700;
-  color: var(--text-main);
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-.heading-card {
-  font-family: var(--font-headline);
-  font-size: var(--text-fluid-card);
-  font-weight: 700;
-  color: var(--text-main);
-  line-height: 1.3;
-}
-
-.text-kpi-value {
-  font-family: var(--font-headline);
-  font-size: var(--text-fluid-kpi);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum", "cv02", "cv03", "cv04";
-  line-height: 1.1;
-  color: var(--text-main);
-  letter-spacing: -0.01em;
-}
-
-.text-subtitle {
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-body);
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-.text-body-responsive {
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-body);
-  color: var(--text-main);
-  line-height: 1.5;
-}
-
-.text-caption-responsive {
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-caption);
-  color: var(--text-dim);
-  line-height: 1.4;
-}
-
-.text-mono-tag {
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 700;
-}
-
-.text-tabular {
-  font-family: var(--font-body);
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-}
-
-/* Material Symbols alignment helper */
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined' !important;
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-  vertical-align: middle;
-}
-
-/* Headings Base */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-headline);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-main);
-  line-height: var(--leading-tight);
-}
-
-/* Typography Helpers Legacy */
-.font-headline { font-family: var(--font-headline) !important; }
-.font-body { font-family: var(--font-body) !important; }
-.font-mono-label {
-  font-family: var(--font-body) !important;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 700;
-}
-.font-data-tabular {
-  font-family: var(--font-body) !important;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
 }
 
 /* Scrollbars */
@@ -304,427 +174,7 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--text-dim);
 }
 
-/* ==========================================================================
-   LAYOUT STRUCTURE
-   ========================================================================== */
-.app-container {
-  display: flex;
-  min-height: 100vh;
-  background-color: var(--bg-app);
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow-y: auto;
-  padding-bottom: 84px; /* Mobile bottom nav space */
-}
-
-@media (min-width: 1024px) {
-  .lg-sidebar {
-    display: flex !important;
-  }
-  .mobile-bottom-nav, .mobile-brand-icon {
-    display: none !important;
-  }
-  .main-content {
-    margin-left: 280px; /* Sidebar width */
-    padding-bottom: 32px;
-  }
-}
-
-.page-body {
-  padding: clamp(16px, 2.5vw, 28px);
-  max-width: 1440px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* Navbar Global Class */
-.navbar-constructo {
-  background-color: var(--bg-navbar) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border) !important;
-}
-
-/* ==========================================================================
-   CARDS & SURFACES
-   ========================================================================== */
-.card-constructo {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: clamp(16px, 2vw, 24px);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.card-constructo:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--border-strong);
-}
-
-/* KPI Card & Left Accent Variants */
-.stat-kpi-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: clamp(16px, 2vw, 22px);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.stat-kpi-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--border-strong);
-}
-
-.stat-kpi-card.accent-red {
-  border-left: 5px solid var(--status-late);
-}
-
-.stat-kpi-card.accent-orange {
-  border-left: 5px solid var(--status-warning);
-}
-
-.stat-kpi-card.accent-amber {
-  border-left: 5px solid var(--status-pending);
-}
-
-.stat-kpi-card.accent-emerald {
-  border-left: 5px solid var(--status-paid);
-}
-
-.stat-kpi-card.accent-blue {
-  border-left: 5px solid var(--technical-blue);
-}
-
-/* Watermark background icon on hover */
-.kpi-watermark-icon {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  opacity: 0.08;
-  font-size: 54px !important;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.stat-kpi-card:hover .kpi-watermark-icon {
-  opacity: 0.18;
-  transform: scale(1.08);
-}
-
-/* ==========================================================================
-   BUTTONS
-   ========================================================================== */
-.btn-constructo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-size: var(--text-fluid-body);
-  font-weight: 600;
-  font-family: var(--font-body);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  border: 1px solid transparent;
-  text-decoration: none;
-  white-space: nowrap;
-  min-height: 40px;
-  transition: all 0.15s ease;
-}
-
-.btn-constructo:active {
-  transform: scale(0.97);
-}
-
-/* Primary Safety Orange Button */
-.btn-primary-orange {
-  background-color: var(--primary);
-  color: #ffffff;
-  box-shadow: var(--shadow-primary);
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-mono);
-  letter-spacing: 0.04em;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.btn-primary-orange:hover {
-  background-color: var(--primary-hover);
-  box-shadow: 0 6px 18px 0 rgba(249, 115, 22, 0.45);
-}
-
-/* Secondary Button */
-.btn-secondary-slate {
-  background-color: var(--bg-surface-low);
-  color: var(--text-main);
-  border: 1px solid var(--border);
-}
-.btn-secondary-slate:hover {
-  background-color: var(--bg-surface-container);
-  border-color: var(--border-strong);
-}
-
-/* Technical Blue Button */
-.btn-tech-blue {
-  background-color: var(--technical-blue);
-  color: #ffffff;
-}
-.btn-tech-blue:hover {
-  background-color: var(--technical-blue-hover);
-}
-
-/* Outline Button */
-.btn-outline-slate {
-  background-color: transparent;
-  color: var(--text-main);
-  border: 1px solid var(--border);
-}
-.btn-outline-slate:hover {
-  background-color: var(--bg-surface-low);
-  border-color: var(--border-strong);
-}
-
-/* WhatsApp Green Button */
-.btn-whatsapp {
-  background-color: #25d366;
-  color: #ffffff;
-  font-weight: 700;
-}
-.btn-whatsapp:hover {
-  background-color: #20bd5a;
-}
-
-/* Canteiro Tactile Big Button */
-.btn-tactile-field {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 24px 16px;
-  border-radius: var(--radius-xl);
-  font-size: var(--text-fluid-card);
-  font-weight: 700;
-  font-family: var(--font-headline);
-  color: #ffffff;
-  box-shadow: var(--shadow-lg);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  text-align: center;
-  transition: all 0.2s ease;
-  min-height: 90px;
-  cursor: pointer;
-}
-.btn-tactile-field:active {
-  transform: scale(0.96);
-}
-
-/* ==========================================================================
-   SOLID STATUS BADGES (High Contrast Constructo Pro)
-   ========================================================================== */
-.chip-status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 4px 8px;
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-radius: var(--radius-xs);
-  color: #ffffff !important;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.chip-status.status-pago {
-  background-color: var(--status-paid);
-}
-
-.chip-status.status-atraso, .chip-status.status-critico {
-  background-color: var(--status-late);
-}
-
-.chip-status.status-pendente, .chip-status.status-atencao {
-  background-color: var(--status-warning);
-}
-
-.chip-status.status-recente {
-  background-color: var(--status-pending);
-}
-
-.chip-status.status-juridico {
-  background-color: #881337;
-}
-
-.chip-status.status-primary {
-  background-color: var(--technical-blue);
-}
-
-/* Pill status filter button */
-.pill-filter {
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-mono);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  border: 1px solid var(--border);
-  background-color: var(--bg-surface-low);
-  color: var(--text-main);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.pill-filter:hover {
-  background-color: var(--bg-surface-container);
-  border-color: var(--border-strong);
-}
-
-.pill-filter.active {
-  background-color: var(--bg-sidebar);
-  color: #ffffff;
-  border-color: var(--bg-sidebar);
-}
-
-:root[data-theme='dark'] .pill-filter.active {
-  background-color: var(--technical-blue);
-  border-color: var(--technical-blue);
-}
-
-/* ==========================================================================
-   DATA TABLES (High-Definition Lines & Headers)
-   ========================================================================== */
-.table-constructo-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background-color: var(--bg-card);
-  box-shadow: var(--shadow-sm);
-}
-
-.table-constructo {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  min-width: 760px;
-}
-
-.table-constructo thead tr {
-  background-color: var(--bg-surface-low);
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-mono);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-bottom: 2px solid var(--border);
-}
-
-.table-constructo th {
-  padding: 14px 16px;
-  font-weight: 700;
-}
-
-.table-constructo td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border-light);
-  font-size: var(--text-fluid-body);
-  color: var(--text-main);
-  vertical-align: middle;
-}
-
-.table-constructo tbody tr {
-  transition: background-color 0.15s ease;
-}
-
-.table-constructo tbody tr:hover {
-  background-color: var(--bg-surface-low);
-}
-
-/* ==========================================================================
-   INPUTS & FORMS (Visible Contours)
-   ========================================================================== */
-.form-group-constructo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-
-.form-label-constructo {
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-}
-
-.form-input-constructo, .form-select-constructo, .form-textarea-constructo {
-  background-color: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
-  font-family: var(--font-body);
-  font-size: var(--text-fluid-body);
-  color: var(--text-main);
-  width: 100%;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  min-height: 42px;
-}
-
-.form-input-constructo:focus, .form-select-constructo:focus, .form-textarea-constructo:focus {
-  outline: none;
-  border-color: var(--technical-blue);
-  box-shadow: 0 0 0 3px var(--technical-blue-light);
-}
-
-/* ==========================================================================
-   MODAL OVERLAY & CONTENT
-   ========================================================================== */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-}
-
-.modal-content {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  width: 100%;
-  max-width: 580px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-  animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
+/* Base Modal Keyframes */
 @keyframes modalIn {
   from {
     opacity: 0;
@@ -736,7 +186,11 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Pulse animation indicator */
+.animate-modal-in {
+  animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Pulse live beacon */
 .pulse-live {
   width: 8px;
   height: 8px;
@@ -745,4 +199,3 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 8px var(--status-paid);
   display: inline-block;
 }
-
