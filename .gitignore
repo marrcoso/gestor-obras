@@ -26,3 +26,8 @@ yarn-error.log*
 *.swp
 *.swo
 *.tsbuildinfo
+
+# Uploads & Local Runtime Store
+uploads/
+*/uploads/
+backend/data_store.json
