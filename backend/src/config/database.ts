@@ -165,6 +165,17 @@ export interface DiarioFoto {
   created_at: string;
 }
 
+export interface ActivityLog {
+  id: string;
+  tenant_id: string;
+  user_id: string;
+  user_nome: string;
+  acao: string;
+  detalhes: string;
+  ip?: string;
+  created_at: string;
+}
+
 export interface DatabaseStore {
   tenants: Tenant[];
   users: User[];
@@ -175,6 +186,7 @@ export interface DatabaseStore {
   orcamentos: Orcamento[];
   orcamento_itens: OrcamentoItem[];
   diario_fotos: DiarioFoto[];
+  activity_logs: ActivityLog[];
 }
 
 const defaultData: DatabaseStore = {
@@ -186,7 +198,8 @@ const defaultData: DatabaseStore = {
   sinapi_itens: [],
   orcamentos: [],
   orcamento_itens: [],
-  diario_fotos: []
+  diario_fotos: [],
+  activity_logs: []
 };
 
 const DB_FILE_PATH = path.join(process.cwd(), 'data_store.json');
@@ -205,7 +218,12 @@ class DatabaseService {
     try {
       if (fs.existsSync(DB_FILE_PATH)) {
         const raw = fs.readFileSync(DB_FILE_PATH, 'utf-8');
-        this.store = JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        this.store = {
+          ...defaultData,
+          ...parsed,
+          activity_logs: parsed.activity_logs || []
+        };
       } else {
         this.saveLocalStore();
       }
