@@ -206,7 +206,7 @@ export const InadimplenciaPage: React.FC = () => {
                 Análise Visual de Inadimplência
               </h3>
 
-              <div className="h-44 rounded-md overflow-hidden relative bg-slate-900">
+              <div className="rounded-md overflow-hidden relative bg-slate-900">
                 <img
                   src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
                   alt="Análise visual de recebíveis"

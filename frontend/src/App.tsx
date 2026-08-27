@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
 import { ThemeProvider } from './context/ThemeContext.js';
+import { NotificationProvider } from './context/NotificationContext.js';
+import { NotificationToast } from './components/notifications/NotificationToast.js';
 import { LoginPage } from './pages/LoginPage.js';
 import { Navbar } from './components/Navbar.js';
 import { Sidebar } from './components/Sidebar.js';
@@ -18,6 +20,7 @@ import { InadimplenciaPage } from './pages/InadimplenciaPage.js';
 import { SinapiOrcamentosPage } from './pages/SinapiOrcamentosPage.js';
 import { DiarioObrasPage } from './pages/DiarioObrasPage.js';
 import { MobileFieldPage } from './pages/MobileFieldPage.js';
+import { UsuarioPage } from './pages/UsuarioPage.js';
 import { NewObraModal } from './components/NewObraModal.js';
 import { LoadingState } from './components/ui/LoadingState.js';
 
@@ -27,6 +30,9 @@ const AppLayout: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-app">
+      {/* Toast Flutuante de Notificações */}
+      <NotificationToast />
+
       {/* Sidebar para desktop */}
       <Sidebar openNewObraModal={() => setNewObraModalOpen(true)} />
 
@@ -81,27 +87,32 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Rota Pública */}
-            <Route path="/login" element={<LoginPage />} />
+        <NotificationProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Rota Pública */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Rotas Protegidas */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<RootRedirect />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/fluxo" element={<FluxoCaixaPage />} />
-              <Route path="/inadimplencia" element={<InadimplenciaPage />} />
-              <Route path="/sinapi" element={<SinapiOrcamentosPage />} />
-              <Route path="/diario" element={<DiarioObrasPage />} />
-              <Route path="/campo" element={<MobileFieldPage />} />
-              <Route path="/field" element={<Navigate to="/campo" replace />} />
-            </Route>
+              {/* Rotas Protegidas */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/" element={<RootRedirect />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/fluxo" element={<FluxoCaixaPage />} />
+                <Route path="/inadimplencia" element={<InadimplenciaPage />} />
+                <Route path="/sinapi" element={<SinapiOrcamentosPage />} />
+                <Route path="/diario" element={<DiarioObrasPage />} />
+                <Route path="/usuario" element={<UsuarioPage />} />
+                <Route path="/perfil" element={<Navigate to="/usuario" replace />} />
+                <Route path="/settings" element={<Navigate to="/usuario" replace />} />
+                <Route path="/campo" element={<MobileFieldPage />} />
+                <Route path="/field" element={<Navigate to="/campo" replace />} />
+              </Route>
 
-            {/* Rota Coringa / Fallback */}
-            <Route path="*" element={<RootRedirect />} />
-          </Routes>
-        </BrowserRouter>
+              {/* Rota Coringa / Fallback */}
+              <Route path="*" element={<RootRedirect />} />
+            </Routes>
+          </BrowserRouter>
+        </NotificationProvider>
       </AuthProvider>
     </ThemeProvider>
   );
