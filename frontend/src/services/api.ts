@@ -8,7 +8,10 @@ import {
   Orcamento,
   DiarioFoto,
   User,
-  Tenant
+  Tenant,
+  Notificacao,
+  ActivityLog,
+  TeamMember
 } from '../types/index.js';
 import { offlineQueue } from './offlineQueue.js';
 
@@ -279,6 +282,62 @@ class ApiClient {
     }
 
     return await response.json();
+  }
+
+  // --- PERFIL & USUÁRIO ---
+  public async updateProfile(data: { nome: string; telefone_whatsapp?: string }): Promise<User> {
+    return this.request<User>('/auth/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  }
+
+  public async changePassword(senhaAtual: string, novaSenha: string): Promise<{ message: string }> {
+    return this.request<{ message: string }>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ senhaAtual, novaSenha })
+    });
+  }
+
+  public async updateTenant(data: {
+    nome_fantasia?: string;
+    razao_social?: string;
+    cnpj?: string;
+    telefone?: string;
+    email_contato?: string;
+  }): Promise<Tenant> {
+    return this.request<Tenant>('/auth/tenant', {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  }
+
+  public async getTeamMembers(): Promise<TeamMember[]> {
+    return this.request<TeamMember[]>('/auth/team');
+  }
+
+  public async createTeamMember(data: {
+    nome: string;
+    email: string;
+    senha: string;
+    perfil: string;
+    telefoneWhatsapp?: string;
+  }): Promise<TeamMember> {
+    return this.request<TeamMember>('/auth/team', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  public async updateTeamMemberStatus(id: string, ativo: boolean): Promise<TeamMember> {
+    return this.request<TeamMember>(`/auth/team/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ ativo })
+    });
+  }
+
+  public async getActivityLogs(): Promise<ActivityLog[]> {
+    return this.request<ActivityLog[]>('/auth/activity-logs');
   }
 
   // --- FLUSH OFFLINE QUEUE ---

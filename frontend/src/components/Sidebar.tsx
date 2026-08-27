@@ -9,7 +9,10 @@ import {
   Camera,
   Smartphone,
   Plus,
-  HardHat
+  HardHat,
+  Bell,
+  Settings,
+  ChevronRight
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -112,21 +115,32 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
         </div>
       </nav>
 
-      {/* User Profile Card Footer */}
+      {/* User Profile Card Footer - Clickable link to /usuario */}
       <div className="p-4 border-t border-white/10">
-        <div className="flex items-center gap-3 p-2.5 bg-white/5 rounded-lg border border-white/5">
-          <div className="w-9 h-9 rounded-full bg-tech/25 border border-tech/40 flex items-center justify-center text-[#38bdf8] font-bold text-sm flex-shrink-0">
-            {user?.nome ? user.nome.charAt(0).toUpperCase() : 'U'}
+        <button
+          onClick={() => navigate('/usuario')}
+          className={`flex items-center justify-between p-2.5 rounded-lg border transition-all w-full text-left cursor-pointer ${
+            location.pathname === '/usuario' || location.pathname === '/perfil'
+              ? 'bg-tech/20 border-tech/40 text-white'
+              : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/15 text-white/80'
+          }`}
+          title="Ver perfil e configurações da construtora"
+        >
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="w-9 h-9 rounded-full bg-tech/25 border border-tech/40 flex items-center justify-center text-[#38bdf8] font-bold text-sm flex-shrink-0">
+              {user?.nome ? user.nome.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div className="flex flex-col overflow-hidden">
+              <span className="text-xs font-semibold text-white truncate">
+                {user?.nome || 'Carlos Silva'}
+              </span>
+              <span className="text-[10px] text-white/45 truncate">
+                {user?.perfil === 'ADMIN' ? 'Engenheiro & Dono' : user?.perfil === 'ENGENHEIRO' ? 'Engenheiro' : 'Mestre de Obras'}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col overflow-hidden">
-            <span className="text-xs font-semibold text-white truncate">
-              {user?.nome || 'Carlos Silva'}
-            </span>
-            <span className="text-[10px] text-white/45 truncate">
-              {user?.perfil === 'ADMIN' ? 'Engenheiro & Dono' : 'Mestre de Obras'}
-            </span>
-          </div>
-        </div>
+          <ChevronRight size={16} className="text-white/40 flex-shrink-0" />
+        </button>
       </div>
     </aside>
   );

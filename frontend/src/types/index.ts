@@ -171,3 +171,43 @@ export interface DiarioFoto {
   data_registro: string;
   created_at: string;
 }
+
+export interface Notificacao {
+  id: string;
+  tipo:
+    | 'INADIMPLENCIA'
+    | 'ALERTA_FINANCEIRO'
+    | 'ORCAMENTO_LIMITE'
+    | 'PRAZO_OBRA'
+    | 'DIARIO_OBRA'
+    | 'OFFLINE_SYNC'
+    | 'SISTEMA';
+  prioridade?: 'BAIXA' | 'MEDIA' | 'ALTA' | 'URGENTE';
+  titulo: string;
+  mensagem: string;
+  link_acao?: string;
+  lida?: boolean;
+  created_at: string;
+}
+
+export interface ActivityLog {
+  id: string;
+  tenant_id: string;
+  user_id: string;
+  user_nome: string;
+  acao: string;
+  detalhes: string;
+  ip?: string;
+  created_at: string;
+}
+
+export interface TeamMember {
+  id: string;
+  nome: string;
+  email: string;
+  perfil: 'ADMIN' | 'ENGENHEIRO' | 'MESTRE_OBRA';
+  telefone_whatsapp?: string;
+  ativo: boolean;
+  created_at?: string;
+}
+

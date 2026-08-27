@@ -14,6 +14,9 @@ interface AuthContextType {
   logout: () => void;
   setSelectedObra: (obra: Obra | null) => void;
   refreshObras: () => Promise<void>;
+  updateUser: (user: User) => void;
+  updateTenant: (tenant: Tenant) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -103,6 +106,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await login(email, 'senha123');
   };
 
+  const refreshUser = async () => {
+    try {
+      const data = await api.me();
+      setUser(data.user);
+      setTenant(data.tenant);
+    } catch (e) {
+      console.error('Erro ao atualizar dados do usuário:', e);
+    }
+  };
+
   const logout = () => {
     api.setToken(null);
     setUser(null);
@@ -124,7 +137,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loginDemo,
         logout,
         setSelectedObra,
-        refreshObras
+        refreshObras,
+        updateUser: (u) => setUser(u),
+        updateTenant: (t) => setTenant(t),
+        refreshUser
       }}
     >
       {children}

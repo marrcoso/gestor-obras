@@ -16,15 +16,6 @@ export interface KpiCardProps {
   className?: string;
 }
 
-const variantBorders = {
-  default: 'border-l-4 border-l-border-strong',
-  blue: 'border-l-4 border-l-tech',
-  emerald: 'border-l-4 border-l-status-paid',
-  amber: 'border-l-4 border-l-status-pending',
-  orange: 'border-l-4 border-l-status-warning',
-  red: 'border-l-4 border-l-status-late'
-};
-
 const iconBackgrounds = {
   default: 'bg-content-dim/10 text-content-dim',
   blue: 'bg-tech/15 text-tech',
@@ -47,9 +38,8 @@ export const KpiCard: React.FC<KpiCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`bg-card border border-border rounded-lg p-4 md:p-5 shadow-sm flex flex-col justify-between gap-3 relative overflow-hidden transition-all hover:shadow-md hover:border-border-strong group ${
-        variantBorders[variant]
-      } ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`bg-card border border-border rounded-lg p-4 md:p-5 shadow-sm flex flex-col justify-between gap-3 relative overflow-hidden transition-all hover:shadow-md hover:border-border-strong group} 
+        ${onClick ? 'cursor-pointer' : ''} ${className}`}
     >
       {/* Background Watermark Icon */}
       {Icon && (
