@@ -176,6 +176,81 @@ export interface ActivityLog {
   created_at: string;
 }
 
+export interface Subscription {
+  id: string;
+  tenant_id: string;
+  plano: 'STARTER' | 'PRO' | 'ENTERPRISE';
+  status: 'TRIAL' | 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'EXPIRED';
+  ciclo: 'MENSAL' | 'ANUAL';
+  valor: number;
+  data_inicio: string;
+  data_expiracao: string;
+  data_proximo_vencimento: string;
+  dias_trial_total: number;
+  asaas_customer_id?: string;
+  asaas_subscription_id?: string;
+  asaas_payment_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Invoice {
+  id: string;
+  tenant_id: string;
+  subscription_id: string;
+  valor: number;
+  forma_pagamento: 'PIX' | 'CARTAO' | 'BOLETO';
+  status: 'PENDENTE' | 'PAGO' | 'VENCIDO' | 'CANCELADO';
+  pix_qrcode_base64?: string;
+  pix_copia_cola?: string;
+  boleto_url?: string;
+  data_vencimento: string;
+  data_pagamento?: string;
+  asaas_invoice_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export const PLAN_LIMITS = {
+  STARTER: {
+    nome: 'Starter / Autônomo',
+    preco_mensal: 97.0,
+    preco_anual_mensal: 77.0,
+    preco_anual_total: 924.0,
+    max_obras_ativas: 2,
+    max_usuarios: 2,
+    recursos: ['SINAPI Nacional Atualizado', 'Canteiro Mobile Offline', 'Comprovantes Rápidos']
+  },
+  PRO: {
+    nome: 'Construtora / Pro',
+    preco_mensal: 247.0,
+    preco_anual_mensal: 197.0,
+    preco_anual_total: 2364.0,
+    max_obras_ativas: 6,
+    max_usuarios: 5,
+    recursos: [
+      'Diário Fotográfico Ilimitado',
+      'Régua de Inadimplência WhatsApp',
+      'Relatórios PDF Executivos',
+      'Exportação para Excel'
+    ]
+  },
+  ENTERPRISE: {
+    nome: 'Escala / Enterprise',
+    preco_mensal: 497.0,
+    preco_anual_mensal: 397.0,
+    preco_anual_total: 4764.0,
+    max_obras_ativas: 999999,
+    max_usuarios: 999999,
+    recursos: [
+      'Obras e Usuários Ilimitados',
+      'BDI Multi-nível Customizado',
+      'Suporte VIP via WhatsApp',
+      'Logo Personalizada nos Relatórios'
+    ]
+  }
+} as const;
+
 export interface DatabaseStore {
   tenants: Tenant[];
   users: User[];
@@ -187,6 +262,8 @@ export interface DatabaseStore {
   orcamento_itens: OrcamentoItem[];
   diario_fotos: DiarioFoto[];
   activity_logs: ActivityLog[];
+  subscriptions: Subscription[];
+  invoices: Invoice[];
 }
 
 const defaultData: DatabaseStore = {
@@ -199,7 +276,9 @@ const defaultData: DatabaseStore = {
   orcamentos: [],
   orcamento_itens: [],
   diario_fotos: [],
-  activity_logs: []
+  activity_logs: [],
+  subscriptions: [],
+  invoices: []
 };
 
 const DB_FILE_PATH = path.join(process.cwd(), 'data_store.json');
@@ -222,7 +301,9 @@ class DatabaseService {
         this.store = {
           ...defaultData,
           ...parsed,
-          activity_logs: parsed.activity_logs || []
+          activity_logs: parsed.activity_logs || [],
+          subscriptions: parsed.subscriptions || [],
+          invoices: parsed.invoices || []
         };
       } else {
         this.saveLocalStore();

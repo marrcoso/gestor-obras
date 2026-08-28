@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
-import { db, Tenant, User } from '../config/database.js';
+import { db, Tenant, User, Subscription, PLAN_LIMITS } from '../config/database.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-erp-obras-2026';
 
@@ -25,7 +25,9 @@ export class AuthController {
       const tenantId = uuidv4();
       const userId = uuidv4();
       const senhaHash = await bcrypt.hash(senha, 10);
-      const now = new Date().toISOString();
+      const now = new Date();
+      const nowIso = now.toISOString();
+      const trialExpiration = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
       const newTenant: Tenant = {
         id: tenantId,
@@ -33,10 +35,10 @@ export class AuthController {
         email_contato: email,
         telefone: telefoneWhatsapp,
         plano: 'STARTER',
-        max_obras_ativas: 5,
+        max_obras_ativas: PLAN_LIMITS.STARTER.max_obras_ativas,
         ativo: true,
-        created_at: now,
-        updated_at: now
+        created_at: nowIso,
+        updated_at: nowIso
       };
 
       const newUser: User = {
@@ -48,12 +50,29 @@ export class AuthController {
         telefone_whatsapp: telefoneWhatsapp,
         perfil: 'ADMIN',
         ativo: true,
-        created_at: now,
-        updated_at: now
+        created_at: nowIso,
+        updated_at: nowIso
+      };
+
+      const newSubscription: Subscription = {
+        id: uuidv4(),
+        tenant_id: tenantId,
+        plano: 'STARTER',
+        status: 'TRIAL',
+        ciclo: 'MENSAL',
+        valor: PLAN_LIMITS.STARTER.preco_mensal,
+        data_inicio: nowIso,
+        data_expiracao: trialExpiration,
+        data_proximo_vencimento: trialExpiration,
+        dias_trial_total: 7,
+        created_at: nowIso,
+        updated_at: nowIso
       };
 
       store.tenants.push(newTenant);
       store.users.push(newUser);
+      store.subscriptions = store.subscriptions || [];
+      store.subscriptions.push(newSubscription);
       db.saveLocalStore();
 
       const token = jwt.sign(
@@ -298,6 +317,19 @@ export class AuthController {
       }
 
       const store = db.getStore();
+
+      // Verifica limite de usuários do plano
+      const sub = (store.subscriptions || []).find((s) => s.tenant_id === tenantId);
+      const planConfig = PLAN_LIMITS[sub?.plano || 'STARTER'] || PLAN_LIMITS.STARTER;
+      const currentUsersCount = store.users.filter((u) => u.tenant_id === tenantId && u.ativo).length;
+
+      if (currentUsersCount >= planConfig.max_usuarios) {
+        return res.status(403).json({
+          error: `Você atingiu o limite de ${planConfig.max_usuarios} colaboradores do Plano ${planConfig.nome}. Faça upgrade de plano para adicionar novos membros.`,
+          code: 'PLAN_LIMIT_REACHED'
+        });
+      }
+
       const emailExists = store.users.some(
         (u) => u.tenant_id === tenantId && u.email.toLowerCase() === email.toLowerCase()
       );

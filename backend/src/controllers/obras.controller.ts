@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { db, Obra } from '../config/database.js';
+import { db, Obra, PLAN_LIMITS } from '../config/database.js';
 
 export class ObrasController {
   public async list(req: Request, res: Response) {
@@ -113,14 +113,19 @@ export class ObrasController {
       const tenantId = req.tenantId!;
       const store = db.getStore();
 
-      const tenant = store.tenants.find((t) => t.id === tenantId);
+      const sub = (store.subscriptions || []).find((s) => s.tenant_id === tenantId);
+      const planConfig = PLAN_LIMITS[sub?.plano || 'STARTER'] || PLAN_LIMITS.STARTER;
+
       const activeObrasCount = store.obras.filter(
         (o) => o.tenant_id === tenantId && o.status === 'EM_ANDAMENTO'
       ).length;
 
-      if (tenant && activeObrasCount >= (tenant.max_obras_ativas || 5)) {
+      if (activeObrasCount >= planConfig.max_obras_ativas) {
         return res.status(403).json({
-          error: `Limite de obras ativas atingido (${tenant.max_obras_ativas}). Faça um upgrade de plano.`
+          error: `Limite de obras ativas atingido (${planConfig.max_obras_ativas} obras no Plano ${planConfig.nome}). Faça upgrade de plano para cadastrar novas obras.`,
+          code: 'PLAN_LIMIT_REACHED',
+          current_count: activeObrasCount,
+          max_allowed: planConfig.max_obras_ativas
         });
       }
 

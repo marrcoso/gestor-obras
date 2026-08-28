@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS orcamento_itens (
 );
 
 -- ------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
 -- 8. DIÁRIO DE OBRA VISUAL (FOTOS & EVOLUÇÃO)
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS diario_fotos (
@@ -192,6 +193,44 @@ CREATE TABLE IF NOT EXISTS diario_fotos (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ------------------------------------------------------------------------------
+-- 9. ASSINATURAS & BILLING SAAS (ASAAS / GATEWAY)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    plano VARCHAR(20) NOT NULL DEFAULT 'STARTER' CHECK (plano IN ('STARTER', 'PRO', 'ENTERPRISE')),
+    status VARCHAR(20) NOT NULL DEFAULT 'TRIAL' CHECK (status IN ('TRIAL', 'ACTIVE', 'PAST_DUE', 'CANCELED', 'EXPIRED')),
+    ciclo VARCHAR(10) NOT NULL DEFAULT 'MENSAL' CHECK (ciclo IN ('MENSAL', 'ANUAL')),
+    valor NUMERIC(10, 2) NOT NULL DEFAULT 97.00,
+    data_inicio TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_expiracao TIMESTAMP WITH TIME ZONE NOT NULL,
+    data_proximo_vencimento TIMESTAMP WITH TIME ZONE NOT NULL,
+    dias_trial_total INT NOT NULL DEFAULT 7,
+    asaas_customer_id VARCHAR(50),
+    asaas_subscription_id VARCHAR(50),
+    asaas_payment_id VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS invoices (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    subscription_id UUID NOT NULL REFERENCES subscriptions(id) ON DELETE CASCADE,
+    valor NUMERIC(10, 2) NOT NULL,
+    forma_pagamento VARCHAR(15) NOT NULL DEFAULT 'PIX' CHECK (forma_pagamento IN ('PIX', 'CARTAO', 'BOLETO')),
+    status VARCHAR(15) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PAGO', 'VENCIDO', 'CANCELADO')),
+    pix_qrcode_base64 TEXT,
+    pix_copia_cola TEXT,
+    boleto_url TEXT,
+    data_vencimento DATE NOT NULL,
+    data_pagamento TIMESTAMP WITH TIME ZONE,
+    asaas_invoice_id VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- ==============================================================================
 -- ÍNDICES ESTRATÉGICOS (PERFORMANCE MULTI-TENANT E BUSCA)
 -- ==============================================================================
@@ -202,6 +241,8 @@ CREATE INDEX IF NOT EXISTS idx_transacoes_vencimento ON transacoes_financeiras(t
 CREATE INDEX IF NOT EXISTS idx_contas_receber_vencimento ON contas_receber(tenant_id, data_vencimento, status);
 CREATE INDEX IF NOT EXISTS idx_diario_fotos_obra_etapa ON diario_fotos(tenant_id, obra_id, etapa, data_registro DESC);
 CREATE INDEX IF NOT EXISTS idx_sinapi_busca ON sinapi_itens(estado_uf, mes_ano_referencia, codigo_sinapi);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_tenant ON subscriptions(tenant_id, status);
+CREATE INDEX IF NOT EXISTS idx_invoices_tenant_status ON invoices(tenant_id, status, data_vencimento);
 
 -- Índice GIN para busca textual rápida na base SINAPI
 CREATE INDEX IF NOT EXISTS idx_sinapi_descricao_gin ON sinapi_itens USING gin(to_tsvector('portuguese', descricao));

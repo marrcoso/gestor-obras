@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
-import { db, Tenant, User, Obra, TransacaoFinanceira, ContaReceber, DiarioFoto } from '../config/database.js';
+import { db, Tenant, User, Obra, TransacaoFinanceira, ContaReceber, DiarioFoto, Subscription, Invoice } from '../config/database.js';
 import { sinapiImporterService } from '../services/sinapi-importer.service.js';
 
 async function runSeed() {
@@ -323,12 +323,44 @@ async function runSeed() {
   ];
 
   // Salva no banco
+  const subId = uuidv4();
+  const subExpiration = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+  const subscription: Subscription = {
+    id: subId,
+    tenant_id: tenantId,
+    plano: 'PRO',
+    status: 'ACTIVE',
+    ciclo: 'ANUAL',
+    valor: 2364.00,
+    data_inicio: now,
+    data_expiracao: subExpiration,
+    data_proximo_vencimento: subExpiration,
+    dias_trial_total: 7,
+    created_at: now,
+    updated_at: now
+  };
+
+  const invoice: Invoice = {
+    id: uuidv4(),
+    tenant_id: tenantId,
+    subscription_id: subId,
+    valor: 2364.00,
+    forma_pagamento: 'PIX',
+    status: 'PAGO',
+    data_vencimento: hojeStr,
+    data_pagamento: now,
+    created_at: now,
+    updated_at: now
+  };
+
   store.tenants = [tenant];
   store.users = [adminUser, mestreUser];
   store.obras = [obra1, obra2];
   store.transacoes = transacoes;
   store.contas_receber = contasReceber;
   store.diario_fotos = diarioFotos;
+  store.subscriptions = [subscription];
+  store.invoices = [invoice];
 
   // 7. Carrega SINAPI
   const totalSinapi = sinapiImporterService.seedDefaultSinapi('SP', '2026-08');
@@ -338,6 +370,7 @@ async function runSeed() {
   console.log('✅ Seed executado com sucesso!');
   console.log(`- 1 Construtora: ${tenant.nome_fantasia}`);
   console.log(`- 2 Usuários: admin@alfaengenharia.com (senha123) e mestre@alfaengenharia.com (senha123)`);
+  console.log(`- 1 Assinatura SaaS Ativa: Plano ${subscription.plano} (${subscription.ciclo})`);
   console.log(`- 2 Obras com Centros de Custo Ativos`);
   console.log(`- ${transacoes.length} Lançamentos Financeiros (Fluxo de Caixa Segregado)`);
   console.log(`- ${contasReceber.length} Títulos a Receber (com 1 caso crítico de Inadimplência para teste de cobrança)`);
