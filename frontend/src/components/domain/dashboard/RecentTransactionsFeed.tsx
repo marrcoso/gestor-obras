@@ -1,17 +1,18 @@
 import React from 'react';
 import { TransacaoFinanceira } from '../../../types/index.js';
 import { StatusBadge } from '../../ui/Badge.js';
+import { formatBRL } from '../../../utils/formatters.js';
 import { Receipt, ArrowRight } from 'lucide-react';
 
 export interface RecentTransactionsFeedProps {
   transacoes: TransacaoFinanceira[];
-  formatMoney: (val: number) => string;
+  formatMoney?: (val: number) => string;
   onViewAll?: () => void;
 }
 
 export const RecentTransactionsFeed: React.FC<RecentTransactionsFeedProps> = ({
   transacoes,
-  formatMoney,
+  formatMoney = formatBRL,
   onViewAll
 }) => {
   return (

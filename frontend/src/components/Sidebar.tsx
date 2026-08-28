@@ -12,7 +12,8 @@ import {
   HardHat,
   Bell,
   Settings,
-  ChevronRight
+  ChevronRight,
+  Crown
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -22,14 +23,21 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, billingOverview } = useAuth();
+
+  const planBadge = billingOverview?.subscription.is_trial
+    ? 'Trial'
+    : billingOverview?.subscription.plano || 'Starter';
+
+  const isCanteiroActive = location.pathname === '/campo' || location.pathname === '/field';
 
   const menuItems = [
     { path: '/dashboard', label: 'Painel Executivo', icon: LayoutDashboard },
     { path: '/fluxo', label: 'Fluxo de Caixa', icon: DollarSign },
     { path: '/inadimplencia', label: 'Radar de Inadimplência', icon: AlertTriangle, badge: 'Crítico' },
     { path: '/sinapi', label: 'Orçador SINAPI', icon: FileSpreadsheet },
-    { path: '/diario', label: 'Diário de Fotos', icon: Camera }
+    { path: '/diario', label: 'Diário de Fotos', icon: Camera },
+    { path: '/planos', label: 'Planos & Assinatura', icon: Crown, badge: planBadge }
   ];
 
   return (
@@ -65,8 +73,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
               onClick={() => navigate(item.path)}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-md text-sm transition-all w-full text-left cursor-pointer ${
                 isActive
-                  ? 'bg-tech/15 text-[#38bdf8] font-bold border border-[#38bdf8]/35'
-                  : 'text-white/75 font-medium border border-transparent hover:bg-white/5 hover:text-white'
+                  ? 'bg-[#38bdf8]/20 text-[#38bdf8] font-bold'
+                  : 'text-white/75 font-medium hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -87,19 +95,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
         <div className="mt-4 pt-4 border-t border-white/10">
           <button
             onClick={() => navigate('/campo')}
-            className={`flex items-center justify-between px-3.5 py-3 rounded-md text-sm font-bold border border-brand/30 w-full text-left transition-all cursor-pointer ${
-              location.pathname === '/campo' || location.pathname === '/field'
-                ? 'bg-brand/20 text-[#fdba74]'
-                : 'bg-brand/10 text-[#fdba74] hover:bg-brand/15'
+            className={`group flex items-center justify-between px-3.5 py-2.5 rounded-md text-sm transition-all w-full text-left cursor-pointer ${
+              isCanteiroActive
+                ? 'bg-brand hover:bg-brand-hover text-white font-bold shadow-primary'
+                : 'text-orange-400 font-semibold hover:bg-brand/10 hover:text-orange-300'
             }`}
           >
             <div className="flex items-center gap-3">
-              <Smartphone size={18} className="text-brand" />
+              <Smartphone
+                size={18}
+                className={`transition-colors ${
+                  isCanteiroActive ? 'text-white' : 'text-orange-400 group-hover:text-orange-300'
+                }`}
+              />
               <span>App do Canteiro</span>
             </div>
-            <span className="bg-brand text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded tracking-wider">
-              CAMPO
-            </span>
+
+            {!isCanteiroActive && (
+              <span className="bg-brand text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded tracking-wider shadow-xs">
+                CAMPO
+              </span>
+            )}
           </button>
         </div>
 
@@ -119,10 +135,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
       <div className="p-4 border-t border-white/10">
         <button
           onClick={() => navigate('/usuario')}
-          className={`flex items-center justify-between p-2.5 rounded-lg border transition-all w-full text-left cursor-pointer ${
+          className={`flex items-center justify-between p-2.5 rounded-lg transition-all w-full text-left cursor-pointer ${
             location.pathname === '/usuario' || location.pathname === '/perfil'
-              ? 'bg-tech/20 border-tech/40 text-white'
-              : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/15 text-white/80'
+              ? 'bg-[#38bdf8]/20 text-white font-medium'
+              : 'bg-white/5 hover:bg-white/10 text-white/80'
           }`}
           title="Ver perfil e configurações da construtora"
         >

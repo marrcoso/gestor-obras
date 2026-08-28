@@ -1,17 +1,18 @@
 import React from 'react';
 import { Obra } from '../../../types/index.js';
 import { Button } from '../../ui/Button.js';
+import { formatBRL } from '../../../utils/formatters.js';
 import { Receipt, Camera } from 'lucide-react';
 
 export interface ObraCardProps {
   obra: Obra;
-  formatMoney: (val: number) => string;
+  formatMoney?: (val: number) => string;
   onSelect: (obra: Obra) => void;
 }
 
 export const ObraCard: React.FC<ObraCardProps> = ({
   obra,
-  formatMoney,
+  formatMoney = formatBRL,
   onSelect
 }) => {
   const perc = obra.percentual_orcamento_consumido || 0;

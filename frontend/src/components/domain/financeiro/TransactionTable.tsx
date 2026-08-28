@@ -2,11 +2,12 @@ import React from 'react';
 import { TransacaoFinanceira } from '../../../types/index.js';
 import { CategoryBadge } from '../../ui/Badge.js';
 import { EmptyState } from '../../ui/EmptyState.js';
+import { formatBRL, formatDateBR } from '../../../utils/formatters.js';
 import { Check, Clock, AlertTriangle, Paperclip, Trash2, Receipt } from 'lucide-react';
 
 export interface TransactionTableProps {
   transacoes: TransacaoFinanceira[];
-  formatMoney: (val: number) => string;
+  formatMoney?: (val: number) => string;
   onToggleStatus: (item: TransacaoFinanceira) => void;
   onDelete: (id: string) => void;
   onOpenComprovante: (url: string) => void;
@@ -14,7 +15,7 @@ export interface TransactionTableProps {
 
 export const TransactionTable: React.FC<TransactionTableProps> = ({
   transacoes,
-  formatMoney,
+  formatMoney = formatBRL,
   onToggleStatus,
   onDelete,
   onOpenComprovante
@@ -78,7 +79,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                 <td className={`font-body text-xs md:text-sm tabular-nums whitespace-nowrap py-3.5 px-4 ${
                   isLate ? 'text-status-late font-bold' : 'text-content-main'
                 }`}>
-                  {t.data_vencimento ? t.data_vencimento.split('-').reverse().join('/') : '—'}
+                  {formatDateBR(t.data_vencimento)}
                 </td>
 
                 {/* Description & Category */}

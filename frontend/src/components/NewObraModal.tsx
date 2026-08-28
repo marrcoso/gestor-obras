@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Building2, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Building2, Plus, Sparkles, AlertTriangle } from 'lucide-react';
 import { api } from '../services/api.js';
+import { useAuth } from '../context/AuthContext.js';
 import { Modal } from './ui/Modal.js';
 import { FormInput, FormSelect } from './ui/Input.js';
 import { Button } from './ui/Button.js';
@@ -12,6 +14,8 @@ interface NewObraModalProps {
 }
 
 export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  const navigate = useNavigate();
+  const { billingOverview } = useAuth();
   const [nome, setNome] = useState('');
   const [clienteNome, setClienteNome] = useState('');
   const [clienteTelefone, setClienteTelefone] = useState('');
@@ -23,6 +27,8 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
+
+  const isLimitReached = Boolean(billingOverview?.usage.obras_atingiu_limite);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +86,32 @@ export const NewObraModal: React.FC<NewObraModalProps> = ({ isOpen, onClose, onS
       size="md"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+        {isLimitReached && (
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3.5 flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
+              <AlertTriangle size={16} />
+              <span>Limite de Obras Ativas Atingido</span>
+            </div>
+            <p className="text-[11px] text-content-muted leading-relaxed">
+              Sua construtora atingiu a capacidade máxima de {billingOverview?.usage.max_obras_ativas} obras simultâneas do Plano {billingOverview?.subscription.plano}.
+            </p>
+            <div className="pt-1">
+              <Button
+                type="button"
+                variant="tech-blue"
+                size="sm"
+                icon={Sparkles}
+                onClick={() => {
+                  onClose();
+                  navigate('/planos');
+                }}
+              >
+                FAZER UPGRADE DE PLANO
+              </Button>
+            </div>
+          </div>
+        )}
+
         {error && (
           <div className="bg-status-late-bg text-status-late px-3.5 py-2.5 rounded-md text-xs font-medium border border-status-late/30">
             {error}

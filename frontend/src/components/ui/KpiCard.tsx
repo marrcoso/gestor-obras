@@ -38,8 +38,9 @@ export const KpiCard: React.FC<KpiCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`bg-card border border-border rounded-lg p-4 md:p-5 shadow-sm flex flex-col justify-between gap-3 relative overflow-hidden transition-all hover:shadow-md hover:border-border-strong group} 
-        ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`bg-card border border-border rounded-xl p-4 sm:p-5 shadow-sm flex flex-col justify-between gap-3 relative overflow-hidden transition-all hover:shadow-md hover:border-border-strong group ${
+        onClick ? 'cursor-pointer' : ''
+      } ${className}`}
     >
       {/* Background Watermark Icon */}
       {Icon && (

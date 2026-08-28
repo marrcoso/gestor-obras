@@ -3,18 +3,19 @@ import { ContaReceber } from '../../../types/index.js';
 import { StatusBadge } from '../../ui/Badge.js';
 import { Button } from '../../ui/Button.js';
 import { EmptyState } from '../../ui/EmptyState.js';
+import { formatBRL, formatDateBR } from '../../../utils/formatters.js';
 import { MessageSquare, Check, AlertTriangle } from 'lucide-react';
 
 export interface ReceivableTableProps {
   contas: ContaReceber[];
-  formatMoney: (val: number) => string;
+  formatMoney?: (val: number) => string;
   onOpenWhatsApp: (contaId: string) => void;
   onMarkPaid: (contaId: string) => void;
 }
 
 export const ReceivableTable: React.FC<ReceivableTableProps> = ({
   contas,
-  formatMoney,
+  formatMoney = formatBRL,
   onOpenWhatsApp,
   onMarkPaid
 }) => {
@@ -82,7 +83,7 @@ export const ReceivableTable: React.FC<ReceivableTableProps> = ({
                     <span className={`font-body text-xs md:text-sm tabular-nums font-semibold ${
                       isLate ? 'text-status-late' : 'text-content-main'
                     }`}>
-                      {conta.data_vencimento ? conta.data_vencimento.split('-').reverse().join('/') : '—'}
+                      {formatDateBR(conta.data_vencimento)}
                     </span>
                     {isLate && !isRecebido && (
                       <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded text-white mt-0.5 ${
