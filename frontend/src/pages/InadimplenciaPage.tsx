@@ -10,6 +10,7 @@ import { LoadingState } from '../components/ui/LoadingState.js';
 import { ReceivableTable } from '../components/domain/inadimplencia/ReceivableTable.js';
 import { NewReceivableModal } from '../components/domain/inadimplencia/NewReceivableModal.js';
 import { WhatsAppModal } from '../components/WhatsAppModal.js';
+import { formatBRL } from '../utils/formatters.js';
 import {
   AlertTriangle,
   Download,
@@ -81,9 +82,6 @@ export const InadimplenciaPage: React.FC = () => {
     }
   };
 
-  const formatMoney = (val: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
-
   const filteredContas = contas.filter((c) => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
@@ -131,7 +129,7 @@ export const InadimplenciaPage: React.FC = () => {
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           title="TOTAL VENCIDO"
-          value={formatMoney(radar?.total_vencido || 0)}
+          value={formatBRL(radar?.total_vencido || 0)}
           icon={Wallet}
           variant="red"
           subtitle={`${radar?.total_clientes_inadimplentes || 0} contratos pendentes`}
@@ -139,7 +137,7 @@ export const InadimplenciaPage: React.FC = () => {
 
         <KpiCard
           title="1-15 DIAS (LEVE)"
-          value={formatMoney(radar?.aging.vencido_1_a_15_dias || 0)}
+          value={formatBRL(radar?.aging.vencido_1_a_15_dias || 0)}
           icon={Clock}
           variant="amber"
           subtitle="Lembrete cordial WhatsApp"
@@ -147,7 +145,7 @@ export const InadimplenciaPage: React.FC = () => {
 
         <KpiCard
           title="16-30 DIAS (ATENÇÃO)"
-          value={formatMoney(radar?.aging.vencido_16_a_30_dias || 0)}
+          value={formatBRL(radar?.aging.vencido_16_a_30_dias || 0)}
           icon={AlertTriangle}
           variant="orange"
           subtitle="Aviso de paralisação de etapa"
@@ -155,7 +153,7 @@ export const InadimplenciaPage: React.FC = () => {
 
         <KpiCard
           title="+30 DIAS (CRÍTICO)"
-          value={formatMoney(radar?.aging.vencido_mais_30_dias || 0)}
+          value={formatBRL(radar?.aging.vencido_mais_30_dias || 0)}
           icon={Gavel}
           variant="red"
           subtitle="Encaminhado para jurídico"
@@ -189,7 +187,7 @@ export const InadimplenciaPage: React.FC = () => {
               ) : (
                 <ReceivableTable
                   contas={filteredContas}
-                  formatMoney={formatMoney}
+                  formatMoney={formatBRL}
                   onOpenWhatsApp={setSelectedContaIdWhatsApp}
                   onMarkPaid={handleMarcarRecebido}
                 />

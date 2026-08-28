@@ -211,3 +211,94 @@ export interface TeamMember {
   created_at?: string;
 }
 
+export interface Subscription {
+  id: string;
+  tenant_id: string;
+  plano: 'STARTER' | 'PRO' | 'ENTERPRISE';
+  status: 'TRIAL' | 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'EXPIRED';
+  ciclo: 'MENSAL' | 'ANUAL';
+  valor: number;
+  data_inicio: string;
+  data_expiracao: string;
+  data_proximo_vencimento: string;
+  dias_trial_total: number;
+  dias_restantes?: number;
+  is_trial?: boolean;
+  is_active?: boolean;
+  is_expired?: boolean;
+  is_past_due?: boolean;
+  is_canceled?: boolean;
+  asaas_customer_id?: string;
+  asaas_subscription_id?: string;
+  asaas_payment_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Invoice {
+  id: string;
+  tenant_id: string;
+  subscription_id: string;
+  valor: number;
+  forma_pagamento: 'PIX' | 'CARTAO' | 'BOLETO';
+  status: 'PENDENTE' | 'PAGO' | 'VENCIDO' | 'CANCELADO';
+  pix_qrcode_base64?: string;
+  pix_copia_cola?: string;
+  boleto_url?: string;
+  data_vencimento: string;
+  data_pagamento?: string;
+  asaas_invoice_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PlanConfig {
+  nome: string;
+  preco_mensal: number;
+  preco_anual_mensal: number;
+  preco_anual_total: number;
+  max_obras_ativas: number;
+  max_usuarios: number;
+  recursos: string[];
+}
+
+export interface BillingOverview {
+  subscription: Subscription;
+  usage: {
+    obras_ativas: number;
+    max_obras_ativas: number;
+    obras_atingiu_limite: boolean;
+    usuarios_ativos: number;
+    max_usuarios: number;
+    usuarios_atingiu_limite: boolean;
+  };
+  plans: {
+    STARTER: PlanConfig;
+    PRO: PlanConfig;
+    ENTERPRISE: PlanConfig;
+  };
+  is_gateway_configured: boolean;
+}
+
+export interface CheckoutPayload {
+  plano: 'STARTER' | 'PRO' | 'ENTERPRISE';
+  ciclo: 'MENSAL' | 'ANUAL';
+  formaPagamento: 'PIX' | 'CARTAO';
+  creditCard?: {
+    holderName: string;
+    number: string;
+    expiryMonth: string;
+    expiryYear: string;
+    ccv: string;
+  };
+  creditCardHolderInfo?: {
+    name: string;
+    email: string;
+    cpfCnpj: string;
+    postalCode?: string;
+    addressNumber?: string;
+    phone?: string;
+  };
+}
+
+

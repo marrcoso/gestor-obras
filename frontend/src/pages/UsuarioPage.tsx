@@ -7,6 +7,10 @@ import { Button } from '../components/ui/Button.js';
 import { FormInput } from '../components/ui/Input.js';
 import { Modal } from '../components/ui/Modal.js';
 import { LoadingState } from '../components/ui/LoadingState.js';
+import { useNavigate } from 'react-router-dom';
+import { PlanCards } from '../components/billing/PlanCards.js';
+import { CheckoutModal } from '../components/billing/CheckoutModal.js';
+import { formatDateTimeBR, formatDateBR } from '../utils/formatters.js';
 import {
   User as UserIcon,
   Shield,
@@ -25,12 +29,17 @@ import {
   Download,
   BellRing,
   Layers,
-  Sparkles
+  Sparkles,
+  CreditCard
 } from 'lucide-react';
 
 export const UsuarioPage: React.FC = () => {
-  const { user, tenant, updateUser, updateTenant, obras } = useAuth();
-  const [activeTab, setActiveTab] = useState<'PROFILE' | 'SECURITY' | 'COMPANY' | 'TEAM' | 'AUDIT'>('PROFILE');
+  const { user, tenant, updateUser, updateTenant, obras, billingOverview, refreshBilling } = useAuth();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'PROFILE' | 'SECURITY' | 'COMPANY' | 'TEAM' | 'PLANS' | 'AUDIT'>('PROFILE');
+  const [ciclo, setCiclo] = useState<'MENSAL' | 'ANUAL'>('ANUAL');
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [selectedPlanForCheckout, setSelectedPlanForCheckout] = useState<'STARTER' | 'PRO' | 'ENTERPRISE'>('PRO');
 
   // Estados de Perfil
   const [nome, setNome] = useState(user?.nome || '');
@@ -249,6 +258,7 @@ export const UsuarioPage: React.FC = () => {
     { key: 'SECURITY', label: 'Segurança & Senha', icon: Shield },
     { key: 'COMPANY', label: 'Dados da Construtora', icon: Building2 },
     { key: 'TEAM', label: 'Equipe & Acessos', icon: Users },
+    { key: 'PLANS', label: 'Planos & Assinatura', icon: Crown },
     { key: 'AUDIT', label: 'Auditoria & Preferências', icon: History }
   ];
 
@@ -646,9 +656,9 @@ export const UsuarioPage: React.FC = () => {
               variant="tech-blue"
               size="sm"
               icon={Sparkles}
-              onClick={() => alert('Para upgrades de plano corporativo ou aumento de obras ativas, entre em contato com nosso suporte executivo.')}
+              onClick={() => setActiveTab('PLANS')}
             >
-              UPGRADE DE PLANO
+              GERENCIAR / UPGRADE DE PLANO
             </Button>
           </div>
         </div>
@@ -822,8 +832,8 @@ export const UsuarioPage: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-xs text-content-muted">{log.detalhes}</p>
-                    <span className="text-[10px] text-content-dim">
-                      {new Date(log.created_at).toLocaleString('pt-BR')}
+                    <span className="text-[10px] text-content-dim font-mono">
+                      {formatDateTimeBR(log.created_at)}
                     </span>
                   </div>
                 ))}
@@ -902,6 +912,46 @@ export const UsuarioPage: React.FC = () => {
         </div>
       )}
 
+      {/* TAB CONTENT: PLANOS & ASSINATURA */}
+      {activeTab === 'PLANS' && (
+        <div className="flex flex-col gap-6">
+          <div className="bg-card border border-border rounded-xl p-5 md:p-6 shadow-sm flex flex-col gap-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base font-bold font-headline text-content-main flex items-center gap-2">
+                  <Crown size={18} className="text-brand" />
+                  Planos de Assinatura & Capacidade
+                </h3>
+                <p className="text-xs text-content-muted mt-0.5">
+                  Faça upgrade de plano para gerenciar mais obras simultâneas e adicionar mestres de obra.
+                </p>
+              </div>
+
+              <Button
+                variant="tech-blue"
+                size="sm"
+                icon={Sparkles}
+                onClick={() => navigate('/planos')}
+              >
+                VER PÁGINA COMPLETA & FATURAS
+              </Button>
+            </div>
+
+            <PlanCards
+              ciclo={ciclo}
+              setCiclo={setCiclo}
+              currentPlan={tenant?.plano || 'STARTER'}
+              isSubscriptionActive={billingOverview?.subscription.is_active && !billingOverview?.subscription.is_trial}
+              onSelectPlan={(plano, selCiclo) => {
+                setSelectedPlanForCheckout(plano);
+                setCiclo(selCiclo);
+                setIsCheckoutOpen(true);
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Modal: Novo Colaborador */}
       <Modal
         isOpen={isNewMemberModalOpen}
@@ -974,6 +1024,17 @@ export const UsuarioPage: React.FC = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Modal: Checkout de Assinatura */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        selectedPlan={selectedPlanForCheckout}
+        ciclo={ciclo}
+        onSuccess={async () => {
+          await refreshBilling();
+        }}
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { Button } from '../components/ui/Button.js';
 import { LoadingState } from '../components/ui/LoadingState.js';
 import { ObraCard } from '../components/domain/dashboard/ObraCard.js';
 import { RecentTransactionsFeed } from '../components/domain/dashboard/RecentTransactionsFeed.js';
+import { formatBRL } from '../utils/formatters.js';
 import {
   Landmark,
   AlertTriangle,
@@ -68,9 +69,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
   const totalReceitasGeral = obras.reduce((acc, curr) => acc + (curr.total_receitas || 0), 0);
   const totalObrasAtivas = obras.filter((o) => o.status === 'EM_ANDAMENTO').length || obras.length;
 
-  const formatMoney = (val: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
-
   if (loading) {
     return (
       <div className="p-4 md:p-6 max-w-7xl mx-auto w-full">
@@ -104,7 +102,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           title="SALDO CONSOLIDADO"
-          value={formatMoney(totalSaldoGeral)}
+          value={formatBRL(totalSaldoGeral)}
           icon={Landmark}
           variant="blue"
           trend={{ value: '+5.2%', isPositive: true, label: 'vs mês anterior' }}
@@ -112,7 +110,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
 
         <KpiCard
           title="RECEBÍVEIS VENCIDOS"
-          value={formatMoney(inadimplencia?.total_vencido || 0)}
+          value={formatBRL(inadimplencia?.total_vencido || 0)}
           icon={AlertTriangle}
           variant="red"
           onClick={() => handleNavigate('inadimplencia')}
@@ -125,7 +123,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
 
         <KpiCard
           title="TOTAL DE ENTRADAS (MÊS)"
-          value={formatMoney(totalReceitasGeral)}
+          value={formatBRL(totalReceitasGeral)}
           icon={FileInput}
           variant="emerald"
           subtitle="75% da meta mensal atingida"
@@ -162,7 +160,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
               <ObraCard
                 key={obra.id}
                 obra={obra}
-                formatMoney={formatMoney}
+                formatMoney={formatBRL}
                 onSelect={(selected) => {
                   setSelectedObra(selected);
                   handleNavigate('fluxo');
@@ -196,7 +194,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setCurrentView, op
         <section className="flex flex-col gap-4">
           <RecentTransactionsFeed
             transacoes={recentTransacoes}
-            formatMoney={formatMoney}
+            formatMoney={formatBRL}
             onViewAll={() => handleNavigate('fluxo')}
           />
         </section>

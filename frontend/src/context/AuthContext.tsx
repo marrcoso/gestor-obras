@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, Tenant, Obra } from '../types/index.js';
+import { User, Tenant, Obra, BillingOverview } from '../types/index.js';
 import { api } from '../services/api.js';
 
 interface AuthContextType {
@@ -7,6 +7,7 @@ interface AuthContextType {
   tenant: Tenant | null;
   selectedObra: Obra | null;
   obras: Obra[];
+  billingOverview: BillingOverview | null;
   loading: boolean;
   isOnline: boolean;
   login: (email: string, pass: string) => Promise<void>;
@@ -14,6 +15,7 @@ interface AuthContextType {
   logout: () => void;
   setSelectedObra: (obra: Obra | null) => void;
   refreshObras: () => Promise<void>;
+  refreshBilling: () => Promise<void>;
   updateUser: (user: User) => void;
   updateTenant: (tenant: Tenant) => void;
   refreshUser: () => Promise<void>;
@@ -26,6 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [obras, setObras] = useState<Obra[]>([]);
   const [selectedObra, setSelectedObra] = useState<Obra | null>(null);
+  const [billingOverview, setBillingOverview] = useState<BillingOverview | null>(null);
   const [loading, setLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
@@ -46,16 +49,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Checa sessão existente
     if (api.getToken()) {
-      api.me()
-        .then(({ user, tenant }) => {
+      Promise.all([
+        api.me(),
+        api.getObras().catch(() => []),
+        api.getBillingOverview().catch(() => null)
+      ])
+        .then(([{ user, tenant }, obrasData, billingData]) => {
           setUser(user);
           setTenant(tenant);
-          return api.getObras();
-        })
-        .then((obrasData) => {
           setObras(obrasData);
           if (obrasData.length > 0) {
             setSelectedObra(obrasData[0]);
+          }
+          if (billingData) {
+            setBillingOverview(billingData);
           }
         })
         .catch(() => {
@@ -87,15 +94,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const refreshBilling = async () => {
+    try {
+      const data = await api.getBillingOverview();
+      setBillingOverview(data);
+    } catch (e) {
+      console.error('Erro ao atualizar dados de billing:', e);
+    }
+  };
+
   const login = async (email: string, pass: string) => {
     setLoading(true);
     try {
       const res = await api.login(email, pass);
       setUser(res.user);
       setTenant(res.tenant);
-      const obrasData = await api.getObras();
+      const [obrasData, billingData] = await Promise.all([
+        api.getObras().catch(() => []),
+        api.getBillingOverview().catch(() => null)
+      ]);
       setObras(obrasData);
       if (obrasData.length > 0) setSelectedObra(obrasData[0]);
+      if (billingData) setBillingOverview(billingData);
     } finally {
       setLoading(false);
     }
@@ -111,6 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await api.me();
       setUser(data.user);
       setTenant(data.tenant);
+      refreshBilling();
     } catch (e) {
       console.error('Erro ao atualizar dados do usuário:', e);
     }
@@ -122,6 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTenant(null);
     setObras([]);
     setSelectedObra(null);
+    setBillingOverview(null);
   };
 
   return (
@@ -131,6 +153,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         tenant,
         selectedObra,
         obras,
+        billingOverview,
         loading,
         isOnline,
         login,
@@ -138,6 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout,
         setSelectedObra,
         refreshObras,
+        refreshBilling,
         updateUser: (u) => setUser(u),
         updateTenant: (t) => setTenant(t),
         refreshUser
@@ -155,3 +179,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

@@ -11,7 +11,11 @@ import {
   Tenant,
   Notificacao,
   ActivityLog,
-  TeamMember
+  TeamMember,
+  Subscription,
+  Invoice,
+  BillingOverview,
+  CheckoutPayload
 } from '../types/index.js';
 import { offlineQueue } from './offlineQueue.js';
 
@@ -338,6 +342,35 @@ class ApiClient {
 
   public async getActivityLogs(): Promise<ActivityLog[]> {
     return this.request<ActivityLog[]>('/auth/activity-logs');
+  }
+
+  // --- BILLING & ASSINATURAS ---
+  public async getBillingOverview(): Promise<BillingOverview> {
+    return this.request<BillingOverview>('/billing/subscription');
+  }
+
+  public async getInvoices(): Promise<Invoice[]> {
+    return this.request<Invoice[]>('/billing/invoices');
+  }
+
+  public async checkoutSubscription(data: CheckoutPayload): Promise<any> {
+    return this.request<any>('/billing/checkout', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  public async cancelSubscription(): Promise<any> {
+    return this.request<any>('/billing/cancel', {
+      method: 'POST'
+    });
+  }
+
+  public async simulatePayment(data: { invoiceId?: string; plano?: string; ciclo?: string }): Promise<any> {
+    return this.request<any>('/billing/simulate-payment', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
   }
 
   // --- FLUSH OFFLINE QUEUE ---

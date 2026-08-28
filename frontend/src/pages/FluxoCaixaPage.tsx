@@ -10,6 +10,7 @@ import { LoadingState } from '../components/ui/LoadingState.js';
 import { TransactionTable } from '../components/domain/financeiro/TransactionTable.js';
 import { NewTransactionModal } from '../components/domain/financeiro/NewTransactionModal.js';
 import { ReceiptModal } from '../components/ReceiptModal.js';
+import { formatBRL } from '../utils/formatters.js';
 import {
   Plus,
   ArrowDown,
@@ -118,9 +119,6 @@ export const FluxoCaixaPage: React.FC = () => {
     }
   };
 
-  const formatMoney = (val: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
-
   // Filter items in memory based on status & search
   const filteredTransacoes = transacoes.filter((t) => {
     if (filtroStatus && t.status !== filtroStatus) return false;
@@ -170,28 +168,28 @@ export const FluxoCaixaPage: React.FC = () => {
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           title="ENTRADAS RECEBIDAS"
-          value={formatMoney(resumo?.total_receitas || 0)}
+          value={formatBRL(resumo?.total_receitas || 0)}
           icon={ArrowDown}
           variant="blue"
         />
 
         <KpiCard
           title="DESPESAS PAGAS"
-          value={formatMoney(resumo?.total_despesas || 0)}
+          value={formatBRL(resumo?.total_despesas || 0)}
           icon={ArrowUp}
           variant="red"
         />
 
         <KpiCard
           title="SALDO ATUAL DA OBRA"
-          value={formatMoney(resumo?.saldo_liquido || 0)}
+          value={formatBRL(resumo?.saldo_liquido || 0)}
           icon={Building2}
           variant="emerald"
         />
 
         <KpiCard
           title="A PAGAR (PENDENTE)"
-          value={formatMoney(resumo?.total_despesas_pendentes || 0)}
+          value={formatBRL(resumo?.total_despesas_pendentes || 0)}
           icon={Clock}
           variant="amber"
         />
@@ -258,7 +256,7 @@ export const FluxoCaixaPage: React.FC = () => {
           ) : (
             <TransactionTable
               transacoes={filteredTransacoes}
-              formatMoney={formatMoney}
+              formatMoney={formatBRL}
               onToggleStatus={handleToggleStatus}
               onDelete={handleDelete}
               onOpenComprovante={setSelectedComprovante}

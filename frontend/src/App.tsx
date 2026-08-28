@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from './context/AuthContext.js';
 import { ThemeProvider } from './context/ThemeContext.js';
 import { NotificationProvider } from './context/NotificationContext.js';
 import { NotificationToast } from './components/notifications/NotificationToast.js';
+import { SubscriptionBanner } from './components/billing/SubscriptionBanner.js';
 import { LoginPage } from './pages/LoginPage.js';
 import { Navbar } from './components/Navbar.js';
 import { Sidebar } from './components/Sidebar.js';
@@ -21,6 +22,7 @@ import { SinapiOrcamentosPage } from './pages/SinapiOrcamentosPage.js';
 import { DiarioObrasPage } from './pages/DiarioObrasPage.js';
 import { MobileFieldPage } from './pages/MobileFieldPage.js';
 import { UsuarioPage } from './pages/UsuarioPage.js';
+import { PlanosPage } from './pages/PlanosPage.js';
 import { NewObraModal } from './components/NewObraModal.js';
 import { LoadingState } from './components/ui/LoadingState.js';
 
@@ -29,29 +31,34 @@ const AppLayout: React.FC = () => {
   const [newObraModalOpen, setNewObraModalOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-app">
-      {/* Toast Flutuante de Notificações */}
-      <NotificationToast />
+    <div className="flex min-h-screen bg-app flex-col">
+      {/* Banner Global de Assinatura & Trial */}
+      <SubscriptionBanner />
 
-      {/* Sidebar para desktop */}
-      <Sidebar openNewObraModal={() => setNewObraModalOpen(true)} />
+      <div className="flex flex-1 min-h-0">
+        {/* Toast Flutuante de Notificações */}
+        <NotificationToast />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto pb-20 lg:pb-8 lg:ml-[280px]">
-        <Navbar openNewObraModal={() => setNewObraModalOpen(true)} />
+        {/* Sidebar para desktop */}
+        <Sidebar openNewObraModal={() => setNewObraModalOpen(true)} />
 
-        <main className="flex-1">
-          <Outlet context={{ openNewObraModal: () => setNewObraModalOpen(true) }} />
-        </main>
+        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto pb-20 lg:pb-8 lg:ml-[280px]">
+          <Navbar openNewObraModal={() => setNewObraModalOpen(true)} />
 
-        {/* Bottom Nav móvel */}
-        <MobileBottomNav />
+          <main className="flex-1">
+            <Outlet context={{ openNewObraModal: () => setNewObraModalOpen(true) }} />
+          </main>
 
-        {/* Modal Global de Cadastro de Obra */}
-        <NewObraModal
-          isOpen={newObraModalOpen}
-          onClose={() => setNewObraModalOpen(false)}
-          onSuccess={() => refreshObras()}
-        />
+          {/* Bottom Nav móvel */}
+          <MobileBottomNav />
+
+          {/* Modal Global de Cadastro de Obra */}
+          <NewObraModal
+            isOpen={newObraModalOpen}
+            onClose={() => setNewObraModalOpen(false)}
+            onSuccess={() => refreshObras()}
+          />
+        </div>
       </div>
     </div>
   );
@@ -101,6 +108,8 @@ export default function App() {
                 <Route path="/inadimplencia" element={<InadimplenciaPage />} />
                 <Route path="/sinapi" element={<SinapiOrcamentosPage />} />
                 <Route path="/diario" element={<DiarioObrasPage />} />
+                <Route path="/planos" element={<PlanosPage />} />
+                <Route path="/billing" element={<Navigate to="/planos" replace />} />
                 <Route path="/usuario" element={<UsuarioPage />} />
                 <Route path="/perfil" element={<Navigate to="/usuario" replace />} />
                 <Route path="/settings" element={<Navigate to="/usuario" replace />} />
