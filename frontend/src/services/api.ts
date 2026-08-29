@@ -353,6 +353,10 @@ class ApiClient {
     return this.request<Invoice[]>('/billing/invoices');
   }
 
+  public async getInvoiceStatus(invoiceId: string): Promise<{ invoice: Invoice; subscription: Subscription; isPaid: boolean }> {
+    return this.request<{ invoice: Invoice; subscription: Subscription; isPaid: boolean }>(`/billing/invoices/${invoiceId}/status`);
+  }
+
   public async checkoutSubscription(data: CheckoutPayload): Promise<any> {
     return this.request<any>('/billing/checkout', {
       method: 'POST',

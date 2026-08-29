@@ -84,7 +84,7 @@ export const PlanCards: React.FC<PlanCardsProps> = ({
     <div className="flex flex-col gap-6">
       {/* Billing Cycle Switcher */}
       <div className="flex flex-col items-center justify-center gap-2">
-        <div className="bg-surface-low border border-border p-1 rounded-xl flex items-center shadow-inner">
+        <div className="bg-surface-low border border-border p-1 gap-2 rounded-xl flex items-center shadow-inner">
           <button
             type="button"
             onClick={() => setCiclo('MENSAL')}

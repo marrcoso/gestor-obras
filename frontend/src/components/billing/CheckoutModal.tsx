@@ -55,6 +55,35 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Máscaras de entrada
+  const formatCardNumber = (val: string) => {
+    const digits = val.replace(/\D/g, '').substring(0, 16);
+    return digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+  };
+
+  const formatCardExpiry = (val: string) => {
+    const digits = val.replace(/\D/g, '').substring(0, 4);
+    if (digits.length >= 3) {
+      return `${digits.substring(0, 2)}/${digits.substring(2, 4)}`;
+    }
+    return digits;
+  };
+
+  const formatCpfCnpj = (val: string) => {
+    const digits = val.replace(/\D/g, '').substring(0, 14);
+    if (digits.length <= 11) {
+      return digits
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    }
+    return digits
+      .replace(/^(\d{2})(\d)/, '$1.$2')
+      .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/\.(\d{3})(\d)/, '.$1/$2')
+      .replace(/(\d{4})(\d)/, '$1-$2');
+  };
+
   const planPrices: Record<string, { mensal: number; anual: number; nome: string }> = {
     STARTER: { mensal: 97, anual: 924, nome: 'Starter / Autônomo' },
     PRO: { mensal: 247, anual: 2364, nome: 'Construtora / Pro' },
@@ -72,6 +101,33 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       setFormaPagamento('PIX');
     }
   }, [isOpen, selectedPlan, ciclo]);
+
+  // Polling em tempo real do status do PIX a cada 3 segundos
+  useEffect(() => {
+    let interval: any = null;
+
+    if (isOpen && pixData?.invoiceId && !isSuccess) {
+      interval = setInterval(async () => {
+        try {
+          const res = await api.getInvoiceStatus(pixData.invoiceId!);
+          if (res.isPaid || res.invoice?.status === 'PAGO' || res.subscription?.status === 'ACTIVE') {
+            setIsSuccess(true);
+            await refreshBilling();
+            setTimeout(() => {
+              onSuccess();
+              onClose();
+            }, 2500);
+          }
+        } catch {
+          // Ignora erros temporários de conexão durante polling
+        }
+      }, 3000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isOpen, pixData?.invoiceId, isSuccess, refreshBilling, onSuccess, onClose]);
 
   const handleGeneratePix = async () => {
     setLoading(true);
@@ -354,8 +410,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <FormInput
                   label="Número do Cartão"
                   value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
+                  onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
                   placeholder="0000 0000 0000 0000"
+                  maxLength={19}
                   required
                 />
 
@@ -363,15 +420,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <FormInput
                     label="Validade"
                     value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
+                    onChange={(e) => setCardExpiry(formatCardExpiry(e.target.value))}
                     placeholder="MM/AA"
+                    maxLength={5}
                     required
                   />
                   <FormInput
                     label="CVV"
                     value={cardCvv}
-                    onChange={(e) => setCardCvv(e.target.value)}
+                    onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').substring(0, 4))}
                     placeholder="123"
+                    maxLength={4}
                     required
                   />
                 </div>
@@ -379,8 +438,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <FormInput
                   label="CPF ou CNPJ do Titular"
                   value={cardCpf}
-                  onChange={(e) => setCardCpf(e.target.value)}
+                  onChange={(e) => setCardCpf(formatCpfCnpj(e.target.value))}
                   placeholder="000.000.000-00"
+                  maxLength={18}
                   required
                 />
 
