@@ -1,26 +1,27 @@
 # 🚀 Master Plan: Da Validação Técnica ao Retorno Financeiro (SaaS ERP de Obras)
 
-Este documento estabelece o **plano estratégico e operacional completo** para transformar a base atual do **ERP Leve de Obras** em um **SaaS B2B lucrativo e escalável** no mercado brasileiro de construção civil.
+Este documento estabelece o **plano estratégico, financeiro e operacional completo** para transformar o **ERP Leve de Obras** em um **SaaS B2B altamente lucrativo e escalável** no mercado brasileiro de construção civil, operando com **custo fixo inicial de R$ 0 a R$ 30/mês**.
 
 ---
 
 ## 📊 1. Diagnóstico do Estado Atual & Gaps de Produção
 
 ### O que já está desenvolvido e funcional:
-- ✅ **Frontend PWA & Web**: Dashboard executivo, Fluxo de Caixa segregado por obra, Módulo de Inadimplência com régua WhatsApp, Orçamentos integrados ao SINAPI da Caixa, Diário de Obras fotográfico e Modo Canteiro Mobile (UX rápida com botões táteis).
-- ✅ **Backend REST & Multi-Tenant**: API Express em TypeScript com isolamento de dados por `tenant_id`, autenticação JWT, controle de perfis (`ADMIN`, `ENGENHEIRO`, `MESTRE_OBRA`).
-- ✅ **Sincronizador SINAPI**: Job e scripts de importação da tabela oficial da Caixa Econômica Federal.
-- ✅ **Database Schema**: Modelagem PostgreSQL completa com índices, chaves estrangeiras e integridade referencial.
+- ✅ **Frontend PWA & Web**: Dashboard executivo, Fluxo de Caixa segregado por obra, Módulo de Inadimplência com régua WhatsApp, Orçamentos integrados ao SINAPI da Caixa, Diário de Obras fotográfico e Modo Canteiro Mobile (UX tátil rápida).
+- ✅ **Módulo de Assinaturas & Checkout**: Telas de planos, modal de checkout PIX dinâmico com polling de status em tempo real, formulário de cartão com máscaras e banner de status com **Grace Period de 5 dias**.
+- ✅ **Backend REST & Multi-Tenant**: API Express em TypeScript com isolamento de dados por `tenant_id`, autenticação JWT, controle de perfis (`ADMIN`, `ENGENHEIRO`, `MESTRE_OBRA`) e middleware de bloqueio tolerante.
+- ✅ **Gateway de Pagamento Integrado (Asaas)**: Serviço de integração com Asaas para criação de clientes, cobrança PIX imediata, assinaturas no cartão e webhook handler com idempotência.
+- ✅ **Storage S3/R2-Compatible**: Módulo de armazenamento pronto para Cloudflare R2 com fallback local.
+- ✅ **Sincronizador SINAPI**: Importador automatizado da tabela oficial da Caixa Econômica Federal.
+- ✅ **Database Schema**: Modelagem relacional PostgreSQL completa (`database/schema.sql`) com índices multi-tenant e busca textual.
 
-### Gaps Críticos para Publicação Comercial:
-| Área | Gap Atual | Solução Necessária |
+### Gaps para Lançamento Comercial:
+| Área | Status Atual | O que falta para Produção |
 | :--- | :--- | :--- |
-| **Billing / Pagamentos** | Não há cobrança automatizada | Integração com Asaas / Stripe (PIX Recorrente + Cartão + Boleto) e bloqueio automático de inadimplentes |
-| **Armazenamento de Mídia** | Upload local / mock | Integração com Cloudflare R2 ou AWS S3 para fotos de comprovantes e diário |
-| **Landing Page & Aquisição** | Sem página pública de conversão | Landing page mobile-first focada na dor do cliente (vídeo demo, comparativo vs Excel, CTA de teste grátis) |
-| **Onboarding Automatizado** | Criação manual de tenant no seed | Fluxo de auto-cadastro com criação de Tenant, usuário admin e template de 1ª obra guiada |
-| **Infraestrutura em Nuvem** | Rodando localmente / Docker local | Deploy em Render / Railway / Hetzner + Neon/Supabase PostgreSQL gerenciado + CDN Cloudflare |
-| **Segurança & Compliance** | Falta rate-limit estrito e termos | Rate-limit (express-rate-limit), Helmet, CORS de produção, Termos de Uso e Política de Privacidade (LGPD) |
+| **Infraestrutura em Nuvem** | Rodando em localhost | Deploy em stack gratuita (Cloudflare Pages + Render + Neon Postgres + Cloudflare R2) |
+| **Chave Oficial Asaas** | Operando em Mock Sandbox | Inserção da API Key de Produção/Sandbox do Asaas no `.env` e cadastro do Webhook público |
+| **Landing Page de Conversão** | Sem página pública | Landing page mobile-first focada na dor do pequeno construtor com botão de Teste Grátis de 7 Dias |
+| **Onboarding Automatizado** | Criação manual de tenant no seed | Fluxo de auto-cadastro com injeção automática de uma Obra Demo para experimentação imediata |
 
 ---
 
@@ -37,20 +38,7 @@ Este documento estabelece o **plano estratégico e operacional completo** para t
 
 ---
 
-### 2.2 Tamanho de Mercado no Brasil (TAM / SAM / SOM)
-
-```mermaid
-graph TD
-    TAM["TAM (Mercado Total Brasil)<br>~350.000 empresas de construção/reforma + 1,2M profissionais (CREA/CAU)"] --> SAM
-    SAM["SAM (Mercado Endereçável Real)<br>~90.000 pequenas construtoras e escritórios sem ERP pesado (Sienge/Mega)"] --> SOM
-    SOM["SOM (Meta Operacional 12-24 meses)<br>500 a 1.200 assinantes ativos no Brasil"]
-```
-
-- **Por que agora?** Os grandes ERPs (Sienge, Mega, TOTVS) custam **R$ 1.500 a R$ 5.000+/mês** com taxa de implantação de R$ 10.000+. O pequeno construtor opera no Excel ou no caderno e é negligenciado pelo mercado enterprise.
-
----
-
-### 2.3 Estrutura de Planos e Preços (Tabela Comercial Sugerida)
+### 2.2 Estrutura de Planos e Preços (Tabela Comercial)
 
 | Plano | Preço Mensal | Preço Anual (Desc. 20%) | Limite de Obras Ativas | Usuários Inclusos | Destaques |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -59,179 +47,190 @@ graph TD
 | **Plano Escala / Enterprise** | **R$ 497 /mês** | **R$ 397 /mês** (R$ 4.764/ano) | Obras ilimitadas | Usuários ilimitados | BDI multi-nível, Suporte VIP via WhatsApp, Logo personalizada em relatórios |
 
 > [!TIP]
-> **Estratégia de Entrada (Trial)**: 7 dias de teste grátis sem cartão de crédito. No 5º dia, envio de automação WhatsApp demonstrando o relatório gerado da obra dele.
+> **Estratégia de Entrada (Trial)**: 7 dias de teste grátis sem cartão de crédito. Se houver atraso na renovação, o sistema concede **5 dias de tolerância (Grace Period)** com aviso visual amigável antes de qualquer restrição.
 
 ---
 
-## 📈 3. Projeção Financeira & Unit Economics
+## 💳 3. Masterclass de Pagamentos & Billing SaaS
 
-### 3.1 Métricas SaaS Projetadas
+### 3.1 O que é o Asaas e por que foi escolhido?
+O **Asaas** é uma instituição de pagamento brasileira especializada em SaaS e recorrência B2B:
+- **Custo Fixo**: **R$ 0,00/mês** (sem taxa de adesão ou mensalidade).
+- **Taxa PIX**: **R$ 1,99** por recebimento aprovado (contra 3% a 4% em gateways tradicionais de cartão).
+- **Taxa Cartão**: ~2,99% + R$ 0,49 por transação aprovada.
+- **Saque PIX**: Transferência gratuita para a conta bancária da sua empresa (PJ ou PF).
 
-| Métrica | Estimativa Conservadora | Estimativa Otimista | Benchmark de Mercado |
-| :--- | :--- | :--- | :--- |
-| **Ticket Médio (ARPU)** | R$ 195,00 /mês | R$ 260,00 /mês | B2B Micro-SaaS |
-| **CAC (Custo de Aquisição de Cliente)** | R$ 380,00 | R$ 220,00 | Tráfego Direto + Indicação |
-| **Tempo Médio de Retenção (Life)** | 16 meses | 24 meses | Construção Civil (obras longas) |
-| **LTV (Lifetime Value)** | **R$ 3.120,00** | **R$ 6.240,00** | Retenção anual |
-| **Relação LTV / CAC** | **8.2x** *(Excelente)* | **28.3x** *(Excepcional)* | Ideal > 3x |
-| **Payback do CAC** | 1.9 meses | 0.9 meses | Ideal < 6 meses |
-| **Churn Mensal** | 3.8% | 2.1% | Baixo após inserção de dados |
-
----
-
-### 3.2 Curva de Faturamento e Lucro (12 Meses)
-
+### 3.2 O Fluxo Real do Dinheiro & Webhooks
 ```mermaid
-gantt
-    title Curva de Crescimento de Clientes e MRR (12 Meses)
-    dateFormat  X
-    axisFormat Mês %d
-    
-    section Validação & Piloto
-    M01 : 0 Clientes | R$ 0 MRR            : 0, 1
-    M02 : 10 Clientes Piloto | R$ 1.500 MRR : 1, 2
-    
-    section Tração Inicial
-    M03 : 25 Clientes | R$ 4.875 MRR        : 2, 3
-    M04 : 50 Clientes | R$ 9.750 MRR        : 3, 4
-    M06 : 110 Clientes | R$ 21.450 MRR (Break-even amplo) : 5, 6
-    
-    section Escala Comercial
-    M09 : 240 Clientes | R$ 46.800 MRR      : 8, 9
-    M12 : 450 Clientes | R$ 87.750 MRR (ARR > R$ 1M) : 11, 12
+sequenceDiagram
+    autonumber
+    actor Cliente as Construtora (Cliente)
+    participant ERP as Nosso ERP (Frontend + Backend)
+    participant Asaas as Gateway Asaas
+    participant Banco as Banco do Cliente (PIX / Cartão)
+    actor Voce as Sua Conta Bancária PJ
+
+    Cliente->>ERP: Seleciona Plano Pro (R$ 247/mês)
+    ERP->>Asaas: Cria Cobrança / Assinatura
+    Asaas-->>ERP: Retorna QR Code PIX Dinâmico + Copia e Cola
+    ERP-->>Cliente: Exibe QR Code na tela (Inicia Polling a cada 3s)
+    Cliente->>Banco: Lê o QR Code e paga no app do banco
+    Banco->>Asaas: Liquidação instantânea do PIX
+    Asaas->>ERP: Dispara Webhook: POST /api/webhooks/asaas (PAYMENT_RECEIVED)
+    ERP->>ERP: Valida token, atualiza fatura para PAGO e ativa assinatura
+    ERP-->>Cliente: Frontend detecta confirmação, comemora e libera acesso
+    Asaas->>Voce: Saldo disponível para transferência PIX para sua conta
 ```
 
-#### Tabela de Evolução Financeira Trimestral:
+---
 
-| Período | Clientes Ativos | MRR (Recorrência Mensal) | ARR (Taxa Anualizada) | Custo Operacional (Infra + Ads) | Lucro Líquido Mensal Estimado |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Mês 1** (Setup & Pilotos) | 5 (Gratuitos/Beta) | R$ 0 | R$ 0 | R$ 450 | - R$ 450 |
-| **Mês 3** (Lançamento Oficial) | 25 | **R$ 4.875** | R$ 58.500 | R$ 2.800 | **+ R$ 2.075** |
-| **Mês 6** (Aceleração) | 110 | **R$ 21.450** | R$ 257.400 | R$ 6.500 | **+ R$ 14.950** |
-| **Mês 9** (Escala) | 240 | **R$ 46.800** | R$ 561.600 | R$ 12.000 | **+ R$ 34.800** |
-| **Mês 12** (Consolidação) | 450 | **R$ 87.750** | **R$ 1.053.000** | R$ 21.000 | **+ R$ 66.750 /mês** |
+## 🌐 4. Manual Passo a Passo de Hospedagem Zero-Cost
+
+Para colocar o sistema no ar de forma profissional com **HTTPS/SSL automático, domínio próprio, banco gerenciado e armazenamento de mídia**, utilize a stack abaixo (100% gratuita na fase inicial):
+
+```mermaid
+graph TD
+    User["📱 Usuário / Cliente<br>(Web / Mobile PWA)"] --> DNS["🌐 Cloudflare DNS & SSL<br>(gestorobras.com.br)"]
+    
+    DNS --> FE["⚡ Frontend: Cloudflare Pages / Vercel<br>(Build React SPA • R$ 0/mês)"]
+    DNS --> BE["🚀 Backend API: Render.com<br>(Node.js Express TS • R$ 0/mês)"]
+    
+    BE --> DB["🐘 Banco: Neon.tech PostgreSQL<br>(0.5 GB Free Tier • Backups Diários)"]
+    BE --> R2["☁️ Mídia: Cloudflare R2 Storage<br>(10 GB Free todo mês • Zero Egress)"]
+    BE --> ASAAS["💳 Pagamentos: Asaas Gateway<br>(Webhooks com Idempotência)"]
+    ASAAS -.->|Webhook Notificação| BE
+```
 
 ---
 
-## 💰 4. Custos Reais de Operação & Infraestrutura
+### 🚀 ETAPA 1: Banco de Dados PostgreSQL (Neon.tech - Grátis)
 
-### 4.1 Custo de Infraestrutura & Ferramental (Fase Inicial vs Escala)
+1. Acesse [neon.tech](https://neon.tech) e crie uma conta gratuita.
+2. Crie um novo projeto com o nome `gestor-obras-db`.
+3. Na dashboard do Neon, selecione a aba **Dashboard** e copie a connection string (`DATABASE_URL`):
+   ```text
+   postgresql://neondb_owner:SENHA@ep-xyz.us-east-1.aws.neon.tech/neondb?sslmode=require
+   ```
+4. Na aba **SQL Editor** do Neon, abra o arquivo local [`database/schema.sql`](file:///home/marcus-vinicius/projects/gestor-obras/database/schema.sql), copie todo o conteúdo e clique em **Run** para criar todas as tabelas, chaves e índices.
 
-| Item / Serviço | Função | Custo Fase 1 (0-100 clientes) | Custo Fase 2 (100-500 clientes) |
-| :--- | :--- | :--- | :--- |
-| **Hospedagem Backend + Frontend** | Render / Railway / Hetzner VPS | ~R$ 120,00 /mês ($20 USD) | ~R$ 350,00 /mês ($60 USD) |
-| **Banco PostgreSQL Gerenciado** | Neon / Supabase Pro (Backup diário) | R$ 0 a R$ 145,00 /mês ($25) | ~R$ 290,00 /mês ($50 USD) |
-| **Storage de Fotos (R2/S3)** | Cloudflare R2 (Sem taxa de egress) | ~R$ 15,00 /mês | ~R$ 80,00 /mês |
-| **Gateway de Pagamento (Asaas)** | Taxa por transação PIX/Boleto/Cartão | R$ 1,99 por PIX / 2.99% Cartão | Diluído no faturamento |
-| **Email Transacional (Resend)** | Boas-vindas, recuperação de senha | R$ 0 (Até 3.000 emails/mês) | ~R$ 115,00 /mês ($20) |
-| **Domínio + DNS Cloudflare** | `gestorobras.com.br` / `.com` | R$ 40,00 /ano | R$ 40,00 /ano |
-| **WhatsApp API (Evolution/Z-API)** | Régua de cobrança automática e avisos | ~R$ 60,00 /mês | ~R$ 120,00 /mês |
-| **TOTAL FIXO MENSAL ESTIMADO** | | **~R$ 340 a R$ 480 /mês** | **~R$ 995 a R$ 1.350 /mês** |
+---
+
+### ☁️ ETAPA 2: Armazenamento de Fotos na Nuvem (Cloudflare R2 - Grátis)
+
+1. Acesse [cloudflare.com](https://cloudflare.com) e crie uma conta gratuita.
+2. No menu lateral esquerdo, vá em **R2 Object Storage**.
+3. Clique em **Create bucket** e defina o nome: `erp-obras-media`.
+4. No canto direito da tela de R2, clique em **Manage R2 API Tokens** > **Create API Token**:
+   - Permissões: **Admin Read & Write**.
+   - TTL: Deixe sem expiração.
+5. Copie e anote:
+   - **Account ID** (disponível na URL ou painel do R2)
+   - **Access Key ID**
+   - **Secret Access Key**
+6. Na aba **Settings** do bucket `erp-obras-media`, vá em **Public Development URL** e clique em **Enable** (ou configure um Custom Domain como `media.gestorobras.com.br`).
+
+---
+
+### 🖥️ ETAPA 3: Deploy do Backend API (Render.com - Grátis)
+
+1. Acesse [render.com](https://render.com) e faça login com seu GitHub.
+2. Clique em **New +** > **Web Service**.
+3. Selecione o repositório `marrcoso/gestor-obras`.
+4. Preencha as configurações do serviço:
+   - **Name**: `erp-obras-api`
+   - **Region**: `Ohio (US East)` ou `Frankfurt`
+   - **Root Directory**: `backend`
+   - **Runtime**: `Node`
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm start`
+   - **Instance Type**: `Free`
+5. Em **Environment Variables**, adicione:
+   | Chave | Valor |
+   | :--- | :--- |
+   | `NODE_ENV` | `production` |
+   | `PORT` | `10000` |
+   | `JWT_SECRET` | `uma_chave_longa_e_super_secreta_com_mais_de_32_caracteres` |
+   | `CORS_ORIGIN` | `https://app.gestorobras.com.br,https://gestorobras.pages.dev` |
+   | `DATABASE_URL` | *(Connection String do Neon obtida na Etapa 1)* |
+   | `R2_ACCOUNT_ID` | *(Account ID do Cloudflare)* |
+   | `R2_ACCESS_KEY_ID` | *(Access Key ID do R2)* |
+   | `R2_SECRET_ACCESS_KEY` | *(Secret Access Key do R2)* |
+   | `R2_BUCKET_NAME` | `erp-obras-media` |
+   | `R2_PUBLIC_URL` | *(Public URL do bucket R2)* |
+   | `ASAAS_API_KEY` | *(Sua chave `$aact_...` gerada no painel do Asaas)* |
+   | `ASAAS_ENV` | `production` *(ou `sandbox` se estiver testando)* |
+   | `ASAAS_WEBHOOK_SECRET` | `sua_senha_secreta_para_validar_o_webhook` |
+6. Clique em **Deploy Web Service**. Em 2 minutos, sua API estará online em `https://erp-obras-api.onrender.com`.
+
+---
+
+### ⚡ ETAPA 4: Deploy do Frontend PWA (Cloudflare Pages - Grátis)
+
+1. No painel da Cloudflare, vá em **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**.
+2. Selecione o repositório `marrcoso/gestor-obras`.
+3. Configure os parâmetros de build:
+   - **Project name**: `gestor-obras-app`
+   - **Framework preset**: `Vite`
+   - **Root directory**: `frontend`
+   - **Build command**: `npm run build`
+   - **Build output directory**: `dist`
+4. Em **Environment variables**, configure:
+   - `VITE_API_BASE_URL`: `https://erp-obras-api.onrender.com/api` (ou `https://api.gestorobras.com.br/api`)
+5. Clique em **Save and Deploy**. Seu app estará publicado instantaneamente com CDN global e SSL ativo.
+
+---
+
+### 🔗 ETAPA 5: Cadastrar o Webhook no Painel do Asaas
+
+Agora que sua API está online com endereço público na internet:
+
+1. Acesse sua conta no [Asaas](https://www.asaas.com) (ou [Sandbox](https://sandbox.asaas.com)).
+2. No menu lateral, vá em **Minha Conta / Configurações** > **Integrações** > **Webhooks** > **Cobranças**.
+3. Preencha os campos:
+   - **URL do Webhook**: `https://erp-obras-api.onrender.com/api/webhooks/asaas` (ou seu domínio oficial `https://api.gestorobras.com.br/api/webhooks/asaas`).
+   - **Email de Notificação**: Seu email pessoal para avisos de falha.
+   - **Token de Autenticação**: O mesmo valor exato definido na variável `ASAAS_WEBHOOK_SECRET`.
+   - **Fila de Sincronização**: Selecionar versão `v3`.
+4. Marque os eventos de disparo:
+   - ✅ `Pagamento recebido` (`PAYMENT_RECEIVED`)
+   - ✅ `Pagamento confirmado` (`PAYMENT_CONFIRMED`)
+   - ✅ `Pagamento vencido` (`PAYMENT_OVERDUE`)
+   - ✅ `Pagamento estornado / reembolsado` (`PAYMENT_REFUNDED`)
+   - ✅ `Cobrança removida` (`PAYMENT_DELETED`)
+   - ✅ `Assinatura cancelada` (`SUBSCRIPTION_DELETED`)
+5. Clique em **Salvar**. Pronto! Todo PIX ou cartão pago disparará a ativação instantânea no seu SaaS.
+
+---
+
+## 💰 5. Custos Reais & Ponto de Equilíbrio (Break-Even)
+
+| Recurso | Provedor | Custo Mensal Inicial (0-100 clientes) |
+| :--- | :--- | :--- |
+| **Frontend SPA / PWA** | Cloudflare Pages | **R$ 0,00** (Gratuito Ilimitado) |
+| **Backend API** | Render.com Web Service | **R$ 0,00** (Free Tier) |
+| **PostgreSQL Gerenciado** | Neon.tech Serverless | **R$ 0,00** (500 MB Free Tier) |
+| **Armazenamento de Fotos** | Cloudflare R2 | **R$ 0,00** (10 GB Free / R$ 0 Egress) |
+| **Gateway de Pagamento** | Asaas | **R$ 0,00 fixo** (R$ 1,99 por PIX recebido) |
+| **Domínio Próprio** | Registro.br | ~R$ 40,00 /ano (R$ 3,33/mês) |
+| **TOTAL FIXO MENSAL** | | **~R$ 3,33 /mês** |
 
 > [!IMPORTANT]
-> **Ponto de Equilíbrio (Break-Even Real)**:
-> Com apenas **3 clientes pagantes no Plano Construtora (3 x R$ 247 = R$ 741)** ou **5 clientes no Starter**, todos os custos de servidores, domínio, emails e banco já estão **100% pagos**. A margem bruta deste SaaS ultrapassa **85%**.
+> **Lucratividade Imediata**: Com **apenas 1 cliente pagante** no Plano Autônomo (R$ 97/mês), a operação já é 100% lucrativa, gerando mais de **R$ 90 de lucro líquido recorrente todo mês**.
 
 ---
 
-## 🛠️ 5. Cronograma de Implementação em 5 Fases
+## 🗓️ 6. Próximos Passos Executivos
 
 ```mermaid
 flowchart TD
-    F1["FASE 1: Blindagem de Produção & Pagamentos<br>(Semanas 1 e 2)"] --> F2["FASE 2: Landing Page & Onboarding Automático<br>(Semana 3)"]
-    F2 --> F3["FASE 3: Beta Fechado com 10 Construtoras<br>(Semanas 4 e 5)"]
-    F3 --> F4["FASE 4: Lançamento Comercial & Tráfego Pago<br>(Mês 2 a 3)"]
-    F4 --> F5["FASE 5: Escala & Expansão de Ticket<br>(Mês 4 em diante)"]
+    S1["1. Criar contas gratuitas (Neon.tech, Cloudflare R2 e Render)"] --> S2["2. Realizar deploy do Banco, Backend e Frontend"]
+    S2 --> S3["3. Copiar URL pública da API e cadastrar Webhook no Asaas"]
+    S3 --> S4["4. Realizar 1 teste real de PIX (R$ 5,00) de ponta a ponta"]
+    S4 --> S5["5. Construir Landing Page de Conversão (Fase 2)"]
 ```
-
----
-
-### Fase 1: Blindagem de Produção, Armazenamento & Gateway de Pagamento
-- **Duração**: 10 a 14 dias.
-- **Entregas Técnicas**:
-  1. **Storage em Nuvem (Cloudflare R2)**:
-     - Substituição do storage local por cliente S3-compatible via `@aws-sdk/client-s3` com URLs pré-assinadas ou CDN própria.
-  2. **Módulo de Assinaturas & Billing (Asaas / Stripe)**:
-     - Criação da tabela `subscriptions` e webhook handler (`POST /api/webhooks/asaas`).
-     - Gestão de status: `TRIAL`, `ACTIVE`, `PAST_DUE`, `CANCELED`.
-     - Middleware de bloqueio: impede acesso a rotas de criação se o plano estiver expirado/cancelado.
-  3. **Segurança de Produção**:
-     - Ativação do `helmet`, `express-rate-limit` (100 req/min por IP), sanitização de inputs e CORS restrito ao domínio oficial.
-     - Migração das variáveis de ambiente para `.env.production`.
-
----
-
-### Fase 2: Landing Page de Alta Conversão & Auto-Onboarding
-- **Duração**: 7 dias.
-- **Entregas Técnicas & Comerciais**:
-  1. **Landing Page Integrada (Desktop & Mobile)**:
-     - Hero com vídeo curto (30s) demonstrando: "Como o mestre lança um gasto em 5 segundos no canteiro".
-     - Calculadora interativa: "Quanto sua construtora perde por mês misturando caixas?".
-     - Tabela de preços transparente com botão "Iniciar Teste Grátis de 7 Dias".
-  2. **Fluxo de Auto-Cadastro (Sign-up)**:
-     - Formulário simples (Nome, Nome da Construtora, WhatsApp, Email, Senha).
-     - Geração automática do Tenant e injeção de uma **Obra Modelo Demo** para o usuário experimentar imediatamente sem tela vazia.
-  3. **Termos de Uso e Política de Privacidade**:
-     - Conformidade com a LGPD e regras claras de custódia de dados de medição.
-
----
-
-### Fase 3: Beta Fechado (Validação com 10 Usuários Reais)
-- **Duração**: 14 dias.
-- **Ações Estratégicas**:
-  1. Recrutar 10 profissionais reais da sua rede (engenheiros, amigos com empreiteiras, grupos de WhatsApp de construção civil da sua região).
-  2. Oferta: **Acesso 100% gratuito por 60 dias** em troca de usar em 1 obra real e realizar 1 call de feedback de 15 minutos por semana.
-  3. Instalação do **Sentry** (monitoramento de erros em tempo real) e **PostHog** (mapa de calor e fluxo de uso).
-  4. Ajustar arestas de usabilidade encontradas no canteiro sob sol e sinal 4G instável.
-
----
-
-### Fase 4: Lançamento Comercial & Máquina de Aquisição (Go-To-Market)
-- **Duração**: Mês 2 ao Mês 3.
-- **Canais de Aquisição (Estratégia Multicanal)**:
-  1. **Google Search Ads (Fundo de Funil - Intenção Alta)**:
-     - Palavras-chave: `"sistema para controle de obras"`, `"app para mestre de obras"`, `"planilha fluxo de caixa obras vs software"`, `"tabela sinapi atualizada online"`.
-     - Orçamento inicial: R$ 30 a R$ 50/dia (R$ 900 a R$ 1.500/mês).
-  2. **Meta Ads (Instagram / Facebook - Vídeos de Dor)**:
-     - Criativo 1: Comparativo lado a lado (Mestre enrolado com 20 notas de papel amassadas no bolso vs Mestre tirando foto no app em 3 segundos).
-     - Criativo 2: "Você sabe exatamente o lucro real da sua última obra? Ou descobriu que tomou prejuízo depois que entregou a chave?".
-  3. **Parcerias com Lojas de Materiais de Construção**:
-     - Parceria com depósitos de materiais locais: Cupom de 20% no ERP para clientes da loja.
-  4. **Prospecção Ativa (Outbound WhatsApp / Instagram)**:
-     - Abordagem consultiva para perfis de pequenas construtoras e empreiteiros no Instagram.
-
----
-
-### Fase 5: Retenção, Expansão de Ticket & Novos Recursos
-- **Duração**: Mês 4 em diante.
-- **Novos Geradores de Receita**:
-  1. **Exportação de Relatório Executivo White-Label em PDF**:
-     - A construtora gera o relatório fotográfico + financeiro com a própria logomarca para enviar ao cliente final (diferencial que fideliza a assinatura).
-  2. **OCR com IA para Notas Fiscais**:
-     - Leitura automática de valor, CNPJ e itens da foto da nota fiscal usando IA (cobrança de add-on ou incluso no plano Enterprise).
-  3. **Upgrade de Planos**: Construtora que iniciou com 2 obras migra para 6 obras conforme ganha novos contratos.
-
----
-
-## 🎲 6. Análise de Riscos, Probabilidades & Mitigação
-
-| Risco Mapeado | Probabilidade | Impacto | Estratégia de Mitigação |
-| :--- | :--- | :--- | :--- |
-| **Resistência do Mestre de Obras em usar app** | **Alta** | **Alto** | O app já foi desenhado com botões gigantes, fluxo de 3 toques e sem menus complexos. O mestre não precisa preencher nada complexo, apenas tirar a foto e digitar o valor. |
-| **Concorrência com Planilhas Excel Gratuitas** | **Média** | **Médio** | Destacar o risco de erro humano no Excel, a perda de histórico em caso de pane no PC e a facilidade do cálculo BDI/SINAPI instantâneo. |
-| **Inadimplência de Assinantes SaaS** | **Média** | **Baixo** | Cobrança antecipada com bloqueio automático após 5 dias de atraso e desconto agressivo para plano Anual pago no PIX/Cartão. |
-| **Custo de Tráfego Pago Alto** | **Média** | **Médio** | Focar no marketing de conteúdo orgânico (SEO no SINAPI) e parcerias com influenciadores de engenharia civil/reformas no YouTube/Instagram. |
-
----
-
-## 🎯 7. Próximos Passos Imediatos para Execução
-
-1. **Aprovação do Plano**: Validar a ordem das etapas e escopo de gateway de pagamento preferido (Asaas é o mais recomendado para o mercado brasileiro por suporte nativo a PIX com webhook instantâneo).
-2. **Setup do Módulo de Assinaturas (Billing)**: Criação das tabelas de assinatura e telas de Checkout/Planos.
-3. **Configuração do Bucket Cloudflare R2**: Upload em nuvem definitivo.
-4. **Construção da Landing Page de Conversão**: Tela inicial para visitantes não autenticados.
 
 ---
 
 > [!NOTE]
-> Este plano foi dimensionado para possibilitar uma operação enxuta (**Bootstrap / Solo Founder** ou equipe mínima de 1-2 pessoas), com ponto de equilíbrio atingível nos primeiros 30 dias de lançamento público.
+> Este documento serve como bússola definitiva de implantação técnica e comercial. Todas as decisões técnicas visam máxima confiabilidade, zero custo fixo inicial e retorno financeiro acelerado.
+
