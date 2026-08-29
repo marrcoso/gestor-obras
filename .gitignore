@@ -31,3 +31,5 @@ yarn-error.log*
 uploads/
 */uploads/
 backend/data_store.json
+
+docs/
