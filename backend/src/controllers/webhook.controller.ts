@@ -42,6 +42,12 @@ export class WebhookController {
       switch (event) {
         case 'PAYMENT_RECEIVED':
         case 'PAYMENT_CONFIRMED': {
+          // Idempotência: se a fatura já estava como PAGA, não adiciona novos dias repetidamente
+          if (invoice.status === 'PAGO' && subscription?.status === 'ACTIVE') {
+            console.log(`[Asaas Webhook] Pagamento ${payment.id} já processado anteriormente (Idempotente)`);
+            return res.status(200).json({ received: true, alreadyProcessed: true });
+          }
+
           invoice.status = 'PAGO';
           invoice.data_pagamento = now.toISOString();
           invoice.updated_at = now.toISOString();
@@ -68,10 +74,17 @@ export class WebhookController {
           invoice.status = 'VENCIDO';
           invoice.updated_at = now.toISOString();
 
-          if (subscription && subscription.status !== 'ACTIVE') {
+          // Grace period: se a assinatura estava ativa ou em trial, passa para PAST_DUE
+          if (subscription && subscription.status !== 'EXPIRED') {
             subscription.status = 'PAST_DUE';
             subscription.updated_at = now.toISOString();
           }
+          break;
+        }
+
+        case 'PAYMENT_RESTORED': {
+          invoice.status = 'PENDENTE';
+          invoice.updated_at = now.toISOString();
           break;
         }
 
@@ -87,7 +100,8 @@ export class WebhookController {
           break;
         }
 
-        case 'SUBSCRIPTION_DELETED': {
+        case 'SUBSCRIPTION_DELETED':
+        case 'SUBSCRIPTION_INACTIVATED': {
           if (subscription) {
             subscription.status = 'CANCELED';
             subscription.updated_at = now.toISOString();

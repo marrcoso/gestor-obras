@@ -12,6 +12,9 @@ router.get('/subscription', (req, res) => billingController.getSubscriptionOverv
 // Histórico de faturas
 router.get('/invoices', (req, res) => billingController.getInvoices(req, res));
 
+// Status de fatura em tempo real (polling do PIX)
+router.get('/invoices/:id/status', (req, res) => billingController.getInvoiceStatus(req, res));
+
 // Iniciar Checkout PIX ou Cartão
 router.post('/checkout', (req, res) => billingController.checkout(req, res));
 

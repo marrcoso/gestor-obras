@@ -358,6 +358,67 @@ export class BillingController {
       return res.status(500).json({ error: err.message || 'Erro ao simular pagamento' });
     }
   }
+
+  /**
+   * Consulta status de uma fatura específica em tempo real (para polling do checkout PIX)
+   */
+  public async getInvoiceStatus(req: Request, res: Response) {
+    try {
+      const tenantId = req.tenantId!;
+      const invoiceId = req.params.id;
+      const store = db.getStore();
+
+      const invoice = (store.invoices || []).find(
+        (i) => (i.id === invoiceId || i.asaas_invoice_id === invoiceId) && i.tenant_id === tenantId
+      );
+
+      if (!invoice) {
+        return res.status(404).json({ error: 'Fatura não encontrada' });
+      }
+
+      const sub = this.getOrCreateSubscription(tenantId);
+
+      // Se a fatura estiver pendente e o Asaas estiver configurado, checa o status diretamente no gateway
+      if (invoice.status === 'PENDENTE' && invoice.asaas_invoice_id && asaasService.isConfigured()) {
+        try {
+          const livePayment = await asaasService.getPayment(invoice.asaas_invoice_id);
+          if (livePayment && (livePayment.status === 'RECEIVED' || livePayment.status === 'CONFIRMED')) {
+            const now = new Date();
+            invoice.status = 'PAGO';
+            invoice.data_pagamento = now.toISOString();
+            invoice.updated_at = now.toISOString();
+
+            const isAnual = sub.ciclo === 'ANUAL';
+            const daysToAdd = isAnual ? 365 : 30;
+            const newExpiration = new Date(now.getTime() + daysToAdd * 24 * 60 * 60 * 1000).toISOString();
+
+            sub.status = 'ACTIVE';
+            sub.data_expiracao = newExpiration;
+            sub.data_proximo_vencimento = newExpiration;
+            sub.updated_at = now.toISOString();
+
+            const tenant = store.tenants.find((t) => t.id === tenantId);
+            if (tenant) {
+              tenant.plano = sub.plano;
+              tenant.max_obras_ativas = PLAN_LIMITS[sub.plano].max_obras_ativas;
+            }
+
+            db.saveLocalStore();
+          }
+        } catch (gatewayErr) {
+          console.warn('Erro ao consultar status no gateway:', gatewayErr);
+        }
+      }
+
+      return res.json({
+        invoice,
+        subscription: sub,
+        isPaid: invoice.status === 'PAGO'
+      });
+    } catch (err: any) {
+      return res.status(500).json({ error: err.message || 'Erro ao consultar status da fatura' });
+    }
+  }
 }
 
 export const billingController = new BillingController();

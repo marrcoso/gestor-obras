@@ -28,12 +28,30 @@ export const enforceActiveSubscription = (req: Request, res: Response, next: Nex
   const diffMs = expDate.getTime() - now.getTime();
   const diasRestantes = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
+  const GRACE_PERIOD_DAYS = 5;
+
   if (sub.status === 'EXPIRED' || (sub.status === 'TRIAL' && diasRestantes < 0)) {
     return res.status(402).json({
       error: 'Seu período de testes ou assinatura expirou. Acesse a aba Planos para reativar o acesso total.',
       code: 'SUBSCRIPTION_EXPIRED',
       subscription_status: sub.status
     });
+  }
+
+  if (sub.status === 'PAST_DUE') {
+    const diasAtraso = Math.max(0, Math.ceil((now.getTime() - expDate.getTime()) / (1000 * 60 * 60 * 24)));
+    if (diasAtraso > GRACE_PERIOD_DAYS) {
+      sub.status = 'EXPIRED';
+      db.saveLocalStore();
+      return res.status(402).json({
+        error: `Sua assinatura possui fatura pendente há mais de ${GRACE_PERIOD_DAYS} dias. Regularize na aba Planos para desbloquear o lançamento de dados.`,
+        code: 'SUBSCRIPTION_EXPIRED',
+        subscription_status: 'EXPIRED'
+      });
+    }
+    // Permite prosseguir dentro do Grace Period (5 dias de tolerância)
+    res.setHeader('X-Subscription-Warning', `PAST_DUE_GRACE_PERIOD_${diasAtraso}_DAYS`);
+    return next();
   }
 
   if (sub.status === 'CANCELED') {

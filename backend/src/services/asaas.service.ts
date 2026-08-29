@@ -229,6 +229,98 @@ export class AsaasService {
       throw new Error(err.response?.data?.errors?.[0]?.description || 'Erro ao processar cartão de crédito no gateway');
     }
   }
+  /**
+   * Consulta status de pagamento no Asaas
+   */
+  public async getPayment(paymentId: string): Promise<AsaasPaymentResponse | null> {
+    if (!this.client) {
+      return null;
+    }
+
+    try {
+      const res = await this.client.get(`/payments/${paymentId}`);
+      const payment = res.data;
+      return {
+        id: payment.id,
+        customer: payment.customer,
+        value: payment.value,
+        netValue: payment.netValue,
+        billingType: payment.billingType,
+        status: payment.status,
+        dueDate: payment.dueDate,
+        invoiceUrl: payment.invoiceUrl,
+        bankSlipUrl: payment.bankSlipUrl,
+        externalReference: payment.externalReference
+      };
+    } catch (err: any) {
+      console.error(`Erro ao consultar pagamento ${paymentId} no Asaas:`, err.response?.data || err.message);
+      return null;
+    }
+  }
+
+  /**
+   * Cria assinatura recorrente no Asaas
+   */
+  public async createSubscription(params: {
+    customerId: string;
+    billingType: 'PIX' | 'CREDIT_CARD' | 'BOLETO';
+    value: number;
+    nextDueDate: string;
+    cycle: 'MONTHLY' | 'YEARLY';
+    description: string;
+    externalReference: string;
+    creditCard?: {
+      holderName: string;
+      number: string;
+      expiryMonth: string;
+      expiryYear: string;
+      ccv: string;
+    };
+    creditCardHolderInfo?: {
+      name: string;
+      email: string;
+      cpfCnpj: string;
+      postalCode?: string;
+      addressNumber?: string;
+      phone?: string;
+    };
+  }): Promise<any> {
+    if (!this.client) {
+      const subId = `sub_mock_${uuidv4().substring(0, 10)}`;
+      return {
+        id: subId,
+        customer: params.customerId,
+        value: params.value,
+        cycle: params.cycle,
+        status: 'ACTIVE',
+        billingType: params.billingType,
+        nextDueDate: params.nextDueDate
+      };
+    }
+
+    try {
+      const res = await this.client.post('/subscriptions', {
+        customer: params.customerId,
+        billingType: params.billingType,
+        value: params.value,
+        nextDueDate: params.nextDueDate,
+        cycle: params.cycle,
+        description: params.description,
+        externalReference: params.externalReference,
+        creditCard: params.creditCard,
+        creditCardHolderInfo: params.creditCardHolderInfo
+      });
+
+      return res.data;
+    } catch (err: any) {
+      const errorMsg =
+        err.response?.data?.errors?.map((e: any) => e.description).join('; ') ||
+        err.message ||
+        'Erro ao criar assinatura recorrente no Asaas';
+      console.error('Erro ao criar assinatura no Asaas:', errorMsg);
+      throw new Error(errorMsg);
+    }
+  }
 }
 
 export const asaasService = new AsaasService();
