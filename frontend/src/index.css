@@ -34,6 +34,7 @@
   --bg-card-hover: #f8fafc;
   --bg-input: #ffffff;
   --bg-navbar: rgba(255, 255, 255, 0.92);
+  --navbar-height: 4rem;
 
   /* Navy Structural Shell (Sidebar) */
   --bg-sidebar: #0f172a;
@@ -101,6 +102,7 @@
   --bg-card-hover: #17223b;
   --bg-input: #0a0f1d;
   --bg-navbar: rgba(15, 23, 42, 0.92);
+  --navbar-height: 4rem;
 
   --bg-sidebar: #060a12;
   --bg-sidebar-hover: rgba(255, 255, 255, 0.05);

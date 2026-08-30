@@ -71,27 +71,28 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
   };
 
   return (
-    <header className="h-16 px-4 md:px-6 flex items-center justify-between sticky top-0 z-40 bg-navbar/95 backdrop-blur-md border-b border-border shadow-xs">
+    <header className="h-16 min-h-[4rem] max-h-[4rem] flex-shrink-0 w-full px-3 sm:px-4 md:px-6 flex flex-row flex-nowrap items-center justify-between sticky top-0 z-40 bg-navbar/95 backdrop-blur-md border-b border-border shadow-xs box-border">
       {/* Left: Obra Selector & Quick New Obra CTA */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink flex-nowrap">
         {/* Mobile Brand Logo */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <div className="w-[34px] h-[34px] bg-brand rounded-md flex items-center justify-center text-white">
+        <div className="flex items-center gap-2 lg:hidden flex-shrink-0">
+          <div className="w-[34px] h-[34px] bg-brand rounded-md flex items-center justify-center text-white shadow-xs">
             <HardHat size={20} />
           </div>
         </div>
 
         {/* Obra Active Selector Pill */}
         {obras.length > 0 ? (
-          <div className="flex items-center gap-2 bg-surface-low px-3 py-1.5 rounded-md border border-border">
-            <Building2 size={16} className="text-tech" />
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-surface-low px-2.5 sm:px-3 py-1.5 rounded-md border border-border min-w-0 max-w-[140px] xs:max-w-[180px] sm:max-w-[240px] md:max-w-[320px]">
+            <Building2 size={16} className="text-tech flex-shrink-0" />
             <select
-              className="bg-transparent border-none text-content-main text-xs md:text-sm font-semibold cursor-pointer outline-none max-w-[160px] sm:max-w-[220px] appearance-none truncate"
+              className="bg-transparent border-none text-content-main text-xs sm:text-sm font-semibold cursor-pointer outline-none w-full appearance-none truncate"
               value={selectedObra?.id || ''}
               onChange={(e) => {
                 const found = obras.find((o) => o.id === e.target.value);
                 if (found) setSelectedObra(found);
               }}
+              title={selectedObra?.nome || 'Selecionar Obra'}
             >
               {obras.map((obra) => (
                 <option key={obra.id} value={obra.id}>
@@ -99,10 +100,10 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
                 </option>
               ))}
             </select>
-            <ChevronDown size={14} className="text-content-dim" />
+            <ChevronDown size={14} className="text-content-dim flex-shrink-0" />
           </div>
         ) : (
-          <span className="text-xs md:text-sm font-semibold text-content-muted">
+          <span className="text-xs sm:text-sm font-semibold text-content-muted truncate">
             Nenhuma obra cadastrada
           </span>
         )}
@@ -111,36 +112,38 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
         {openNewObraModal && (
           <button
             onClick={openNewObraModal}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-brand hover:bg-brand-hover text-white text-[11px] font-bold tracking-wider uppercase shadow-primary transition-all active:scale-95 cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-brand hover:bg-brand-hover text-white text-[11px] font-bold tracking-wider uppercase shadow-primary transition-all active:scale-95 cursor-pointer flex-shrink-0"
           >
             <Plus size={14} />
-            NOVA OBRA
+            <span>NOVA OBRA</span>
           </button>
         )}
       </div>
 
       {/* Right: Actions, Sync, Theme, Notifications & Profile */}
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-1 sm:gap-2 md:gap-2.5 flex-shrink-0 flex-nowrap">
         {/* Toggle Mode: Desktop Gestão vs Mobile Canteiro */}
-        <div className="flex bg-surface-low p-0.5 rounded-md border border-border gap-0.5">
+        <div className="hidden sm:flex bg-surface-low p-0.5 rounded-md border border-border gap-0.5 flex-shrink-0">
           <button
             onClick={() => navigate('/campo')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded transition-colors cursor-pointer flex-shrink-0 ${
               isField ? 'bg-brand text-white shadow-xs' : 'text-content-muted hover:text-content-main'
             }`}
+            title="Modo Canteiro"
           >
             <Smartphone size={13} />
-            <span className="hidden sm:inline">Canteiro</span>
+            <span className="hidden lg:inline">Canteiro</span>
           </button>
 
           <button
             onClick={() => navigate('/dashboard')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded transition-colors cursor-pointer flex-shrink-0 ${
               !isField ? 'bg-tech text-white shadow-xs' : 'text-content-muted hover:text-content-main'
             }`}
+            title="Modo Gestão"
           >
             <Monitor size={13} />
-            <span className="hidden sm:inline">Gestão</span>
+            <span className="hidden lg:inline">Gestão</span>
           </button>
         </div>
 
@@ -149,7 +152,7 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
           <button
             onClick={handleSync}
             disabled={syncing}
-            className="flex items-center gap-1.5 bg-status-pending-bg text-status-pending border border-status-pending rounded-md px-2.5 py-1 text-xs font-bold transition-transform active:scale-95 cursor-pointer"
+            className="flex items-center gap-1.5 bg-status-pending-bg text-status-pending border border-status-pending rounded-md px-2 sm:px-2.5 py-1 text-xs font-bold transition-transform active:scale-95 cursor-pointer flex-shrink-0"
             title="Sincronizar fila offline"
           >
             <RefreshCw size={13} className={syncing ? 'animate-spin' : ''} />
@@ -160,7 +163,7 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
         {/* Dark / Light Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-1.5 rounded-md text-content-muted hover:text-content-main hover:bg-surface-low transition-colors cursor-pointer"
+          className="p-1.5 rounded-md text-content-muted hover:text-content-main hover:bg-surface-low transition-colors cursor-pointer flex-shrink-0 flex items-center justify-center w-8 h-8"
           title={theme === 'dark' ? 'Alternar para Tema Claro' : 'Alternar para Tema Escuro'}
           aria-label="Alternar tema"
         >
@@ -168,10 +171,10 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
         </button>
 
         {/* Notifications Icon with Badge & Popover */}
-        <div className="relative flex items-center" ref={notifRef}>
+        <div className="relative flex items-center flex-shrink-0" ref={notifRef}>
           <button
             onClick={() => setIsNotifOpen(!isNotifOpen)}
-            className={`p-1.5 rounded-md transition-colors relative cursor-pointer ${
+            className={`p-1.5 rounded-md transition-colors relative cursor-pointer flex items-center justify-center w-8 h-8 ${
               isNotifOpen
                 ? 'bg-brand/15 text-brand'
                 : 'text-content-muted hover:text-content-main hover:bg-surface-low'
@@ -191,10 +194,10 @@ export const Navbar: React.FC<NavbarProps> = ({ openNewObraModal }) => {
         </div>
 
         {/* Logout Action */}
-        <div className="border-l border-border pl-1.5">
+        <div className="border-l border-border pl-1 sm:pl-1.5 flex items-center flex-shrink-0">
           <button
             onClick={handleLogout}
-            className="p-1.5 rounded-md text-content-dim hover:text-status-late hover:bg-status-late/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-md text-content-dim hover:text-status-late hover:bg-status-late/10 transition-colors cursor-pointer flex items-center justify-center w-8 h-8"
             title="Sair do sistema"
           >
             <LogOut size={17} />
