@@ -12,6 +12,7 @@ import { NotificationProvider } from './context/NotificationContext.js';
 import { NotificationToast } from './components/notifications/NotificationToast.js';
 import { SubscriptionBanner } from './components/billing/SubscriptionBanner.js';
 import { LoginPage } from './pages/LoginPage.js';
+import { RegisterPage } from './pages/RegisterPage.js';
 import { Navbar } from './components/Navbar.js';
 import { Sidebar } from './components/Sidebar.js';
 import { MobileBottomNav } from './components/MobileBottomNav.js';
@@ -97,8 +98,10 @@ export default function App() {
         <NotificationProvider>
           <BrowserRouter>
             <Routes>
-              {/* Rota Pública */}
+              {/* Rotas Públicas */}
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/cadastro" element={<RegisterPage />} />
+              <Route path="/register" element={<Navigate to="/cadastro" replace />} />
 
               {/* Rotas Protegidas */}
               <Route element={<ProtectedRoute />}>
