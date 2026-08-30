@@ -15,7 +15,8 @@ import {
   Subscription,
   Invoice,
   BillingOverview,
-  CheckoutPayload
+  CheckoutPayload,
+  RegisterPayload
 } from '../types/index.js';
 import { offlineQueue } from './offlineQueue.js';
 
@@ -82,13 +83,7 @@ class ApiClient {
     return res;
   }
 
-  public async register(payload: {
-    nomeConstrutora: string;
-    nomeUsuario: string;
-    email: string;
-    senha: string;
-    telefoneWhatsapp?: string;
-  }): Promise<{ token: string; user: User; tenant: Tenant }> {
+  public async register(payload: RegisterPayload): Promise<{ token: string; user: User; tenant: Tenant }> {
     const res = await this.request<{ token: string; user: User; tenant: Tenant }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(payload)

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, Tenant, Obra, BillingOverview } from '../types/index.js';
+import { User, Tenant, Obra, BillingOverview, RegisterPayload } from '../types/index.js';
 import { api } from '../services/api.js';
+import { deviceSessionService, DeviceSession } from '../services/deviceSession.js';
 
 interface AuthContextType {
   user: User | null;
@@ -10,7 +11,9 @@ interface AuthContextType {
   billingOverview: BillingOverview | null;
   loading: boolean;
   isOnline: boolean;
-  login: (email: string, pass: string) => Promise<void>;
+  login: (email: string, pass: string, rememberDevice?: boolean) => Promise<void>;
+  register: (payload: RegisterPayload, rememberDevice?: boolean) => Promise<void>;
+  quickResumeSession: (session: DeviceSession) => Promise<void>;
   loginDemo: (perfil: 'ADMIN' | 'MESTRE_OBRA') => Promise<void>;
   logout: () => void;
   setSelectedObra: (obra: Obra | null) => void;
@@ -48,7 +51,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.addEventListener('offline', handleOffline);
 
     // Checa sessão existente
-    if (api.getToken()) {
+    const existingToken = api.getToken();
+    if (existingToken) {
       Promise.all([
         api.me(),
         api.getObras().catch(() => []),
@@ -64,6 +68,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (billingData) {
             setBillingOverview(billingData);
           }
+          // Atualiza dados de sessão do aparelho
+          deviceSessionService.saveSession(user, tenant, existingToken);
         })
         .catch(() => {
           api.setToken(null);
@@ -103,12 +109,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const login = async (email: string, pass: string) => {
+  const login = async (email: string, pass: string, rememberDevice = true) => {
     setLoading(true);
     try {
       const res = await api.login(email, pass);
       setUser(res.user);
       setTenant(res.tenant);
+
+      if (rememberDevice) {
+        deviceSessionService.saveSession(res.user, res.tenant, res.token);
+      }
+
       const [obrasData, billingData] = await Promise.all([
         api.getObras().catch(() => []),
         api.getBillingOverview().catch(() => null)
@@ -121,9 +132,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const register = async (payload: RegisterPayload, rememberDevice = true) => {
+    setLoading(true);
+    try {
+      const res = await api.register(payload);
+      setUser(res.user);
+      setTenant(res.tenant);
+
+      if (rememberDevice) {
+        deviceSessionService.saveSession(res.user, res.tenant, res.token);
+      }
+
+      const [obrasData, billingData] = await Promise.all([
+        api.getObras().catch(() => []),
+        api.getBillingOverview().catch(() => null)
+      ]);
+      setObras(obrasData);
+      if (obrasData.length > 0) setSelectedObra(obrasData[0]);
+      if (billingData) setBillingOverview(billingData);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const quickResumeSession = async (session: DeviceSession) => {
+    setLoading(true);
+    try {
+      if (session.lastToken) {
+        api.setToken(session.lastToken);
+      }
+      const [{ user, tenant }, obrasData, billingData] = await Promise.all([
+        api.me(),
+        api.getObras().catch(() => []),
+        api.getBillingOverview().catch(() => null)
+      ]);
+      setUser(user);
+      setTenant(tenant);
+      setObras(obrasData);
+      if (obrasData.length > 0) setSelectedObra(obrasData[0]);
+      if (billingData) setBillingOverview(billingData);
+      deviceSessionService.saveSession(user, tenant, api.getToken());
+    } catch (err) {
+      // Se o token expirou, desloga e mantém a sessão local para pedir senha
+      api.setToken(null);
+      throw new Error('Sessão expirada. Por favor, insira sua senha para reativar o acesso.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loginDemo = async (perfil: 'ADMIN' | 'MESTRE_OBRA') => {
     const email = perfil === 'ADMIN' ? 'admin@alfaengenharia.com' : 'mestre@alfaengenharia.com';
-    await login(email, 'senha123');
+    await login(email, 'senha123', true);
   };
 
   const refreshUser = async () => {
@@ -157,6 +217,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         isOnline,
         login,
+        register,
+        quickResumeSession,
         loginDemo,
         logout,
         setSelectedObra,

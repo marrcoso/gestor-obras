@@ -5,6 +5,8 @@ export interface Tenant {
   cnpj?: string;
   telefone?: string;
   email_contato: string;
+  segmento_atuacao?: string;
+  estado_uf?: string;
   plano: 'STARTER' | 'PRO' | 'ENTERPRISE';
   max_obras_ativas: number;
 }
@@ -301,4 +303,14 @@ export interface CheckoutPayload {
   };
 }
 
+export interface RegisterPayload {
+  nomeConstrutora: string;
+  nomeUsuario: string;
+  email: string;
+  senha: string;
+  telefoneWhatsapp?: string;
+  estadoUf?: string;
+  segmentoAtuacao?: string;
+  cnpjCpf?: string;
+}
 
