@@ -12,7 +12,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ url, onClose }) => {
   if (!url) return null;
 
   const isPdf = url.toLowerCase().endsWith('.pdf');
-  const fullUrl = url.startsWith('http') ? url : `http://localhost:3001${url}`;
+  const fullUrl = url;
 
   return (
     <Modal
