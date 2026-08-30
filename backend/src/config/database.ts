@@ -325,9 +325,12 @@ class DatabaseService {
   private async initPostgres() {
     if (process.env.DATABASE_URL) {
       try {
+        const isLocalPg = process.env.DATABASE_URL.includes('@postgres:') || process.env.DATABASE_URL.includes('@localhost:');
+        const useSsl = process.env.DATABASE_SSL === 'true' || (!isLocalPg && process.env.NODE_ENV === 'production');
+
         this.pool = new Pool({
           connectionString: process.env.DATABASE_URL,
-          ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+          ssl: useSsl ? { rejectUnauthorized: false } : false
         });
         const client = await this.pool.connect();
         this.isPgAvailable = true;
