@@ -14,6 +14,8 @@ export interface Tenant {
   cnpj?: string;
   telefone?: string;
   email_contato: string;
+  segmento_atuacao?: string;
+  estado_uf?: string;
   plano: 'STARTER' | 'PRO' | 'ENTERPRISE';
   max_obras_ativas: number;
   ativo: boolean;

@@ -9,17 +9,35 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-erp-obras-2026';
 export class AuthController {
   public async register(req: Request, res: Response) {
     try {
-      const { nomeConstrutora, nomeUsuario, email, senha, telefoneWhatsapp } = req.body;
+      const {
+        nomeConstrutora,
+        nomeUsuario,
+        email,
+        senha,
+        telefoneWhatsapp,
+        estadoUf,
+        segmentoAtuacao,
+        cnpjCpf
+      } = req.body;
 
       if (!nomeConstrutora || !nomeUsuario || !email || !senha) {
-        return res.status(400).json({ error: 'Preencha todos os campos obrigatórios' });
+        return res.status(400).json({ error: 'Preencha todos os campos obrigatórios (Construtora, Nome, Email e Senha)' });
+      }
+
+      if (typeof senha !== 'string' || senha.length < 6) {
+        return res.status(400).json({ error: 'A senha deve ter no mínimo 6 caracteres' });
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        return res.status(400).json({ error: 'Informe um endereço de e-mail válido' });
       }
 
       const store = db.getStore();
-      const userExists = store.users.some((u) => u.email.toLowerCase() === email.toLowerCase());
+      const userExists = store.users.some((u) => u.email.toLowerCase() === email.trim().toLowerCase());
 
       if (userExists) {
-        return res.status(400).json({ error: 'Email já cadastrado na plataforma' });
+        return res.status(400).json({ error: 'Este e-mail já está cadastrado na plataforma' });
       }
 
       const tenantId = uuidv4();
@@ -31,9 +49,12 @@ export class AuthController {
 
       const newTenant: Tenant = {
         id: tenantId,
-        nome_fantasia: nomeConstrutora,
-        email_contato: email,
-        telefone: telefoneWhatsapp,
+        nome_fantasia: nomeConstrutora.trim(),
+        email_contato: email.trim().toLowerCase(),
+        telefone: telefoneWhatsapp?.trim() || undefined,
+        cnpj: cnpjCpf?.trim() || undefined,
+        segmento_atuacao: segmentoAtuacao?.trim() || undefined,
+        estado_uf: (estadoUf?.trim() || 'SP').toUpperCase(),
         plano: 'STARTER',
         max_obras_ativas: PLAN_LIMITS.STARTER.max_obras_ativas,
         ativo: true,
@@ -44,10 +65,10 @@ export class AuthController {
       const newUser: User = {
         id: userId,
         tenant_id: tenantId,
-        nome: nomeUsuario,
-        email: email.toLowerCase(),
+        nome: nomeUsuario.trim(),
+        email: email.trim().toLowerCase(),
         senha_hash: senhaHash,
-        telefone_whatsapp: telefoneWhatsapp,
+        telefone_whatsapp: telefoneWhatsapp?.trim() || undefined,
         perfil: 'ADMIN',
         ativo: true,
         created_at: nowIso,
@@ -73,6 +94,15 @@ export class AuthController {
       store.users.push(newUser);
       store.subscriptions = store.subscriptions || [];
       store.subscriptions.push(newSubscription);
+
+      this.logActivity(
+        tenantId,
+        userId,
+        newUser.nome,
+        'CONSTRUTORA_REGISTRADA',
+        `Nova construtora cadastrada: ${newTenant.nome_fantasia} (Plano Starter Trial 7 dias)`
+      );
+
       db.saveLocalStore();
 
       const token = jwt.sign(
@@ -94,7 +124,8 @@ export class AuthController {
           nome: newUser.nome,
           email: newUser.email,
           perfil: newUser.perfil,
-          tenant_id: newUser.tenant_id
+          tenant_id: newUser.tenant_id,
+          telefone_whatsapp: newUser.telefone_whatsapp
         },
         tenant: newTenant
       });
