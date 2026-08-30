@@ -41,7 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ openNewObraModal }) => {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-[280px] bg-sidebar border-r border-white/10 hidden lg:flex flex-col z-[100] shadow-[4px_0_24px_rgba(0,0,0,0.25)]">
+    <aside className="w-[280px] bg-sidebar border-r border-white/10 hidden lg:flex flex-col flex-shrink-0 h-full shadow-[4px_0_24px_rgba(0,0,0,0.25)] z-30">
       {/* Brand Header */}
       <div className="p-5 pb-4 flex items-center gap-3">
         <div className="w-[42px] h-[42px] bg-brand rounded-lg flex items-center justify-center text-white shadow-primary flex-shrink-0">
